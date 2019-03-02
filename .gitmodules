@@ -1,0 +1,3 @@
+[submodule "Externals/ImWindow"]
+	path = Externals/ImWindow
+	url = https://github.com/thennequin/ImWindow.git
