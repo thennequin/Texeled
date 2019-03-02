@@ -21,6 +21,7 @@ Program::Program()
 	style.Colors[ImGuiCol_MenuBarBg] = style.Colors[ImGuiCol_WindowBg];
 
 	m_pShortKeyManager = new ShortKeyManager();
+	m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::AskExit), false);
 }
 
 Program::~Program()
