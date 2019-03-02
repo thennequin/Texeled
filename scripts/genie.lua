@@ -38,7 +38,9 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui/stb_textedit.h",
 							"../Externals/ImWindow/Externals/imgui/stb_truetype.h",
 
-							"../src/**"
+							"../src/**",
+							"../src/**.ico",
+							"../src/Default.rc"
 		}
 		
 		includedirs {
@@ -65,8 +67,15 @@ solution "Texeled"
 			libdirs			"../Externals/ImWindow/Externals/DirectX/lib/x64"
 		
 
+		platforms{}
+
 		configuration		"Debug"
-			flags			"Symbols"
+			targetsuffix	"_d"
+			flags			{ "Symbols" }
 			
 		configuration		"Release"
-			flags			"Optimize"
+			flags			{ "Optimize" }
+
+		configuration 		"**.ico"
+			buildaction 	"Embed"
+	
