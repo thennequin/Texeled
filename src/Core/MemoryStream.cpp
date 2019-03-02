@@ -88,7 +88,8 @@ namespace Core
 			iReadSize = m_iSize - m_iCursor;
 		if (iReadSize > 0)
 		{
-			memcpy(pBuffer, (char*)m_pMemory + m_iCursor, iSize);
+			memcpy(pBuffer, (char*)m_pMemory + m_iCursor, iReadSize);
+			m_iCursor += iReadSize;
 		}
 		return iReadSize;
 	}
@@ -100,7 +101,8 @@ namespace Core
 			iWriteSize = m_iSize - m_iCursor;
 		if (iWriteSize > 0)
 		{
-			memcpy((char*)m_pMemory + m_iCursor, pBuffer, iSize);
+			memcpy((char*)m_pMemory + m_iCursor, pBuffer, iWriteSize);
+			m_iCursor += iWriteSize;
 		}
 		return iWriteSize;
 	}
