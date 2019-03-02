@@ -44,14 +44,16 @@ solution "Texeled"
 		}
 		
 		includedirs {
-							"..", -- For ImwConfig.h
+							"../src", -- For ImwConfig.h
 							"../Externals/ImWindow",
 							"../Externals/ImWindow/ImWindow",
 							"../Externals/ImWindow/ImWindowEasyWindow",
 							"../Externals/ImWindow/ImWindowDX11",
 							"../Externals/ImWindow/Externals/imgui",
 							"../Externals/ImWindow/Externals/EasyWindow",
-							"../Externals/ImWindow/Externals/DirectX/include"
+							"../Externals/ImWindow/Externals/DirectX/include",
+							
+							"../Externals/stb"
 		}
 		
 		flags				"ExtraWarnings"
