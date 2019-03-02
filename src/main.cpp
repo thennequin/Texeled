@@ -1,16 +1,26 @@
 
-#include "ImwWindowManagerDX11.h"
-#include "windows.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
-int main()
+#include "Program.h"
+
+//#define CONSOLE
+
+#ifndef CONSOLE
+#include <Windows.h>
+#endif
+
+int main(int argc, char* argv[])
 {
-	ImWindow::ImwWindowManagerDX11 oMgr;
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(1337);
 
-	oMgr.Init();
+	Program* pInstance = Program::CreateInstance();
 
-	while (oMgr.Run(false) && oMgr.Run(true)) Sleep(16);
+	while (pInstance->Run()) Sleep(8);
 
-	ImGui::Shutdown();
+	Program::DestroyInstance();
 
 	return 0;
 }
