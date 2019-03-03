@@ -37,6 +37,7 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui/stb_rect_pack.h",
 							"../Externals/ImWindow/Externals/imgui/stb_textedit.h",
 							"../Externals/ImWindow/Externals/imgui/stb_truetype.h",
+							"../Externals/stb/*",
 
 							"../src/**",
 							"../src/**.ico",
@@ -52,7 +53,7 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui",
 							"../Externals/ImWindow/Externals/EasyWindow",
 							"../Externals/ImWindow/Externals/DirectX/include",
-							
+
 							"../Externals/stb"
 		}
 		
@@ -62,22 +63,28 @@ solution "Texeled"
 							"_CRT_SECURE_NO_WARNINGS"
 		}
 
+		configuration 		"**.ico"
+			buildaction 	"Embed"
+
 		configuration		"x32"
 			libdirs			"../Externals/ImWindow/Externals/DirectX/lib/x86"
 			
 		configuration		"x64"
 			libdirs			"../Externals/ImWindow/Externals/DirectX/lib/x64"
 		
-
-		platforms{}
-
 		configuration		"Debug"
-			targetsuffix	"_d"
 			flags			{ "Symbols" }
 			
 		configuration		"Release"
 			flags			{ "Optimize" }
 
-		configuration 		"**.ico"
-			buildaction 	"Embed"
+		configuration 		{ "x32", "Debug" }
+			targetsuffix	"_d"
+		configuration 		{ "x32", "Release" }
+			targetsuffix	""
+		
+		configuration 		{ "x64", "Debug" }
+			targetsuffix	"_x64_d"
+		configuration 		{ "x64", "Release" }
+			targetsuffix	"_x64"
 	
