@@ -5,6 +5,9 @@
 
 #include <D3D11.h>
 
+#include "Graphics/TextureUtils.h"
+#include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
+
 Program* Program::s_pInstance = NULL;
 
 Program::Program()
@@ -12,6 +15,8 @@ Program::Program()
 	, m_oImWindowMgrDX11(true)
 {
 	s_pInstance = this;
+
+	Graphics::TextureLoader::RegisterLoaderSTBI();
 
 	m_oImWindowMgrDX11.Init();
 	m_oImWindowMgrDX11.SetMainTitle("Texeled");
