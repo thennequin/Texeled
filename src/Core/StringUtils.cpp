@@ -40,6 +40,59 @@ namespace Core
 
 			return false;
 		}
+
+		//https://github.com/clibs/wildcardcmp/
+		bool Wildcard(const char* pPattern, const char* pString)
+		{
+			const char* pLastStart = NULL; // last `*`
+			const char* pLastChar = NULL; // last checked char
+
+			//Invalid
+			if (pPattern == NULL || pString == NULL)
+				return false;
+
+			// loop 1 char at a time
+			while (1)
+			{
+				if (*pString == NULL)
+				{
+					if (*pPattern == NULL)
+						return true;
+					if (*pLastChar == NULL)
+						return false;
+					pString = pLastChar++;
+					pPattern = pLastStart;
+					continue;
+				}
+				else
+				{
+					if (*pPattern != *pString)
+					{
+						if ('*' == *pPattern)
+						{
+							pLastStart = ++pPattern;
+							pLastChar = pString;
+							// "*" -> "foobar"
+							if (*pPattern != NULL)
+								continue;
+							return false;
+						}
+						else if (pLastStart != NULL)
+						{
+							pString++;
+							// "*ooba*" -> "foobar"
+							continue;
+						}
+						return false;
+					}
+				}
+
+				pString++;
+				pPattern++;
+			}
+
+			return true;
+		}
 	}
 	//namespace StringUtils
 }
