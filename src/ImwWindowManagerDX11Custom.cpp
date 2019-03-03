@@ -2,8 +2,17 @@
 #include "ImwWindowManagerDX11Custom.h"
 using namespace ImWindow;
 
+
+#include "Core/MemoryStream.h"
+
+#include "Graphics/TextureUtils.h"
+#include "GraphicResources/Texture2D.h"
+
+#include "Resources/Icons/Default_24_png.h"
+
 ImwWindowManagerDX11Custom::ImwWindowManagerDX11Custom(bool bCustomFrame)
-	: ImwWindowManagerDX11( bCustomFrame )
+	: ImwWindowManagerDX11(bCustomFrame)
+	, m_pIcon(NULL)
 {
 }
 
@@ -11,7 +20,32 @@ ImwWindowManagerDX11Custom::~ImwWindowManagerDX11Custom()
 {
 }
 
-const float c_fIconSize = 20.f;
+bool ImwWindowManagerDX11Custom::InternalInit()
+{
+	if (ImwWindowManagerDX11::InternalInit() == false)
+		return false;
+
+	//Load Image
+	Graphics::Texture oTexture;
+	Core::MemoryStream oMemStream(Resources::Icons::Default_24_png::Data, Resources::Icons::Default_24_png::Size);
+	CORE_VERIFY(Graphics::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+	if (oTexture.IsValid())
+	{
+		m_pIcon = GraphicResources::Texture2D::CreateFromTexture(&oTexture);
+	}
+	return true;
+}
+
+void ImwWindowManagerDX11Custom::InternalDestroy()
+{
+	if (m_pIcon)
+	{
+		delete m_pIcon;
+	}
+	ImwWindowManagerDX11::InternalDestroy();
+}
+
+const float c_fIconSize = 24.f;
 float ImwWindowManagerDX11Custom::GetTitleBarHeight() const
 {
 	ImGuiContext* pContext = m_pMainPlatformWindow->GetContext();
@@ -24,7 +58,7 @@ float ImwWindowManagerDX11Custom::GetTitleBarHeight() const
 void ImwWindowManagerDX11Custom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow)
 {
 	//Draw simple icon in title bar
-	ImGui::Dummy(ImVec2(c_fIconSize, c_fIconSize));
+	/*ImGui::Dummy(ImVec2(c_fIconSize, c_fIconSize));
 	ImRect oRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
 	const ImVec2 oCenter = oRect.GetCenter();
 	const ImVec2 oSize = oRect.GetSize();
@@ -34,8 +68,13 @@ void ImwWindowManagerDX11Custom::PaintTitleBar(ImwPlatformWindow* pPlatformWindo
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
 	pDrawList->AddRectFilled(oRect.Min, oCenter - c_oSpace, iColor);
 	pDrawList->AddRectFilled(oCenter + c_oSpace, oRect.Max, iColor);
-	pDrawList->AddLine(oRect.GetBL(), oRect.GetTR(), iColor);
+	pDrawList->AddLine(oRect.GetBL(), oRect.GetTR(), iColor);*/
 
-	ImGui::SameLine();
+	if (m_pIcon)
+	{
+		ImGui::Image((ImTextureID)m_pIcon->GetTextureView(), ImVec2(c_fIconSize, c_fIconSize));
+		ImGui::SameLine();
+	}
+
 	ImwWindowManager::PaintTitleBar(pPlatformWindow);
 }

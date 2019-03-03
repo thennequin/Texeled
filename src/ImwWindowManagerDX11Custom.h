@@ -6,6 +6,11 @@
 
 #include "ImwWindowManagerDX11.h"
 
+namespace GraphicResources
+{
+	class Texture2D;
+}
+
 namespace ImWindow
 {
 	class ImwWindowManagerDX11Custom : public ImwWindowManagerDX11
@@ -14,8 +19,13 @@ namespace ImWindow
 		ImwWindowManagerDX11Custom(bool bCustomFrame);
 		virtual							~ImwWindowManagerDX11Custom();
 
+		virtual bool					InternalInit();
+		virtual void					InternalDestroy();
+
 		virtual float					GetTitleBarHeight() const;
 		virtual void					PaintTitleBar(ImwPlatformWindow* pPlatformWindow);
+	protected:
+		GraphicResources::Texture2D*	m_pIcon;
 	};
 }
 
