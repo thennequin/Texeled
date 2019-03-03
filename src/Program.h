@@ -5,6 +5,9 @@
 #include "ImwWindowManagerDX11Custom.h"
 
 class ShortKeyManager;
+class IDXGIFactory;
+class ID3D11Device;
+class ID3D11DeviceContext;
 
 class Program
 {
@@ -19,14 +22,18 @@ public:
 	bool									Run();
 	void									AskExit();
 
-	ImWindow::ImwWindowManager*				GetWindowManager() { return &m_oMgr; }
+	ImWindow::ImwWindowManager*				GetWindowManager() { return &m_oImWindowMgrDX11; }
+
+	IDXGIFactory*							GetDXGIFactory() const;
+	ID3D11Device*							GetDX11Device() const;
+	ID3D11DeviceContext*					GetDX11DeviceContext() const;
 
 protected:
 	static Program*							s_pInstance;
 
 	bool									m_bRun;
 
-	ImWindow::ImwWindowManagerDX11Custom	m_oMgr;
+	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
 
 	ShortKeyManager*						m_pShortKeyManager;
 };

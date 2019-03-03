@@ -3,16 +3,18 @@
 
 #include "ShortKeyManager.h"
 
+#include <D3D11.h>
+
 Program* Program::s_pInstance = NULL;
 
 Program::Program()
 	: m_bRun(true)
-	, m_oMgr(true)
+	, m_oImWindowMgrDX11(true)
 {
 	s_pInstance = this;
 
-	m_oMgr.Init();
-	m_oMgr.SetMainTitle("Program");
+	m_oImWindowMgrDX11.Init();
+	m_oImWindowMgrDX11.SetMainTitle("Texeled");
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
@@ -47,10 +49,25 @@ void Program::DestroyInstance()
 	}
 }
 
+IDXGIFactory* Program::GetDXGIFactory() const
+{
+	return m_oImWindowMgrDX11.GetDXGIFactory();
+}
+
+ID3D11Device* Program::GetDX11Device() const
+{
+	return m_oImWindowMgrDX11.GetDX11Device();
+}
+
+ID3D11DeviceContext* Program::GetDX11DeviceContext() const
+{
+	return m_oImWindowMgrDX11.GetDX11DeviceContext();
+}
+
 bool Program::Run()
 {
 	m_pShortKeyManager->Manage(false);
-	return m_bRun && m_oMgr.Run(false) && m_oMgr.Run(true);
+	return m_bRun && m_oImWindowMgrDX11.Run(false) && m_oImWindowMgrDX11.Run(true);
 }
 
 void Program::AskExit()
