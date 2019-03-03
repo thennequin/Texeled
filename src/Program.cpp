@@ -8,6 +8,8 @@
 #include "Graphics/TextureUtils.h"
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 
+#include "Windows/WorkAreaWindow.h"
+
 Program* Program::s_pInstance = NULL;
 
 Program::Program()
@@ -29,6 +31,8 @@ Program::Program()
 
 	m_pShortKeyManager = new ShortKeyManager();
 	m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::AskExit), false);
+
+	m_pWorkAreaWindow = new Windows::WorkAreaWindow();
 }
 
 Program::~Program()

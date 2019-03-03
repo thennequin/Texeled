@@ -9,6 +9,11 @@ class IDXGIFactory;
 class ID3D11Device;
 class ID3D11DeviceContext;
 
+namespace Windows
+{
+	class WorkAreaWindow;
+}
+
 class Program
 {
 	Program();
@@ -36,6 +41,8 @@ protected:
 	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
 
 	ShortKeyManager*						m_pShortKeyManager;
+
+	Windows::WorkAreaWindow*				m_pWorkAreaWindow;
 };
 
 #endif // __PROGRAM_H__
