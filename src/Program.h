@@ -4,10 +4,17 @@
 
 #include "ImwWindowManagerDX11Custom.h"
 
+#include "Graphics/Texture.h"
+
 class ShortKeyManager;
 class IDXGIFactory;
 class ID3D11Device;
 class ID3D11DeviceContext;
+
+namespace GraphicResources
+{
+	class Texture2D;
+}
 
 namespace Windows
 {
@@ -16,11 +23,11 @@ namespace Windows
 
 class Program
 {
-	Program();
+	Program(int iArgCount, char** pArgs);
 	~Program();
 public:
 
-	static Program*							CreateInstance();
+	static Program*							CreateInstance(int iArgCount, char** pArgs);
 	static void								DestroyInstance();
 	static Program*							GetInstance() { return s_pInstance; }
 
@@ -33,6 +40,11 @@ public:
 	ID3D11Device*							GetDX11Device() const;
 	ID3D11DeviceContext*					GetDX11DeviceContext() const;
 
+
+	void									LoadFile(const char* pFile);
+	Graphics::Texture&						GetTexture() { return m_oTexture; }
+	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
+
 protected:
 	static Program*							s_pInstance;
 
@@ -43,6 +55,9 @@ protected:
 	ShortKeyManager*						m_pShortKeyManager;
 
 	Windows::WorkAreaWindow*				m_pWorkAreaWindow;
+
+	Graphics::Texture						m_oTexture;
+	GraphicResources::Texture2D*			m_pTexture2D;
 };
 
 #endif // __PROGRAM_H__
