@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(1337);
 
-	Program* pInstance = Program::CreateInstance();
+	Program* pInstance = Program::CreateInstance(argc, argv);
 
 	while (pInstance->Run()) Sleep(8);
 
