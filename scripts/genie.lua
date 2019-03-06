@@ -59,6 +59,10 @@ solution "Texeled"
 		
 		flags				"ExtraWarnings"
 
+		buildoptions {
+							"/openmp"
+		}
+
 		defines {
 							"_CRT_SECURE_NO_WARNINGS"
 		}
