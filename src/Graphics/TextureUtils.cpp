@@ -328,19 +328,19 @@ namespace Graphics
 		return ErrorCode::Fail;
 	}
 
-	ErrorCode ConvertPixelFormat(const Texture& oTexture, Texture* pOutTexture, EPixelFormat eWantedPixelFormat)
+	ErrorCode ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, EPixelFormat eWantedPixelFormat)
 	{
-		if (pOutTexture == NULL)
+		if (pTexture == NULL || pOutTexture == NULL)
 		{
 			return ErrorCode(1, "Invalid argument");
 		}
 
-		if (eWantedPixelFormat != oTexture.GetPixelFormat() )
+		if (eWantedPixelFormat != pTexture->GetPixelFormat() )
 		{
 			PixelFormat::ConvertionFuncChain oConvertionFuncChain;
 			int iConvertionChainLength;
 			int iAdditionalBits;
-			if (PixelFormat::GetConvertionChain(oTexture.GetPixelFormat(), eWantedPixelFormat, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits) == false)
+			if (PixelFormat::GetConvertionChain(pTexture->GetPixelFormat(), eWantedPixelFormat, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits) == false)
 			{
 				return ErrorCode(1, "Format convertion not implemented");
 			}
@@ -348,24 +348,24 @@ namespace Graphics
 			Texture oNewTexture;
 			Texture::Desc oNewDesc;
 			oNewDesc.ePixelFormat = eWantedPixelFormat;
-			oNewDesc.iWidth = oTexture.GetWidth();
-			oNewDesc.iHeight = oTexture.GetHeight();
-			oNewDesc.iFaceCount = oTexture.GetFaceCount();
-			oNewDesc.iMipCount = oTexture.GetMipCount();
+			oNewDesc.iWidth = pTexture->GetWidth();
+			oNewDesc.iHeight = pTexture->GetHeight();
+			oNewDesc.iFaceCount = pTexture->GetFaceCount();
+			oNewDesc.iMipCount = pTexture->GetMipCount();
 			if (oNewTexture.Create(oNewDesc) != ErrorCode::Ok)
 			{
 				return ErrorCode(1, "Can't create new Texture");
 			}
 
 			size_t iTotalSize = 0;
-			for (int iMipIndex = 0, iMipCount = oTexture.GetMipCount(); iMipIndex < iMipCount; ++iMipIndex)
+			for (int iMipIndex = 0, iMipCount = pTexture->GetMipCount(); iMipIndex < iMipCount; ++iMipIndex)
 			{
 				for (int iFaceIndex = 0, iFaceCount = oNewDesc.iFaceCount; iFaceIndex < iFaceCount; ++iFaceIndex)
 				{
 					const Texture::TextureFaceData& oNewFaceData = oNewTexture.GetData().GetFaceData(iMipIndex, iFaceIndex);
-					const Texture::TextureFaceData& oFaceData = oTexture.GetData().GetFaceData(iMipIndex, iFaceIndex);
+					const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMipIndex, iFaceIndex);
 
-					int iSourceBits = PixelFormat::BitPerPixel(oTexture.GetPixelFormat());
+					int iSourceBits = PixelFormat::BitPerPixel(pTexture->GetPixelFormat());
 					int iDestBits = PixelFormat::BitPerPixel(eWantedPixelFormat);
 
 					uint32_t iSrcMipWidth = oFaceData.iWidth;
@@ -374,7 +374,7 @@ namespace Graphics
 					uint32_t iDestMipHeight = oNewFaceData.iHeight;
 					uint32_t iSrcPaddingX, iSrcPaddingY, iDestPaddingX, iDestPaddingY;
 
-					PixelFormat::GetDataSize(oTexture.GetPixelFormat(), &iSrcMipWidth, &iSrcMipHeight, &iSrcPaddingX, &iSrcPaddingY);
+					PixelFormat::GetDataSize(pTexture->GetPixelFormat(), &iSrcMipWidth, &iSrcMipHeight, &iSrcPaddingX, &iSrcPaddingY);
 					PixelFormat::GetDataSize(eWantedPixelFormat, &iDestMipWidth, &iDestMipHeight, &iDestPaddingX, &iDestPaddingY);
 
 					uint32_t iMipWidth = Math::Min(iSrcMipWidth, iDestMipWidth);
@@ -392,7 +392,7 @@ namespace Graphics
 							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY * iSrcMipWidth + iX * iSrcPaddingY) * iSourceBits / 8;
 							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY * iDestMipWidth + iX * iDestPaddingY) * iDestBits / 8;
 
-							EPixelFormat eCurrentFormat = oTexture.GetPixelFormat();
+							EPixelFormat eCurrentFormat = pTexture->GetPixelFormat();
 							uint32_t iCurrentBits = PixelFormat::BitPerPixel(eCurrentFormat);
 							uint32_t iCurrentPaddingX, iCurrentPaddingY;
 							PixelFormat::GetDataSize(eCurrentFormat, NULL, NULL, &iCurrentPaddingX, &iCurrentPaddingY);

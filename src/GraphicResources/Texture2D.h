@@ -1,12 +1,14 @@
 #ifndef __GRAPHIC_RESOURCE_TEXTURE_DATA_H__
 #define __GRAPHIC_RESOURCE_TEXTURE_DATA_H__
 
+#include "Core/ErrorCode.h"
+
 #include "Graphics/PixelFormat.h"
 
 #include <DXGIFormat.h>
 
-class ID3D11Texture2D;
-class ID3D11ShaderResourceView;
+struct ID3D11Texture2D;
+struct ID3D11ShaderResourceView;
 
 namespace Graphics
 {
@@ -44,9 +46,9 @@ namespace GraphicResources
 
 		//bool							CopyTo(Texture2D* pTexture);
 
-		static Texture2D*				CreateFromTexture(Graphics::Texture* pTexture);
+		static ErrorCode				CreateFromTexture(Graphics::Texture* pTexture, Texture2D** pOutTexture2D);
 
-		static DXGI_FORMAT				GetDXGIFormatFromPixelFormat(Graphics::EPixelFormat ePixelFormat);
+		static bool						GetDXGIFormatFromPixelFormat(Graphics::EPixelFormat ePixelFormat, DXGI_FORMAT* pOutDXGIFormat, Graphics::EPixelFormat* pOutConvertionFormatRequired);
 		static Graphics::EPixelFormat	GetPixelFormatFromDXGIFromat(DXGI_FORMAT eDXGIFormat);
 	protected:
 		ID3D11Texture2D*				m_pTexture;
