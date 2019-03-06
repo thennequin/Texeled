@@ -98,6 +98,6 @@ void Program::LoadFile(const char* pFile)
 	if (Graphics::LoadFromFile(&m_oTexture, pFile) == ErrorCode::Ok)
 	{
 		ImwSafeDelete(m_pTexture2D);
-		GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D);
+		CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D));
 	}
 }

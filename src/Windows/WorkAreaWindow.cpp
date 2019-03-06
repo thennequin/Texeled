@@ -46,7 +46,7 @@ namespace Windows
 				}
 			}
 
-			GraphicResources::Texture2D::CreateFromTexture(&oCheckerboardTexture, &m_pCheckboardTexture2DRes);
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oCheckerboardTexture, &m_pCheckboardTexture2DRes));
 		}
 	}
 
