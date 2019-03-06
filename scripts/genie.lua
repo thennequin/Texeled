@@ -80,7 +80,7 @@ solution "Texeled"
 			flags			{ "Symbols" }
 			
 		configuration		"Release"
-			flags			{ "Optimize" }
+			flags			{ "Optimize", "Symbols" }
 
 		configuration 		{ "x32", "Debug" }
 			targetsuffix	"_d"
