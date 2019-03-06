@@ -31,7 +31,7 @@ bool ImwWindowManagerDX11Custom::InternalInit()
 	CORE_VERIFY(Graphics::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
 	if (oTexture.IsValid())
 	{
-		m_pIcon = GraphicResources::Texture2D::CreateFromTexture(&oTexture);
+		GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIcon);
 	}
 	return true;
 }
