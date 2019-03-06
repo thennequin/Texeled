@@ -17,5 +17,6 @@ namespace Core
 #endif //_DEBUG
 
 #define CORE_VERIFY(bCondition, ...) { Core::Assert((bCondition), CORE_ASSERT_STRINGIFY(bCondition), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__, ""); }
+#define CORE_VERIFY_OK(bCondition, ...) { Core::Assert((bCondition) == ErrorCode::Ok, CORE_ASSERT_STRINGIFY(bCondition), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__, ""); }
 
 #endif //__CORE_ASSERT_H__
