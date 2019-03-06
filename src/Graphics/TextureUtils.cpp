@@ -382,10 +382,10 @@ namespace Graphics
 					uint32_t iPaddingX = Math::Max(iSrcPaddingX, iDestPaddingX);
 					uint32_t iPaddingY = Math::Max(iSrcPaddingY, iDestPaddingY);
 
-//#pragma omp parallel for
+#pragma omp parallel for
 					for (int iY = 0; iY < iMipHeight; iY += iPaddingY)
 					{
-//#pragma omp parallel for
+#pragma omp parallel for
 						for (int iX = 0; iX < iMipWidth; iX += iPaddingX)
 						{
 							PixelFormat::ConvertionTemporaryData oConvertionTempData[2];
