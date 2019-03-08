@@ -5,6 +5,20 @@
 
 namespace Graphics
 {
+	enum EComponentEncoding
+	{
+		E_COMPONENT_ENCODING_NONE = 0,
+
+		E_COMPONENT_ENCODING_UNORM,
+		E_COMPONENT_ENCODING_INT,
+		E_COMPONENT_ENCODING_UINT,
+		E_COMPONENT_ENCODING_FLOAT,
+		E_COMPONENT_ENCODING_SNORM,
+
+		_E_COMPONENT_ENCODING_COUNT
+	};
+	extern const char* const EComponentEncoding_string[_E_COMPONENT_ENCODING_COUNT];
+
 	//https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkFormat.html
 	enum EPixelFormat
 	{
@@ -49,11 +63,12 @@ namespace Graphics
 
 	typedef struct
 	{
-		int iComponents;
 		int iBitsPerPixel;
+		int iComponents;
 		int iBlockWidth;
 		int iBlockHeight;
 		int iBlockSize;
+		EComponentEncoding eEncoding;
 	} PixelFormatInfos;
 
 	extern PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT];

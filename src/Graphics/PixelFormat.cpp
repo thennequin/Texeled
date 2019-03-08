@@ -6,6 +6,16 @@
 
 namespace Graphics
 {
+	extern const char* const EComponentEncoding_string[_E_COMPONENT_ENCODING_COUNT] = {
+		"None",
+		
+		"UNorm",
+		"Int",
+		"UInt",
+		"Float",
+		"SNorm"
+	};
+
 	const char* const EPixelFormat_string[_E_PIXELFORMAT_COUNT] = {
 			"None",
 
@@ -44,42 +54,42 @@ namespace Graphics
 
 	extern PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT] =
 	{
-		//iBitsPerPixel, iBlockWidth, iBlockHeight, iBlockSize
-		{   0,   0,   0,   0   }, // E_PIXELFORMAT_NONE
+		//iBitsPerPixel, iComponnts, iBlockWidth, iBlockHeight, iBlockSize, eEncoding
+		{   0,   0,   0,   0,   E_COMPONENT_ENCODING_NONE   }, // E_PIXELFORMAT_NONE
 
-		{   8,   1,   1,   1   }, // E_PIXELFORMAT_R8_UNORM
+		{   8,   1,   1,   1,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_R8_UNORM
 
-		{  16,   1,   1,   2   }, // E_PIXELFORMAT_RG8_UNORM
+		{  16,   1,   1,   2,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_RG8_UNORM
 
-		{  24,   1,   1,   3   }, // E_PIXELFORMAT_RGB8_UNORM
-		{  24,   1,   1,   3   }, // E_PIXELFORMAT_BGR8_UNORM
+		{  24,   1,   1,   3,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_RGB8_UNORM
+		{  24,   1,   1,   3,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BGR8_UNORM
 
-		{  32,   1,   1,   4   }, // E_PIXELFORMAT_RGBA8_UNORM
-		{  32,   1,   1,   4   }, // E_PIXELFORMAT_BGRA8_UNORM
+		{  32,   1,   1,   4,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_RGBA8_UNORM
+		{  32,   1,   1,   4,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BGRA8_UNORM
 
-		{  24,   1,   1,   3   }, // E_PIXELFORMAT_R5G6B5_UNORM
-		{  24,   1,   1,   3   }, // E_PIXELFORMAT_B5G6BR_UNORM
+		{  24,   1,   1,   3,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_R5G6B5_UNORM
+		{  24,   1,   1,   3,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_B5G6BR_UNORM
 
-		{  48,   1,   1,   6   }, // E_PIXELFORMAT_RGB16_SFLOAT
+		{  48,   1,   1,   6,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_RGB16_FLOAT
 
-		{  64,   1,   1,   6   }, // E_PIXELFORMAT_RGBA16_UNORM
-		{  64,   1,   1,   8   }, // E_PIXELFORMAT_RGBA16_SFLOAT
+		{  64,   1,   1,   6,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_RGBA16_UNORM
+		{  64,   1,   1,   8,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_RGBA16_FLOAT
 
-		{  96,   1,   1,  12   }, // E_PIXELFORMAT_RGB32_SFLOAT
+		{  96,   1,   1,  12,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_RGB32_FLOAT
 
-		{ 128,   1,   1,  16   }, // E_PIXELFORMAT_RGBA32_SFLOAT
+		{ 128,   1,   1,  16,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_RGBA32_FLOAT
 
-		{  32,   1,   1,   4   }, // E_PIXELFORMAT_R10G10B10A2_UNORM
+		{  32,   1,   1,   4,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_R10G10B10A2_UNORM
 
-		{  32,   1,   1,   4   }, // E_PIXELFORMAT_R9G9B9E5_SHAREDEXP
+		{  32,   1,   1,   4,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_R9G9B9E5_SHAREDEXP
 
-		{   4,   4,   4,   8   }, // E_PIXELFORMAT_BC1
-		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC2
-		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC3
-		{   4,   4,   4,   8   }, // E_PIXELFORMAT_BC4
-		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC5
-		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC6H
-		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC7
+		{   4,   4,   4,   8,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BC1
+		{   8,   4,   4,  16,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BC2
+		{   8,   4,   4,  16,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BC3
+		{   4,   4,   4,   8,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BC4
+		{   8,   4,   4,  16,   E_COMPONENT_ENCODING_UNORM  }, // E_PIXELFORMAT_BC5
+		{   8,   4,   4,  16,   E_COMPONENT_ENCODING_FLOAT  }, // E_PIXELFORMAT_BC6H
+		{   8,   4,   4,  16,   E_COMPONENT_ENCODING_UNORM  }  // E_PIXELFORMAT_BC7
 	};
 
 	namespace PixelFormat
