@@ -47,6 +47,17 @@ namespace Graphics
 	};
 	extern const char* const EPixelFormat_string[_E_PIXELFORMAT_COUNT];
 
+	typedef struct
+	{
+		int iComponents;
+		int iBitsPerPixel;
+		int iBlockWidth;
+		int iBlockHeight;
+		int iBlockSize;
+	} PixelFormatInfos;
+
+	extern PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT];
+
 	namespace PixelFormat
 	{
 		typedef void(*ConvertionFunc)(void*, void*, size_t, size_t);

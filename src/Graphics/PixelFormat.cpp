@@ -42,6 +42,46 @@ namespace Graphics
 			"BC7"
 	};
 
+	extern PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT] =
+	{
+		//iBitsPerPixel, iBlockWidth, iBlockHeight, iBlockSize
+		{   0,   0,   0,   0   }, // E_PIXELFORMAT_NONE
+
+		{   8,   1,   1,   1   }, // E_PIXELFORMAT_R8_UNORM
+
+		{  16,   1,   1,   2   }, // E_PIXELFORMAT_RG8_UNORM
+
+		{  24,   1,   1,   3   }, // E_PIXELFORMAT_RGB8_UNORM
+		{  24,   1,   1,   3   }, // E_PIXELFORMAT_BGR8_UNORM
+
+		{  32,   1,   1,   4   }, // E_PIXELFORMAT_RGBA8_UNORM
+		{  32,   1,   1,   4   }, // E_PIXELFORMAT_BGRA8_UNORM
+
+		{  24,   1,   1,   3   }, // E_PIXELFORMAT_R5G6B5_UNORM
+		{  24,   1,   1,   3   }, // E_PIXELFORMAT_B5G6BR_UNORM
+
+		{  48,   1,   1,   6   }, // E_PIXELFORMAT_RGB16_SFLOAT
+
+		{  64,   1,   1,   6   }, // E_PIXELFORMAT_RGBA16_UNORM
+		{  64,   1,   1,   8   }, // E_PIXELFORMAT_RGBA16_SFLOAT
+
+		{  96,   1,   1,  12   }, // E_PIXELFORMAT_RGB32_SFLOAT
+
+		{ 128,   1,   1,  16   }, // E_PIXELFORMAT_RGBA32_SFLOAT
+
+		{  32,   1,   1,   4   }, // E_PIXELFORMAT_R10G10B10A2_UNORM
+
+		{  32,   1,   1,   4   }, // E_PIXELFORMAT_R9G9B9E5_SHAREDEXP
+
+		{   4,   4,   4,   8   }, // E_PIXELFORMAT_BC1
+		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC2
+		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC3
+		{   4,   4,   4,   8   }, // E_PIXELFORMAT_BC4
+		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC5
+		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC6H
+		{   8,   4,   4,  16   }, // E_PIXELFORMAT_BC7
+	};
+
 	namespace PixelFormat
 	{
 		bool IsCompressed(EPixelFormat ePixelFormat)
@@ -51,164 +91,18 @@ namespace Graphics
 
 		int BitPerPixel(EPixelFormat ePixelFormat)
 		{
-			switch (ePixelFormat)
-			{
-			case E_PIXELFORMAT_R8_UNORM:
-				return 8;
-
-			case E_PIXELFORMAT_RG8_UNORM:
-				return 16;
-
-			case E_PIXELFORMAT_RGB8_UNORM:
-			case E_PIXELFORMAT_BGR8_UNORM:
-				return 24;
-
-			case E_PIXELFORMAT_RGBA8_UNORM:
-			case E_PIXELFORMAT_BGRA8_UNORM:
-				return 32;
-
-			case E_PIXELFORMAT_R5G6B5_UNORM:
-			case E_PIXELFORMAT_B5G6BR_UNORM:
-				return 16;
-
-			case E_PIXELFORMAT_RGB16_SFLOAT:
-				return 48;
-
-			case E_PIXELFORMAT_RGBA16_UNORM:
-			case E_PIXELFORMAT_RGBA16_SFLOAT:
-				return 64;
-
-			case E_PIXELFORMAT_RGB32_SFLOAT:
-				return 96;
-
-			case E_PIXELFORMAT_RGBA32_SFLOAT:
-				return 128;
-
-			case E_PIXELFORMAT_R10G10B10A2_UNORM:
-				return 32;
-
-			case E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
-				return 32;
-
-			//Compressed
-			case E_PIXELFORMAT_BC1:
-			case E_PIXELFORMAT_BC4:
-				return 4;
-
-			case E_PIXELFORMAT_BC2:
-			case E_PIXELFORMAT_BC3:
-			case E_PIXELFORMAT_BC5:
-			case E_PIXELFORMAT_BC6H:
-			case E_PIXELFORMAT_BC7:
-				return 8;
-
-			default:
-				return 0;
-			}
+			return EPixelFormatInfos[ePixelFormat].iBitsPerPixel;
 		}
 
 		//Return Bytes
 		int BlockSize(EPixelFormat ePixelFormat)
 		{
-			switch (ePixelFormat)
-			{
-			case E_PIXELFORMAT_R8_UNORM:
-				return 1;
-
-			case E_PIXELFORMAT_RG8_UNORM:
-				return 2;
-
-			case E_PIXELFORMAT_RGB8_UNORM:
-			case E_PIXELFORMAT_BGR8_UNORM:
-				return 3;
-
-			case E_PIXELFORMAT_RGBA8_UNORM:
-			case E_PIXELFORMAT_BGRA8_UNORM:
-				return 4;
-
-			case E_PIXELFORMAT_R5G6B5_UNORM:
-			case E_PIXELFORMAT_B5G6BR_UNORM:
-				return 2;
-
-			case E_PIXELFORMAT_RGB16_SFLOAT:
-				return 6;
-
-			case E_PIXELFORMAT_RGBA16_UNORM:
-			case E_PIXELFORMAT_RGBA16_SFLOAT:
-				return 8;
-
-			case E_PIXELFORMAT_RGB32_SFLOAT:
-				return 12;
-			case E_PIXELFORMAT_RGBA32_SFLOAT:
-				return 16;
-
-			case E_PIXELFORMAT_R10G10B10A2_UNORM:
-				return 4;
-
-			case E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
-				return 4;
-
-			//Compressed
-			case E_PIXELFORMAT_BC1:
-			case E_PIXELFORMAT_BC4:
-				return 8;
-
-			case E_PIXELFORMAT_BC2:
-			case E_PIXELFORMAT_BC3:
-			case E_PIXELFORMAT_BC5:
-			case E_PIXELFORMAT_BC6H:
-			case E_PIXELFORMAT_BC7:
-				return 16;
-
-			default:
-				return 0;
-			}
+			return EPixelFormatInfos[ePixelFormat].iBlockSize;
 		}
 
 		int ComponentCount(EPixelFormat ePixelFormat)
 		{
-			switch (ePixelFormat)
-			{
-			case E_PIXELFORMAT_R8_UNORM:
-				return 1;
-
-			case E_PIXELFORMAT_RG8_UNORM:
-				return 1;
-
-			case E_PIXELFORMAT_RGB8_UNORM:
-			case E_PIXELFORMAT_BGR8_UNORM:
-			case E_PIXELFORMAT_R5G6B5_UNORM:
-			case E_PIXELFORMAT_B5G6BR_UNORM:
-			case E_PIXELFORMAT_RGB16_SFLOAT:
-			case E_PIXELFORMAT_RGB32_SFLOAT:
-				return 3;
-
-			case E_PIXELFORMAT_RGBA8_UNORM:
-			case E_PIXELFORMAT_BGRA8_UNORM:
-			case E_PIXELFORMAT_R10G10B10A2_UNORM:
-			case E_PIXELFORMAT_RGBA16_UNORM:
-			case E_PIXELFORMAT_RGBA16_SFLOAT:
-			case E_PIXELFORMAT_RGBA32_SFLOAT:
-				return 4;
-
-			case E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
-				return 3;
-
-			case E_PIXELFORMAT_BC1: // DXT1
-			case E_PIXELFORMAT_BC2: // DXT2 / DXT3
-			case E_PIXELFORMAT_BC3: // DXT4 / DXT5
-				return 4;
-			case E_PIXELFORMAT_BC4:
-				return 1;
-			case E_PIXELFORMAT_BC5:
-				return 2;
-			case E_PIXELFORMAT_BC6H:
-			case E_PIXELFORMAT_BC7:
-				return 3;
-
-			default:
-				return 0;
-			}
+			return EPixelFormatInfos[ePixelFormat].iComponents;
 		}
 
 		bool GetDataSize(EPixelFormat ePixelFormat, uint32_t* pInOutWidth, uint32_t* pInOutHeight, uint32_t* pOutXPadding, uint32_t* pOutYPadding)
