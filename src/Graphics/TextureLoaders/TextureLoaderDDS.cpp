@@ -100,7 +100,7 @@ namespace Graphics
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R16G16B16A16_FLOAT)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_SFLOAT;
+					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_FLOAT;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R9G9B9E5_SHAREDEXP)
 				{
@@ -163,11 +163,11 @@ namespace Graphics
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R16G16B16A16_FLOAT.iFourCC)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_SFLOAT;
+				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_FLOAT;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R32G32B32A32_FLOAT.iFourCC)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA32_SFLOAT;
+				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA32_FLOAT;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 8

@@ -58,10 +58,10 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGB32_SFLOAT;
+						oDesc.ePixelFormat = E_PIXELFORMAT_RGB32_FLOAT;
 						break;
 					case 4:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGBA32_SFLOAT;
+						oDesc.ePixelFormat = E_PIXELFORMAT_RGBA32_FLOAT;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;

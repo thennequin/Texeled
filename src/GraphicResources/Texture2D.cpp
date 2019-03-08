@@ -250,25 +250,25 @@ namespace GraphicResources
 				eDXGIOutput = DXGI_FORMAT_B5G6R5_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGB16_SFLOAT:
+			case Graphics::E_PIXELFORMAT_RGB16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA16_SFLOAT;
+				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA16_FLOAT;
 				break;
 
 			case Graphics::E_PIXELFORMAT_RGBA16_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA16_SFLOAT:
+			case Graphics::E_PIXELFORMAT_RGBA16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGB32_SFLOAT:
+			case Graphics::E_PIXELFORMAT_RGB32_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R32G32B32A32_FLOAT;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA32_SFLOAT;
+				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA32_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA32_SFLOAT:
+			case Graphics::E_PIXELFORMAT_RGBA32_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R32G32B32A32_FLOAT;
 				break;
 
