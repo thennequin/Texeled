@@ -143,6 +143,10 @@ namespace Graphics
 			{
 				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGR8_UNORM;
 			}
+			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_R5G6B5, sizeof(DDS_PIXELFORMAT)) == 0)
+			{
+				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R5G6B5_UNORM;
+			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
 				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC1;
@@ -232,7 +236,6 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
 				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGRA8_UNORM;
-				//TODO: do something for the alpha?
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
@@ -242,7 +245,6 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
 				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA8_UNORM;
-				//TODO: do something for the alpha?
 			}
 
 			if (oDesc.ePixelFormat != EPixelFormat::E_PIXELFORMAT_NONE)
@@ -252,30 +254,27 @@ namespace Graphics
 					return false;
 				}
 
-				uint32_t iBPP = PixelFormat::BitPerPixel(oDesc.ePixelFormat);
-				uint32_t iBlockSize = PixelFormat::BlockSize(oDesc.ePixelFormat);
+				const PixelFormatInfos& oInfos = EPixelFormatInfos[oDesc.ePixelFormat];
 
 				for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
 				{
 					for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
 					{
 						const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
-						uint32_t iPadMipWidth = oFaceData.iWidth;
-						uint32_t iPadMipHeight = oFaceData.iHeight;
 
-						uint32_t iPaddingX, iPaddingY;
-						PixelFormat::GetDataSize(oDesc.ePixelFormat, &iPadMipWidth, &iPadMipHeight, &iPaddingX, &iPaddingY);
+						uint32_t iBlockCountX, iBlockCountY;
+						PixelFormat::GetBlockCount(oDesc.ePixelFormat, oFaceData.iWidth, oFaceData.iHeight, &iBlockCountX, &iBlockCountY);
 
-						int iBlockCount = iPadMipWidth * iPadMipHeight / iPaddingX / iPaddingY;
+						int iBlockCount = iBlockCountX * iBlockCountY;
 
-						size_t iBlocksSize = iBlockCount * iBlockSize;
+						size_t iBlocksSize = iBlockCount * oInfos.iBlockSize;
 
 						void* pBlocks = oFaceData.pData;
 
 						if (oFaceData.iSize != iBlocksSize)
 							return false;
 
-						size_t iRowSize = iPadMipWidth * iBPP / 8 /*/ iPaddingX*/;
+						size_t iRowSize = iBlockCountX * oInfos.iBlockSize;
 
 						if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_PITCH) != 0)
 						{
@@ -287,7 +286,7 @@ namespace Graphics
 
 							size_t iDiff = iPitchSize - iRowSize;
 							size_t iRemainingPitch = iPitchSize;
-							for (int iLine = 0; iLine < iPadMipHeight; iLine += iPaddingY)
+							for (int iLine = 0; iLine < iBlockCountY; ++iLine)
 							{
 								if (iRowSize > iRemainingPitch)
 								{
@@ -306,11 +305,11 @@ namespace Graphics
 						}
 						else if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_LINEARSIZE) != 0)
 						{
-							size_t iLinearSize = oDDSHeader.iPitchOrLinearSize;
-							if (iMip == 0 && iBlocksSize != iLinearSize)
+							/*size_t iLinearSize = oDDSHeader.iPitchOrLinearSize;
+							if (iMip == 0 && (iBlockCountY * oInfos.iBlockSize) != iLinearSize)
 							{
 								return false;
-							}
+							}*/
 							if (pStream->Read(pBlocks, iBlocksSize) != iBlocksSize)
 							{
 								return false;
