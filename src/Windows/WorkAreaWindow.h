@@ -6,6 +6,7 @@
 namespace GraphicResources
 {
 	class Texture2D;
+	class SamplerState;
 }
 
 namespace Windows
@@ -28,6 +29,7 @@ namespace Windows
 		ImVec2					m_oCurrentOffset;
 
 		GraphicResources::Texture2D*	m_pCheckboardTexture2DRes;
+		GraphicResources::SamplerState*	m_pSamplerStatePoint;
 	};
 }
 //namespace Windows

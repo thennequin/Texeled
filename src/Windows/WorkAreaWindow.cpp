@@ -5,6 +5,9 @@
 #include "Program.h"
 
 #include "GraphicResources/Texture2D.h"
+#include "GraphicResources/SamplerState.h"
+
+#include "ImGuiUtils.h"
 
 namespace Windows
 {
@@ -48,11 +51,21 @@ namespace Windows
 
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oCheckerboardTexture, &m_pCheckboardTexture2DRes));
 		}
+
+		m_pSamplerStatePoint = new GraphicResources::SamplerState();
+		GraphicResources::SamplerState::Desc oSamplerDesc;
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilter::NEAREST_MIPMAP_LINEAR;
+		oSamplerDesc.eWrapU = GraphicResources::Wrap::REPEAT;
+		oSamplerDesc.eWrapV = GraphicResources::Wrap::REPEAT;
+		oSamplerDesc.eWrapW = GraphicResources::Wrap::REPEAT;
+		CORE_VERIFY_OK(m_pSamplerStatePoint->Create(oSamplerDesc));
 	}
 
 	WorkAreaWindow::~WorkAreaWindow()
 	{
 		ImwSafeDelete(m_pCheckboardTexture2DRes);
+		ImwSafeDelete(m_pSamplerStatePoint);
+	}
 	}
 
 	void WorkAreaWindow::OnGui()
@@ -190,9 +203,11 @@ namespace Windows
 				ImWindow::ImwPlatformWindowSokol::SetUniformBlock(SG_SHADERSTAGE_FS, 0, &m_oUniformBlock, sizeof(m_oUniformBlock));
 				*/
 
+				ImGuiUtils::PushSampler(m_pSamplerStatePoint);
 				pDrawList->AddImage((ImTextureID)pTexture2DRes->GetTextureView(),
 					oImageStart, oImageEnd,
 					oUv0, oUv1);
+				ImGuiUtils::PopSampler();
 
 				/*
 				ImWindow::ImwPlatformWindowSokol::ReleaseUniformBlock(SG_SHADERSTAGE_FS, 0);
