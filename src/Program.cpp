@@ -10,6 +10,8 @@
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 
+#include "Resources/Fonts/Consolas_ttf.h"
+
 #include "Windows/WorkAreaWindow.h"
 
 #include "GraphicResources/Texture2D.h"
@@ -25,6 +27,15 @@ Program::Program(int iArgCount, char** pArgs)
 
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
+
+	ImFontConfig oConfig;
+	oConfig.MergeMode = false;
+	oConfig.FontDataOwnedByAtlas = false;
+	//ImGui::GetIO().Fonts->AddFontDefault();
+	ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Resources::Fonts::Consolas_ttf::Data, Resources::Fonts::Consolas_ttf::Size, 16.f, &oConfig, NULL);
+	oConfig.MergeMode = true;
+
+	ImGui::GetIO().Fonts->Build();
 
 	m_oImWindowMgrDX11.Init();
 	m_oImWindowMgrDX11.SetMainTitle("Texeled");
