@@ -159,14 +159,17 @@ namespace GraphicResources
 			pInputTexture = &oNewTexture;
 		}
 
-		D3D11_SUBRESOURCE_DATA oInitData;
-		oInitData.pSysMem = pInputTexture->GetData().GetData();
-		oInitData.SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), pInputTexture->GetWidth());
-		oInitData.SysMemSlicePitch = 0;
+		D3D11_SUBRESOURCE_DATA oInitData[Graphics::Texture::c_iMaxMip];
+		memset(oInitData, 0, sizeof(oInitData));
+		for (int iMip = 0; iMip < pInputTexture->GetMipCount(); ++iMip)
+		{
+			const Graphics::Texture::TextureFaceData& oFaceData = pInputTexture->GetData().GetFaceData(iMip, 0);
+			oInitData[iMip].pSysMem = oFaceData.pData;
+			oInitData[iMip].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
+		}
 
 
-		D3D11_TEXTURE2D_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
+		D3D11_TEXTURE2D_DESC desc = { 0 };
 		desc.Width = pInputTexture->GetWidth();
 		desc.Height = pInputTexture->GetHeight();
 		desc.MipLevels = pInputTexture->GetMipCount();
@@ -177,24 +180,15 @@ namespace GraphicResources
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE /*| D3D11_BIND_RENDER_TARGET*/;
-		Program::GetInstance()->GetDX11Device()->CreateTexture2D(&desc, &oInitData, &pDX11Texture);
+		HRESULT hRes = Program::GetInstance()->GetDX11Device()->CreateTexture2D(&desc, oInitData, &pDX11Texture);
 
 		// Create texture view
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-		ZeroMemory(&srvDesc, sizeof(srvDesc));
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = { 0 };
 		srvDesc.Format = eDXGIFormat;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 		Program::GetInstance()->GetDX11Device()->CreateShaderResourceView(pDX11Texture, &srvDesc, &pDX11TextureView);
-
-		/*D3D11_MAPPED_SUBRESOURCE oMappedSubResource;
-		ZeroMemory(&oMappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		HRESULT hRes = Program::GetInstance()->GetDX11DeviceContext()->Map(pDX11Texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &oMappedSubResource); //TODO TEST result
-
-		IM_ASSERT(oMappedSubResource.pData != NULL);
-
-		Program::GetInstance()->GetDX11DeviceContext()->Unmap(pDX11Texture, 0);*/
 
 		Texture2D* pNewTexture = new Texture2D();
 
@@ -281,15 +275,15 @@ namespace GraphicResources
 				break;
 
 			case Graphics::E_PIXELFORMAT_BC1: // DXT1
-				eDXGIOutput =  DXGI_FORMAT_BC1_UNORM; // DXT;
+				eDXGIOutput =  DXGI_FORMAT_BC1_UNORM;
 				break;
 
 			case Graphics::E_PIXELFORMAT_BC2: // DXT2 / DXT3
-				eDXGIOutput =  DXGI_FORMAT_BC2_UNORM; // DXT2 / DXT
+				eDXGIOutput =  DXGI_FORMAT_BC2_UNORM;
 				break;
 
 			case Graphics::E_PIXELFORMAT_BC3: // DXT4 / DXT5
-				eDXGIOutput =  DXGI_FORMAT_BC3_UNORM; // DXT4 / DXT
+				eDXGIOutput =  DXGI_FORMAT_BC3_UNORM;
 				break;
 
 			case Graphics::E_PIXELFORMAT_BC4:

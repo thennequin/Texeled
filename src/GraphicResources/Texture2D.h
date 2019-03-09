@@ -1,5 +1,5 @@
-#ifndef __GRAPHIC_RESOURCE_TEXTURE_DATA_H__
-#define __GRAPHIC_RESOURCE_TEXTURE_DATA_H__
+#ifndef __GRAPHIC_RESOURCE_TEXTURE2D_H__
+#define __GRAPHIC_RESOURCE_TEXTURE2D_H__
 
 #include "Core/ErrorCode.h"
 
@@ -58,4 +58,4 @@ namespace GraphicResources
 }
 //namespace GraphicResources
 
-#endif // __GRAPHIC_RESOURCE_TEXTURE_DATA_H__
+#endif // __GRAPHIC_RESOURCE_TEXTURE2D_H__
