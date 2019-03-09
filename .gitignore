@@ -1,3 +1,6 @@
+Externals/ImWindow/*
+Src/Resources/*
+
 # Compiled Object files
 *.slo
 *.lo
