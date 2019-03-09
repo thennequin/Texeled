@@ -34,10 +34,10 @@ namespace Graphics
 			"RGB16 SHalf",
 
 			"RGBA16 UNorm",
-			"RGBA16 SHalf",
+			"RGBA16 Half",
 
-			"RGB32 SFloat",
-			"RGBA32 SFloat",
+			"RGB32 Float",
+			"RGBA32 Float",
 
 			"R10G10B10A2 UNorm",
 
