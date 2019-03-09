@@ -161,7 +161,7 @@ namespace GraphicResources
 
 		D3D11_SUBRESOURCE_DATA oInitData;
 		oInitData.pSysMem = pInputTexture->GetData().GetData();
-		oInitData.SysMemPitch = Graphics::PixelFormat::BitPerPixel(pInputTexture->GetPixelFormat()) / 8 * pInputTexture->GetWidth();
+		oInitData.SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), pInputTexture->GetWidth());
 		oInitData.SysMemSlicePitch = 0;
 
 
@@ -176,7 +176,7 @@ namespace GraphicResources
 		//desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE /*| D3D11_BIND_RENDER_TARGET*/;
 		Program::GetInstance()->GetDX11Device()->CreateTexture2D(&desc, &oInitData, &pDX11Texture);
 
 		// Create texture view
