@@ -18,6 +18,7 @@ ImwWindowManagerDX11Custom::ImwWindowManagerDX11Custom(bool bCustomFrame)
 
 ImwWindowManagerDX11Custom::~ImwWindowManagerDX11Custom()
 {
+	InternalDestroy();
 }
 
 bool ImwWindowManagerDX11Custom::InternalInit()
@@ -41,6 +42,7 @@ void ImwWindowManagerDX11Custom::InternalDestroy()
 	if (m_pIcon)
 	{
 		delete m_pIcon;
+		m_pIcon = NULL;
 	}
 	ImwWindowManagerDX11::InternalDestroy();
 }
