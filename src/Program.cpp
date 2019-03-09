@@ -42,9 +42,12 @@ Program::Program(int iArgCount, char** pArgs)
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.095f, 0.095f, 0.095f, 1.f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 1.f);
 	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.204f, 0.204f, 0.204f, 1.f);
 	style.Colors[ImGuiCol_MenuBarBg] = style.Colors[ImGuiCol_WindowBg];
+	style.Colors[ImGuiCol_Header] = ImVec4(0.16f, 0.34, 0.34f, 1.f);
+	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.16f, 0.34, 0.34f, 1.f);
+	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.24f, 0.42, 0.42f, 1.f);
 
 	m_pShortKeyManager = new ShortKeyManager();
 	m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::AskExit), false);
