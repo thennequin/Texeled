@@ -122,63 +122,34 @@ namespace Graphics
 			return EPixelFormatInfos[ePixelFormat].iComponents;
 		}
 
-		bool GetDataSize(EPixelFormat ePixelFormat, uint32_t* pInOutWidth, uint32_t* pInOutHeight, uint32_t* pOutXPadding, uint32_t* pOutYPadding)
+		void GetBlockCount(EPixelFormat ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY)
 		{
-			switch (ePixelFormat)
+			if (pOutCountX != NULL)
 			{
-			case E_PIXELFORMAT_R8_UNORM:
-			case E_PIXELFORMAT_RG8_UNORM:
-			case E_PIXELFORMAT_RGB8_UNORM:
-			case E_PIXELFORMAT_BGR8_UNORM:
-			case E_PIXELFORMAT_RGBA8_UNORM:
-			case E_PIXELFORMAT_BGRA8_UNORM:
-			case E_PIXELFORMAT_R5G6B5_UNORM:
-			case E_PIXELFORMAT_B5G6BR_UNORM:
-			case E_PIXELFORMAT_RGB32_FLOAT:
-			case E_PIXELFORMAT_RGBA32_FLOAT:
-			case E_PIXELFORMAT_RGB16_FLOAT:
-			case E_PIXELFORMAT_RGBA16_UNORM:
-			case E_PIXELFORMAT_RGBA16_FLOAT:
-			case E_PIXELFORMAT_R10G10B10A2_UNORM:
-			case E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
-			{
-				if (pOutXPadding != NULL) *pOutXPadding = 1;
-				if (pOutYPadding != NULL) *pOutYPadding = 1;
-				return true;
+				const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+				uint32_t iBlockCount = ((iWidth + (oInfos.iBlockWidth - 1)) / oInfos.iBlockWidth);
+				if (iBlockCount == 0)
+					iBlockCount = 1;
+				*pOutCountX = iBlockCount;
 			}
 
-			case E_PIXELFORMAT_BC1: // DXT1
-			case E_PIXELFORMAT_BC2: // DXT2 / DXT3
-			case E_PIXELFORMAT_BC3: // DXT4 / DXT5
-			case E_PIXELFORMAT_BC4:
-			case E_PIXELFORMAT_BC5:
-			case E_PIXELFORMAT_BC6H:
-			case E_PIXELFORMAT_BC7:
+			if (pOutCountY != NULL)
 			{
-				if (pInOutWidth != NULL)
-				{
-					uint32_t iWidth = ((*pInOutWidth + 3) / 4);
-					if (iWidth == 0)
-						iWidth = 1;
-					*pInOutWidth = iWidth * 4;
-				}
-				if (pInOutHeight != NULL)
-				{
-					uint32_t iHeight = ((*pInOutHeight + 3) / 4);
-					if (iHeight == 0)
-						iHeight = 1;
-
-					*pInOutHeight = iHeight * 4;
-				}
-				if (pOutXPadding != NULL)
-					*pOutXPadding = 4;
-				if (pOutYPadding != NULL)
-					*pOutYPadding = 4;
-				return true;
+				const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+				uint32_t iBlockCount = ((iHeight + (oInfos.iBlockHeight - 1)) / oInfos.iBlockHeight);
+				if (iBlockCount == 0)
+					iBlockCount = 1;
+				*pOutCountY = iBlockCount;
 			}
-			}
+		}
 
-			return false;
+		uint32_t GetPitch(EPixelFormat ePixelFormat, uint32_t iWidth)
+		{
+			const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+			uint32_t iBlockCount = ((iWidth + (oInfos.iBlockWidth - 1)) / oInfos.iBlockWidth);
+			if (iBlockCount == 0)
+				iBlockCount = 1;
+			return iBlockCount * oInfos.iBlockSize;
 		}
 
 		void HalfToFloat(uint16_t iValue, float* pOutFloat)

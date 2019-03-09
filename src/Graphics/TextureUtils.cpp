@@ -368,19 +368,21 @@ namespace Graphics
 					int iSourceBits = PixelFormat::BitPerPixel(pTexture->GetPixelFormat());
 					int iDestBits = PixelFormat::BitPerPixel(eWantedPixelFormat);
 
-					uint32_t iSrcMipWidth = oFaceData.iWidth;
-					uint32_t iSrcMipHeight = oFaceData.iHeight;
-					uint32_t iDestMipWidth = oNewFaceData.iWidth;
-					uint32_t iDestMipHeight = oNewFaceData.iHeight;
-					uint32_t iSrcPaddingX, iSrcPaddingY, iDestPaddingX, iDestPaddingY;
+					const PixelFormatInfos& oSrcPFInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
+					const PixelFormatInfos& oDstPFInfos = EPixelFormatInfos[eWantedPixelFormat];
 
-					PixelFormat::GetDataSize(pTexture->GetPixelFormat(), &iSrcMipWidth, &iSrcMipHeight, &iSrcPaddingX, &iSrcPaddingY);
-					PixelFormat::GetDataSize(eWantedPixelFormat, &iDestMipWidth, &iDestMipHeight, &iDestPaddingX, &iDestPaddingY);
+					uint32_t iSrcMipBlockX;
+					uint32_t iSrcMipBlockY;
+					PixelFormat::GetBlockCount(pTexture->GetPixelFormat(), oFaceData.iWidth, oFaceData.iHeight, &iSrcMipBlockX, &iSrcMipBlockY);
 
-					uint32_t iMipWidth = Math::Min(iSrcMipWidth, iDestMipWidth);
-					uint32_t iMipHeight = Math::Min(iSrcMipHeight, iDestMipHeight);
-					uint32_t iPaddingX = Math::Max(iSrcPaddingX, iDestPaddingX);
-					uint32_t iPaddingY = Math::Max(iSrcPaddingY, iDestPaddingY);
+					uint32_t iDstMipBlockX;
+					uint32_t iDstMipBlockY;
+					PixelFormat::GetBlockCount(eWantedPixelFormat, oNewFaceData.iWidth, oNewFaceData.iHeight, &iDstMipBlockX, &iDstMipBlockY);
+
+					uint32_t iMipWidth = Math::Min(iSrcMipBlockX * oSrcPFInfos.iBlockWidth, iDstMipBlockX * oDstPFInfos.iBlockWidth);
+					uint32_t iMipHeight = Math::Min(iSrcMipBlockY * oSrcPFInfos.iBlockHeight, iDstMipBlockY * oDstPFInfos.iBlockHeight);
+					uint32_t iPaddingX = Math::Max(oSrcPFInfos.iBlockWidth , oDstPFInfos.iBlockWidth);
+					uint32_t iPaddingY = Math::Max(oSrcPFInfos.iBlockHeight, oDstPFInfos.iBlockHeight);
 
 #pragma omp parallel for
 					for (int iY = 0; iY < iMipHeight; iY += iPaddingY)
@@ -389,28 +391,31 @@ namespace Graphics
 						for (int iX = 0; iX < iMipWidth; iX += iPaddingX)
 						{
 							PixelFormat::ConvertionTemporaryData oConvertionTempData[2];
-							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY * iSrcMipWidth + iX * iSrcPaddingY) * iSourceBits / 8;
-							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY * iDestMipWidth + iX * iDestPaddingY) * iDestBits / 8;
+							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX * oSrcPFInfos.iBlockSize);
+							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY * iDstMipBlockX * oDstPFInfos.iBlockSize + iX * oDstPFInfos.iBlockSize);
 
 							EPixelFormat eCurrentFormat = pTexture->GetPixelFormat();
 							uint32_t iCurrentBits = PixelFormat::BitPerPixel(eCurrentFormat);
 							uint32_t iCurrentPaddingX, iCurrentPaddingY;
-							PixelFormat::GetDataSize(eCurrentFormat, NULL, NULL, &iCurrentPaddingX, &iCurrentPaddingY);
+
+							iCurrentPaddingX = EPixelFormatInfos[eCurrentFormat].iBlockWidth;
+							iCurrentPaddingY = EPixelFormatInfos[eCurrentFormat].iBlockHeight;
 
 							for (int iChain = 0; iChain < iConvertionChainLength; ++iChain)
 							{
 								void* pInputData = (iChain == 0) ? pSourceData : ((iChain % 2 == 0) ? &oConvertionTempData[0] : &oConvertionTempData[1]);
 								void* pOutputData = (iChain == (iConvertionChainLength - 1)) ? pNewData : ((iChain % 2 == 0) ? &oConvertionTempData[1] : &oConvertionTempData[0]);
 
-								uint32_t iInputPitch = (iChain == 0) ? iSrcMipWidth : iPaddingX;
-								uint32_t iOutputPitch = (iChain == (iConvertionChainLength - 1)) ? iDestMipWidth : iPaddingX;
+								uint32_t iInputPitch = (iChain == 0) ? (iSrcMipBlockX * oSrcPFInfos.iBlockWidth) : iPaddingX;
+								uint32_t iOutputPitch = (iChain == (iConvertionChainLength - 1)) ? (iDstMipBlockX * oDstPFInfos.iBlockWidth) : iPaddingX;
 
 								PixelFormat::ConvertionFuncInfo oFunc = oConvertionFuncChain[iChain];
 
 								uint32_t iNextBits = PixelFormat::BitPerPixel(oFunc.eFormat);
 
 								uint32_t iNextPaddingX, iNextPaddingY;
-								PixelFormat::GetDataSize(oFunc.eFormat, NULL, NULL, &iNextPaddingX, &iNextPaddingY);
+								iNextPaddingX = EPixelFormatInfos[oFunc.eFormat].iBlockWidth;
+								iNextPaddingY = EPixelFormatInfos[oFunc.eFormat].iBlockHeight;
 
 								uint32_t iFuncPaddingX = Math::Max(iCurrentPaddingX, iNextPaddingX);
 								uint32_t iFuncPaddingY = Math::Max(iCurrentPaddingY, iNextPaddingY);

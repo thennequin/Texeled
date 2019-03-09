@@ -66,6 +66,8 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 {
 	Destroy();
 
+	const PixelFormatInfos& oInfos = EPixelFormatInfos[oDesc.ePixelFormat];
+
 	size_t iOffset = 0;
 	size_t iBits = PixelFormat::BitPerPixel(oDesc.ePixelFormat);
 	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
@@ -76,26 +78,18 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 		iMipHeight = iMipHeight > 0 ? iMipHeight : 1;
 		size_t iPadMipWidth;
 		size_t iPadMipHeight;
-		
-		if (PixelFormat::IsCompressed(oDesc.ePixelFormat))
-		{
-			iPadMipWidth = ((iMipWidth + 3) / 4) * 4;
-			iPadMipHeight = ((iMipHeight + 3) / 4) * 4;
-		}
-		else
-		{
-			iPadMipWidth = iMipWidth;
-			iPadMipHeight = iMipHeight;
-		}
+
+		uint32_t iBlockCountX, iBlockCountY;
+		PixelFormat::GetBlockCount(oDesc.ePixelFormat, iMipWidth, iMipHeight, &iBlockCountX, &iBlockCountY);
 
 		for (int iFaceIndex = 0; iFaceIndex < oDesc.iFaceCount; ++iFaceIndex)
 		{
-			size_t iSize = iPadMipWidth * iPadMipHeight * iBits / 8;
-			
+			size_t iSize = iBlockCountX * iBlockCountY * oInfos.iBlockSize;
+
 			m_oFaceData[iFaceIndex][iMipIndex].iWidth = (int)iMipWidth;
 			m_oFaceData[iFaceIndex][iMipIndex].iHeight = (int)iMipHeight;
 			m_oFaceData[iFaceIndex][iMipIndex].iSize = iSize;
-			m_oFaceData[iFaceIndex][iMipIndex].iPitch = iPadMipWidth * iBits / 8;
+			m_oFaceData[iFaceIndex][iMipIndex].iPitch = iBlockCountX * oInfos.iBlockSize;
 			m_oFaceData[iFaceIndex][iMipIndex].pData = (void*)iOffset;
 			iOffset += iSize;
 		}
