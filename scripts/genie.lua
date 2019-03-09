@@ -1,7 +1,7 @@
 local PROJECT_DIR          = (path.getabsolute("..") .. "/")
-local PROJECT_BUILD_DIR    = path.join(PROJECT_DIR, ".build/")
+local PROJECT_OBJ_DIR    = path.join(PROJECT_DIR, ".obj")
 local PROJECT_PROJECTS_DIR = path.join(PROJECT_DIR, ".projects")
-local PROJECT_RUNTIME_DIR  = path.join(PROJECT_DIR, "Output/")
+local PROJECT_RUNTIME_DIR  = path.join(PROJECT_DIR, ".out/")
 local BGFX_ROOT_DIR        = path.join(PROJECT_DIR, "..")
 
 
@@ -11,7 +11,7 @@ solution "Texeled"
 	platforms				{ "x32", "x64" }
 	
 	location				(path.join(PROJECT_PROJECTS_DIR, _ACTION))
-	objdir					(path.join(PROJECT_BUILD_DIR, _ACTION))
+	objdir					(path.join(PROJECT_OBJ_DIR, _ACTION))
 
 	project "Texeled"
 		uuid				"6b4b6661-91b7-4678-9ee9-a3f251ddf595"
