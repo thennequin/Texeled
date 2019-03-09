@@ -99,7 +99,8 @@ namespace Graphics
 		int						BitPerPixel(EPixelFormat ePixelFormat);
 		int						BlockSize(EPixelFormat ePixelFormat);
 		int						ComponentCount(EPixelFormat ePixelFormat);
-		bool					GetDataSize(EPixelFormat ePixelFormat, uint32_t* pInOutWidth, uint32_t* pInOutHeight, uint32_t* pOutXPadding, uint32_t* pOutYPadding);
+		void					GetBlockCount(EPixelFormat ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY);
+		uint32_t				GetPitch(EPixelFormat ePixelFormat, uint32_t iWidth);
 
 #pragma pack(push,1)
 
