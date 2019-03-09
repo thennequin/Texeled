@@ -64,14 +64,14 @@ namespace Graphics
 	typedef struct
 	{
 		int iBitsPerPixel;
-		int iComponents;
 		int iBlockWidth;
 		int iBlockHeight;
 		int iBlockSize;
+		int iComponents;
 		EComponentEncoding eEncoding;
 	} PixelFormatInfos;
 
-	extern PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT];
+	extern const PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT];
 
 	namespace PixelFormat
 	{
