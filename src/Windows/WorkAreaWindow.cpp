@@ -66,7 +66,6 @@ namespace Windows
 		ImwSafeDelete(m_pCheckboardTexture2DRes);
 		ImwSafeDelete(m_pSamplerStatePoint);
 	}
-	}
 
 	void WorkAreaWindow::OnGui()
 	{
