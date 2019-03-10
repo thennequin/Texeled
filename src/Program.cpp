@@ -6,6 +6,10 @@
 
 #include <D3D11.h>
 
+#include "PlatformUtils.h"
+
+#include "Core/StringBuilder.h"
+
 #include "Graphics/TextureLoader.h"
 #include "Graphics/TextureWriter.h"
 
@@ -142,6 +146,44 @@ bool Program::LoadFile(const char* pFile)
 
 void Program::Open()
 {
+	char pBuffer[1024] = { 0 };
+	int iIndex;
+
+	Core::StringBuilder oExts;
+	static char* s_pExts = NULL;
+
+	const Graphics::TextureLoaderInfo* pLoaders;
+	int iLoaderCount;
+	GetTextureLoaders(&pLoaders, &iLoaderCount);
+
+	oExts += "All supported formats";
+	oExts += (char)0;
+	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	{
+		if (iIndex > 0)
+			oExts += ';';
+		oExts += pLoaders[iIndex].pExts;
+	}
+	oExts += (char)0;
+
+	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	{
+		oExts += pLoaders[iIndex].pName;
+		oExts += " (";
+		oExts += pLoaders[iIndex].pExts;
+		oExts += ')';
+		oExts += (char)0;
+		oExts += pLoaders[iIndex].pExts;
+		oExts += (char)0;
+	}
+
+	char* pExts = oExts.Export();
+	if (PlatformUtils::OpenFileDialog("Test", pExts, pBuffer, sizeof(pBuffer), &iIndex))
+	{
+		//TODO testing iindex
+		LoadFile(pBuffer);
+	}
+	free(pExts);
 }
 
 void Program::Save()
