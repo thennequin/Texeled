@@ -5,7 +5,7 @@ using namespace ImWindow;
 
 #include "Core/MemoryStream.h"
 
-#include "Graphics/TextureUtils.h"
+#include "Graphics/TextureLoader.h"
 #include "GraphicResources/Texture2D.h"
 
 #include "Resources/Icons/Default_24_png.h"

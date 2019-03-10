@@ -1,7 +1,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 
 #include "Graphics/DDS.h"
-#include "Graphics/TextureUtils.h"
+#include "Graphics/TextureLoader.h"
 
 #include <stdlib.h>
 #include <stdio.h>

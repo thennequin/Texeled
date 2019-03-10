@@ -5,7 +5,7 @@
 
 #include <D3D11.h>
 
-#include "Graphics/TextureUtils.h"
+#include "Graphics/TextureLoader.h"
 
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"

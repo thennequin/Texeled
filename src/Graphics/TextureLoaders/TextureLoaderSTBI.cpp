@@ -1,5 +1,6 @@
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
-#include "Graphics/TextureUtils.h"
+
+#include "Graphics/TextureLoader.h"
 
 #include "stb_image.h"
 
@@ -110,7 +111,7 @@ namespace Graphics
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
 				stbi_image_free((void*)oDesc.pData[0][0]);
-				return oErr == ErrorCode::Ok;;
+				return oErr == ErrorCode::Ok;
 			}
 			const char* pError = stbi_failure_reason();
 			return false;
