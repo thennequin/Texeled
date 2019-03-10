@@ -43,7 +43,7 @@ public:
 	bool									LoadFile(const char* pFile);
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
-
+	void									UpdateTexture2DRes();
 
 	void									Open();
 	void									Save();

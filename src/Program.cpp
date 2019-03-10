@@ -121,15 +121,21 @@ void Program::AskExit()
 	m_bRun = false;
 }
 
+void Program::UpdateTexture2DRes()
+{
+	ImwSafeDelete(m_pTexture2D);
+	if (m_oTexture.IsValid())
+	{
+		CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D));
+	}
+}
+
 bool Program::LoadFile(const char* pFile)
 {
 	if (Graphics::LoadFromFile(&m_oTexture, pFile) == ErrorCode::Ok)
 	{
-		ImwSafeDelete(m_pTexture2D);
-		if (GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D) == ErrorCode::Ok)
-		{
-			return true;
-		}
+		UpdateTexture2DRes();
+		return true;
 	}
 	return false;
 }
