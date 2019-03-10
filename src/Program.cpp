@@ -9,6 +9,7 @@
 #include "PlatformUtils.h"
 
 #include "Core/StringBuilder.h"
+#include "Core/StringUtils.h"
 
 #include "Graphics/TextureLoader.h"
 #include "Graphics/TextureWriter.h"
@@ -178,7 +179,7 @@ void Program::Open()
 	}
 
 	char* pExts = oExts.Export();
-	if (PlatformUtils::OpenFileDialog("Test", pExts, pBuffer, sizeof(pBuffer), &iIndex))
+	if (PlatformUtils::OpenFileDialog("Open file", pExts, pBuffer, sizeof(pBuffer), &iIndex))
 	{
 		//TODO testing iindex
 		LoadFile(pBuffer);
@@ -192,4 +193,37 @@ void Program::Save()
 
 void Program::SaveAs()
 {
+	char pBuffer[1024] = { 0 };
+	int iIndex;
+
+	Core::StringBuilder oExts;
+	static char* s_pExts = NULL;
+
+	const Graphics::TextureWriterInfo* pWriters;
+	int iLoaderCount;
+	Graphics::GetTextureWriters(&pWriters, &iLoaderCount);
+
+	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	{
+		oExts += pWriters[iIndex].pName;
+		oExts += " (";
+		oExts += pWriters[iIndex].pExt;
+		oExts += ')';
+		oExts += (char)0;
+		oExts += pWriters[iIndex].pExt;
+		oExts += (char)0;
+	}
+
+	char* pExts = oExts.Export();
+	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iIndex))
+	{
+		if (Core::StringUtils::Wildcard(pBuffer, pExts) == false)
+		{
+			//Append extension
+		}
+		//TODO testing iindex
+		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer));
+		LoadFile(pBuffer);
+	}
+	free(pExts);
 }
