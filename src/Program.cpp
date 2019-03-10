@@ -51,8 +51,8 @@ Program::Program(int iArgCount, char** pArgs)
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 1.f);
 	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.204f, 0.204f, 0.204f, 1.f);
 	style.Colors[ImGuiCol_MenuBarBg] = style.Colors[ImGuiCol_WindowBg];
-	style.Colors[ImGuiCol_Header] = ImVec4(0.16f, 0.34, 0.34f, 1.f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.16f, 0.34, 0.34f, 1.f);
+	style.Colors[ImGuiCol_Header] = ImVec4(0.16f, 0.34f, 0.34f, 1.f);
+	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.16f, 0.34f, 0.34f, 1.f);
 	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.24f, 0.42, 0.42f, 1.f);
 
 	m_pShortKeyManager = new ShortKeyManager();
