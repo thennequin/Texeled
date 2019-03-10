@@ -33,6 +33,9 @@ namespace Graphics
 			{
 				if (Core::StringUtils::Wildcard(it->pExt, pFilename))
 				{
+					if (it->pTester != NULL && it->pTester(pTexture) == E_SUPPORTED_WRITER_FALSE)
+						return ErrorCode(1, "Texture not supported by writer");
+
 					WriterSettings oSettings;
 					if (it->pWriter(pTexture, pSettings, pStream))
 					{
