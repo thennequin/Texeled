@@ -21,7 +21,7 @@ namespace Graphics
 
 		ESupportedWriter TextureWriterSupportedDDS(Texture* pTexture)
 		{
-			return E_SUPPORTED_WRTIER_FULL;
+			return E_SUPPORTED_WRITER_FULL;
 		}
 
 		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream)

@@ -12,9 +12,9 @@ namespace Graphics
 
 	enum ESupportedWriter
 	{
-		E_SUPPORTED_WRTIER_FALSE,
-		E_SUPPORTED_WRTIER_PARIAL,
-		E_SUPPORTED_WRTIER_FULL,
+		E_SUPPORTED_WRITER_FALSE,
+		E_SUPPORTED_WRITER_PARTIAL,
+		E_SUPPORTED_WRITER_FULL,
 	};
 
 	typedef ESupportedWriter(*TextureWriterSupportedFunc)(Texture* pTexture);
