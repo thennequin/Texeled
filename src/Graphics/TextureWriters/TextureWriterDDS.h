@@ -1,8 +1,6 @@
 #ifndef __GRAPHICS_TEXTURE_WRITER_DDS_H__
 #define __GRAPHICS_TEXTURE_WRITER_DDS_H__
 
-#include "Graphics/TextureWriter.h"
-
 namespace Graphics
 {
 	namespace TextureWriter
