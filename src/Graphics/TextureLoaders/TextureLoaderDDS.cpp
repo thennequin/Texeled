@@ -10,10 +10,13 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
+		bool TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture);
+
 		void RegisterLoaderDDS()
 		{
-			Graphics::RegisterTextureLoader("DDS", ".DDS\0", Graphics::TextureLoader::TextureLoaderDDS);
+			Graphics::RegisterTextureLoader("DDS", "*.DDS\0", Graphics::TextureLoader::TextureLoaderDDS);
 		}
+
 
 		bool TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture)
 		{

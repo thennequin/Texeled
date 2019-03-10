@@ -8,6 +8,8 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
+		bool TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture);
+
 		void RegisterLoaderSTBI()
 		{
 			const char* const pExts =

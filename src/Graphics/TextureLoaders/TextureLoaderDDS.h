@@ -8,7 +8,6 @@ namespace Graphics
 	namespace TextureLoader
 	{
 		void RegisterLoaderDDS();
-		bool TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture);
 	}
 	//namespace TextureLoader
 }

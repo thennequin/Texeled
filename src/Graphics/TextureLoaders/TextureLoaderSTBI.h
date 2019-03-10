@@ -8,7 +8,6 @@ namespace Graphics
 	namespace TextureLoader
 	{
 		void RegisterLoaderSTBI();
-		bool TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture);
 	}
 	//namespace TextureLoader
 }
