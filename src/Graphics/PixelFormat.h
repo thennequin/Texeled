@@ -106,12 +106,12 @@ namespace Graphics
 
 		typedef union
 		{
-			struct
+			struct _
 			{
 				uint16_t mantissa : 10;
 				uint16_t exponent : 5;
 				uint16_t sign : 1;
-			};
+			} v;
 			uint16_t u;
 		} half;
 
@@ -126,12 +126,12 @@ namespace Graphics
 		template<typename T, int iR, int iG, int iB>
 		union RGBBits
 		{
-			struct
+			struct _
 			{
 				T r : iR;
 				T g : iG;
 				T b : iB;
-			};
+			} v;
 			T u;
 		};
 
@@ -146,12 +146,12 @@ namespace Graphics
 		template<typename T, int iB, int iG, int iR>
 		union BGRBits
 		{
-			struct
+			struct _
 			{
 				T b : iB;
 				T g : iG;
 				T r : iR;
-			};
+			} v;
 			T u;
 		};
 
@@ -185,13 +185,13 @@ namespace Graphics
 		template<typename T, int iB, int iG, int iR, int iA>
 		union BGRABits
 		{
-			struct
+			struct _
 			{
 				T b : iB;
 				T g : iG;
 				T r : iR;
 				T a : iA;
-			};
+			} v;
 			T u;
 		};
 

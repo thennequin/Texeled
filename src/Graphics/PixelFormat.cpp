@@ -52,7 +52,7 @@ namespace Graphics
 			"BC7"
 	};
 
-	const PixelFormatInfos const EPixelFormatInfos[_E_PIXELFORMAT_COUNT] =
+	const PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT] =
 	{
 		//  /--------------------------------------------------------- iBitsPerPixel
 		//  |    /---------------------------------------------------- iBlockWidth
@@ -348,36 +348,36 @@ namespace Graphics
 		{
 			R5G6B5* pIn565 = (R5G6B5*)pIn;
 			RGB8* pOut888 = (RGB8*)pOut;
-			pOut888->b = (pIn565->b << 3) | (pIn565->b >> 2);
-			pOut888->g = (pIn565->g << 2) | (pIn565->g >> 4);
-			pOut888->r = (pIn565->r << 3) | (pIn565->r >> 2);
+			pOut888->b = (uint8_t)((pIn565->v.b << 3) | (pIn565->v.b >> 2));
+			pOut888->g = (uint8_t)((pIn565->v.g << 2) | (pIn565->v.g >> 4));
+			pOut888->r = (uint8_t)((pIn565->v.r << 3) | (pIn565->v.r >> 2));
 		}
 
 		void Convert_RGB8_To_RGB565(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 		{
 			RGB8* pIn888 = (RGB8*)pIn;
 			R5G6B5* pOut565 = (R5G6B5*)pOut;
-			pOut565->r = (pIn888->r >> 3) & 0x1F;
-			pOut565->g = (pIn888->g >> 2) & 0x3F;
-			pOut565->b = (pIn888->b >> 3) & 0x1F;
+			pOut565->v.r = (pIn888->r >> 3) & 0x1F;
+			pOut565->v.g = (pIn888->g >> 2) & 0x3F;
+			pOut565->v.b = (pIn888->b >> 3) & 0x1F;
 		}
 
 		void Convert_BGR565_To_RGB8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 		{
 			B5G6R5* pIn565 = (B5G6R5*)pIn;
 			RGB8* pOut888 = (RGB8*)pOut;
-			pOut888->b = (pIn565->b << 3) | (pIn565->b >> 2);
-			pOut888->g = (pIn565->g << 2) | (pIn565->g >> 4);
-			pOut888->r = (pIn565->r << 3) | (pIn565->r >> 2);
+			pOut888->b = (uint8_t)((pIn565->v.b << 3) | (pIn565->v.b >> 2));
+			pOut888->g = (uint8_t)((pIn565->v.g << 2) | (pIn565->v.g >> 4));
+			pOut888->r = (uint8_t)((pIn565->v.r << 3) | (pIn565->v.r >> 2));
 		}
 
 		void Convert_RGB8_To_BGR565(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 		{
 			RGB8* pIn888 = (RGB8*)pIn;
 			B5G6R5* pOut565 = (B5G6R5*)pOut;
-			pOut565->r = (pIn888->r >> 3) & 0x1F;
-			pOut565->g = (pIn888->g >> 2) & 0x3F;
-			pOut565->b = (pIn888->b >> 3) & 0x1F;
+			pOut565->v.r = (pIn888->r >> 3) & 0x1F;
+			pOut565->v.g = (pIn888->g >> 2) & 0x3F;
+			pOut565->v.b = (pIn888->b >> 3) & 0x1F;
 		}
 
 		void Convert_RGB32F_To_RGBA32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
@@ -550,16 +550,16 @@ namespace Graphics
 
 		inline void RGB8Lerp(const RGB8& iColorA, const RGB8& iColorB, RGB8* pOut, int iMulA, int iMulB, int iDiv, int iAdd)
 		{
-			pOut->r = (iColorA.r * iMulA + iColorB.r * iMulB + iAdd) / iDiv;
-			pOut->g = (iColorA.g * iMulA + iColorB.g * iMulB + iAdd) / iDiv;
-			pOut->b = (iColorA.b * iMulA + iColorB.b * iMulB + iAdd) / iDiv;
+			pOut->r = (uint8_t)((iColorA.r * iMulA + iColorB.r * iMulB + iAdd) / iDiv);
+			pOut->g = (uint8_t)((iColorA.g * iMulA + iColorB.g * iMulB + iAdd) / iDiv);
+			pOut->b = (uint8_t)((iColorA.b * iMulA + iColorB.b * iMulB + iAdd) / iDiv);
 
 		}
 		inline void RGBA8Lerp(const RGBA8& iColorA, const RGBA8& iColorB, RGBA8* pOut, int iMulA, int iMulB, int iDiv, int iAdd)
 		{
-			pOut->r = (iColorA.r * iMulA + iColorB.r * iMulB + iAdd) / iDiv;
-			pOut->g = (iColorA.g * iMulA + iColorB.g * iMulB + iAdd) / iDiv;
-			pOut->b = (iColorA.b * iMulA + iColorB.b * iMulB + iAdd) / iDiv;
+			pOut->r = (uint8_t)((iColorA.r * iMulA + iColorB.r * iMulB + iAdd) / iDiv);
+			pOut->g = (uint8_t)((iColorA.g * iMulA + iColorB.g * iMulB + iAdd) / iDiv);
+			pOut->b = (uint8_t)((iColorA.b * iMulA + iColorB.b * iMulB + iAdd) / iDiv);
 		}
 
 		void Convert_BC1_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
@@ -822,7 +822,7 @@ namespace Graphics
 				oOutPixel.r = oInPixel.r;
 				oOutPixel.g = oInPixel.g;
 				oOutPixel.b = oInPixel.b;
-				oOutPixel.a = iAlphaIndex * 255 / 15;
+				oOutPixel.a = (uint8_t)(iAlphaIndex * 255 / 15);
 			}
 		}
 
@@ -1030,7 +1030,7 @@ namespace Graphics
 			if (iCurrentChain > 0 && eChain[iCurrentChain - 1] == eDestPixelFormat)
 			{
 				int iAdditionalBits = 0;
-				EPixelFormat eCurrentFormat = eSourcePixelFormat;
+				eCurrentFormat = eSourcePixelFormat;
 				for (int i = 0; i < iCurrentChain; ++i)
 				{
 					ConvertionFuncDeclaration& oInfo = s_pConvertionMatrix[eCurrentFormat][eChain[i]];
