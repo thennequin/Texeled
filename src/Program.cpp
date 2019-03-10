@@ -110,11 +110,15 @@ void Program::AskExit()
 	m_bRun = false;
 }
 
-void Program::LoadFile(const char* pFile)
+bool Program::LoadFile(const char* pFile)
 {
 	if (Graphics::LoadFromFile(&m_oTexture, pFile) == ErrorCode::Ok)
 	{
 		ImwSafeDelete(m_pTexture2D);
-		CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D));
+		if (GraphicResources::Texture2D::CreateFromTexture(&m_oTexture, &m_pTexture2D) == ErrorCode::Ok)
+		{
+			return true;
+		}
 	}
+	return false;
 }

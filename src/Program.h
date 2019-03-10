@@ -40,8 +40,7 @@ public:
 	ID3D11Device*							GetDX11Device() const;
 	ID3D11DeviceContext*					GetDX11DeviceContext() const;
 
-
-	void									LoadFile(const char* pFile);
+	bool									LoadFile(const char* pFile);
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
 
