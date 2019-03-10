@@ -12,6 +12,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 
+#include "Graphics/TextureWriters/TextureWriterDDS.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
 
@@ -30,6 +31,8 @@ Program::Program(int iArgCount, char** pArgs)
 
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
+
+	Graphics::TextureWriter::RegisterWriterDDS();
 
 	ImFontConfig oConfig;
 	oConfig.MergeMode = false;
