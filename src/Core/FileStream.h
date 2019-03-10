@@ -11,14 +11,16 @@ namespace Core
 		enum EAccessMode
 		{
 			E_ACCESS_MODE_READ,
-			E_ACCESS_MODE_WRITE
+			E_ACCESS_MODE_WRITE,
+			E_ACCESS_MODE_WRITE_SAFE
 		};
 
 								FileStream();
 		virtual					~FileStream();
 
-		bool					Open(const char* pFilname, EAccessMode eAccessMode);
+		bool					Open(const char* pFilename, EAccessMode eAccessMode);
 		bool					Close();
+		bool					Cancel(); //For WRITE_SAFE
 
 		virtual bool			IsValid() const;
 		virtual bool			IsSeekable() const;
@@ -31,8 +33,11 @@ namespace Core
 		virtual size_t			Write(void* pBuffer, size_t iSize);
 	protected:
 		void*					m_pFile;
+		void*					m_pSourceFile;
 		EAccessMode				m_eAccessMode;
 		size_t					m_iPos;
+		char*					m_pFileName;
+		char*					m_pSourceFileName;
 	};
 }
 //namespace Core
