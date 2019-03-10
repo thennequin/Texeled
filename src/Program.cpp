@@ -2,13 +2,21 @@
 #include "Program.h"
 
 #include "ShortKeyManager.h"
+#include "Menus.h"
 
 #include <D3D11.h>
 
 #include "Graphics/TextureLoader.h"
+#include "Graphics/TextureWriter.h"
 
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
+#include "Graphics/TextureLoaders/TextureLoaderEXR.h"
+#include "Graphics/TextureLoaders/TextureLoaderKTX.h"
+
+#include "Graphics/TextureWriters/TextureWriterDDS.h"
+//#include "Graphics/TextureWriters/TextureWritersPNG.h"
+//#include "Graphics/TextureWriters/TextureWriterJPEG.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
 
@@ -121,4 +129,16 @@ bool Program::LoadFile(const char* pFile)
 		}
 	}
 	return false;
+}
+
+void Program::Open()
+{
+}
+
+void Program::Save()
+{
+}
+
+void Program::SaveAs()
+{
 }

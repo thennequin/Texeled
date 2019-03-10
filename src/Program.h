@@ -7,7 +7,7 @@
 #include "Graphics/Texture.h"
 
 class ShortKeyManager;
-class IDXGIFactory;
+class Menus;
 class ID3D11Device;
 class ID3D11DeviceContext;
 
@@ -44,6 +44,11 @@ public:
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
 
+
+	void									Open();
+	void									Save();
+	void									SaveAs();
+
 protected:
 	static Program*							s_pInstance;
 
@@ -52,6 +57,7 @@ protected:
 	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
 
 	ShortKeyManager*						m_pShortKeyManager;
+	Menus*									m_pMenus;
 
 	Windows::WorkAreaWindow*				m_pWorkAreaWindow;
 
