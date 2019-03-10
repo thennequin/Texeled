@@ -11,12 +11,7 @@
 
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
-#include "Graphics/TextureLoaders/TextureLoaderEXR.h"
-#include "Graphics/TextureLoaders/TextureLoaderKTX.h"
 
-#include "Graphics/TextureWriters/TextureWriterDDS.h"
-//#include "Graphics/TextureWriters/TextureWritersPNG.h"
-//#include "Graphics/TextureWriters/TextureWriterJPEG.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
 
@@ -59,6 +54,11 @@ Program::Program(int iArgCount, char** pArgs)
 
 	m_pShortKeyManager = new ShortKeyManager();
 	m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::AskExit), false);
+	m_pShortKeyManager->RegisterShortKey("Open", "CTRL+O", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
+	m_pShortKeyManager->RegisterShortKey("Save", "CTRL+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
+	m_pShortKeyManager->RegisterShortKey("Save As", "CTRL+SHIFT+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
+
+	m_pMenus = new Menus();
 
 	m_pWorkAreaWindow = new Windows::WorkAreaWindow();
 
