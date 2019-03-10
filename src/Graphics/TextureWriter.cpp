@@ -31,7 +31,7 @@ namespace Graphics
 		{
 			for (Core::Array<TextureWriterInfo>::iterator it = s_oTextureWriters.begin(), itEnd = s_oTextureWriters.end(); it != itEnd; ++it)
 			{
-				if (Core::StringUtils::EndsWith(pFilename, it->pExt, false))
+				if (Core::StringUtils::Wildcard(it->pExt, pFilename))
 				{
 					WriterSettings oSettings;
 					if (it->pWriter(pTexture, pSettings, pStream))
@@ -45,7 +45,7 @@ namespace Graphics
 				}
 			}
 		}
-		return ErrorCode::Fail;
+		return ErrorCode(1, "Extension not supported");
 	}
 
 	ErrorCode SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename)
@@ -53,14 +53,22 @@ namespace Graphics
 		if (pTexture != NULL)
 		{
 			Core::FileStream oFileStream;
-			if (oFileStream.Open(pFilename, Core::FileStream::E_ACCESS_MODE_WRITE))
+			if (oFileStream.Open(pFilename, Core::FileStream::E_ACCESS_MODE_WRITE_SAFE))
 			{
 				ErrorCode oErr = SaveToStream(pTexture, pSettings, &oFileStream, pFilename);
 
-				oFileStream.Close();
+				if (oErr == ErrorCode::Ok)
+				{
+					oFileStream.Close();
+				}
+				else
+				{
+					oFileStream.Cancel();
+				}
+
 				return oErr;
 			}
 		}
-		return ErrorCode::Fail;
+		return ErrorCode(1, "Extension not supported");
 	}
 }
