@@ -5,13 +5,6 @@
 
 namespace Graphics
 {
-	typedef struct
-	{
-		const char*				pName;
-		const char*				pExts;
-		TextureLoaderFunc		pLoader;
-	} TextureLoaderInfo;
-
 	static Core::Array<TextureLoaderInfo>	s_oTextureLoaders;
 
 	void RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader)
@@ -60,5 +53,11 @@ namespace Graphics
 		}
 
 		return ErrorCode::Fail;
+	}
+
+	void GetTextureLoaders(const TextureLoaderInfo** pOutLoaders, int* pOutCount)
+	{
+		*pOutLoaders = s_oTextureLoaders.begin();;
+		*pOutCount = s_oTextureLoaders.size();
 	}
 }
