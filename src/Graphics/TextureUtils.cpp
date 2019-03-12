@@ -384,10 +384,10 @@ namespace Graphics
 					uint32_t iPaddingX = Math::Max(oSrcPFInfos.iBlockWidth , oDstPFInfos.iBlockWidth);
 					uint32_t iPaddingY = Math::Max(oSrcPFInfos.iBlockHeight, oDstPFInfos.iBlockHeight);
 
-#pragma omp parallel for
+//#pragma omp parallel for
 					for (int iY = 0; iY < iMipHeight; iY += iPaddingY)
 					{
-#pragma omp parallel for
+//#pragma omp parallel for
 						for (int iX = 0; iX < iMipWidth; iX += iPaddingX)
 						{
 							PixelFormat::ConvertionTemporaryData oConvertionTempData[2];
@@ -404,7 +404,9 @@ namespace Graphics
 							for (int iChain = 0; iChain < iConvertionChainLength; ++iChain)
 							{
 								void* pInputData = (iChain == 0) ? pSourceData : ((iChain % 2 == 0) ? &oConvertionTempData[0] : &oConvertionTempData[1]);
+								size_t iInputSize = (iChain == 0) ? (oFaceData.iSize - size_t((char*)pSourceData - (char*)oFaceData.pData)) : sizeof(PixelFormat::ConvertionTemporaryData);
 								void* pOutputData = (iChain == (iConvertionChainLength - 1)) ? pNewData : ((iChain % 2 == 0) ? &oConvertionTempData[1] : &oConvertionTempData[0]);
+								size_t iOutputSize = (iChain == (iConvertionChainLength - 1)) ? ( oNewFaceData.iSize - size_t((char*)pNewData - (char*)oNewFaceData.pData )) : sizeof(PixelFormat::ConvertionTemporaryData);
 
 								uint32_t iInputPitch = (iChain == 0) ? (iSrcMipBlockX * oSrcPFInfos.iBlockWidth) : iPaddingX;
 								uint32_t iOutputPitch = (iChain == (iConvertionChainLength - 1)) ? (iDstMipBlockX * oDstPFInfos.iBlockWidth) : iPaddingX;
@@ -430,6 +432,8 @@ namespace Graphics
 										void* pTempInput = (char*)pInputData + (size_t)(iTY * iInputPitch + iTX) * iCurrentBits / 8;
 										void* pTempOutput = (char*)pOutputData + (size_t)(iTY * iOutputPitch + iTX) * iNextBits / 8;
 
+										CORE_ASSERT(pTempInput >= pInputData && pTempInput <= ((char*)pInputData + iInputSize ));
+										CORE_ASSERT(pTempOutput >= pOutputData && pTempOutput <= ((char*)pOutputData + iOutputSize));
 										oFunc.pFunc(pTempInput, pTempOutput, iInputPitch, iOutputPitch);
 									}
 								}
