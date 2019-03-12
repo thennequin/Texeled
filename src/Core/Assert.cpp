@@ -7,7 +7,7 @@
 
 namespace Core
 {
-	void Assert(bool bCondition, const char* pCondition, const char* pFile, int iLine, const char* pFunction, const char* pFormat, ...)
+	bool Assert(bool bCondition, const char* pCondition, const char* pFile, int iLine, const char* pFunction, const char* pFormat, ...)
 	{
 		if (bCondition == false)
 		{
@@ -23,11 +23,9 @@ namespace Core
 			else
 				snprintf(pBuffer, 4096, "Condition:\n%s\nFile:\n%s(%d)\n\nFunction:\n%s", pCondition, pFile, iLine, pFunction);
 			int iRet = MessageBox(NULL, pBuffer, "Assert: Do you want to break?", MB_ICONERROR | MB_YESNO);
-			if (iRet == IDYES)
-			{
-				__debugbreak();
-			}
+			return iRet == IDYES;
 		}
+		return false;
 	}
 }
 //Core
