@@ -391,8 +391,8 @@ namespace Graphics
 						for (int iX = 0; iX < iMipWidth; iX += iPaddingX)
 						{
 							PixelFormat::ConvertionTemporaryData oConvertionTempData[2];
-							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX * oSrcPFInfos.iBlockSize);
-							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY * iDstMipBlockX * oDstPFInfos.iBlockSize + iX * oDstPFInfos.iBlockSize);
+							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY / oSrcPFInfos.iBlockHeight * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX / oSrcPFInfos.iBlockWidth * oSrcPFInfos.iBlockSize);
+							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY / oDstPFInfos.iBlockHeight * iDstMipBlockX * oDstPFInfos.iBlockSize + iX / oDstPFInfos.iBlockWidth * oDstPFInfos.iBlockSize);
 
 							EPixelFormat eCurrentFormat = pTexture->GetPixelFormat();
 							uint32_t iCurrentBits = PixelFormat::BitPerPixel(eCurrentFormat);
