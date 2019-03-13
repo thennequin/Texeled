@@ -302,6 +302,7 @@ namespace Windows
 			m_oCurrentOffset = m_oOffset;
 
 			//Display image informations
+			if (0)
 			{
 				char pInformations[2048];
 				snprintf(pInformations, 2048,

@@ -3,6 +3,7 @@
 
 #include "ShortKeyManager.h"
 #include "Menus.h"
+#include "StatusBars.h"
 
 #include <D3D11.h>
 
@@ -67,6 +68,7 @@ Program::Program(int iArgCount, char** pArgs)
 	m_pShortKeyManager->RegisterShortKey("Save As", "CTRL+SHIFT+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
 
 	m_pMenus = new Menus();
+	new StatusBars();
 
 	m_pWorkAreaWindow = new Windows::WorkAreaWindow();
 
