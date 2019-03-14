@@ -21,6 +21,7 @@
 #include "Graphics/TextureWriters/TextureWriterDDS.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
+#include "Resources/Fonts/Consolas_Bold_ttf.h"
 
 #include "Windows/WorkAreaWindow.h"
 
@@ -44,7 +45,8 @@ Program::Program(int iArgCount, char** pArgs)
 	oConfig.MergeMode = false;
 	oConfig.FontDataOwnedByAtlas = false;
 	//ImGui::GetIO().Fonts->AddFontDefault();
-	ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Resources::Fonts::Consolas_ttf::Data, Resources::Fonts::Consolas_ttf::Size, 16.f, &oConfig, NULL);
+	//ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Resources::Fonts::Consolas_ttf::Data, Resources::Fonts::Consolas_ttf::Size, 16.f, &oConfig, NULL);
+	ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Resources::Fonts::Consolas_Bold_ttf::Data, Resources::Fonts::Consolas_Bold_ttf::Size, 16.f, &oConfig, NULL);
 	oConfig.MergeMode = true;
 
 	ImGui::GetIO().Fonts->Build();
