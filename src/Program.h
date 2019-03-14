@@ -31,6 +31,12 @@ struct Shortkeys
 	const ShortKeyManager::ShortKey* pSaveAs;
 };
 
+struct Fonts
+{
+	ImFont* pFontConsolasBold;
+	ImFont* pFontConsolas;
+};
+
 class Program
 {
 	Program(int iArgCount, char** pArgs);
@@ -60,13 +66,15 @@ public:
 	void									SaveAs();
 
 	const Shortkeys&						GetShortkeys() const { return m_oShortkeys; }
-
+	const Fonts&							GetFonts() const { return m_oFonts; }
 protected:
 	static Program*							s_pInstance;
 
 	bool									m_bRun;
 
 	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
+
+	Fonts									m_oFonts;
 
 	ShortKeyManager*						m_pShortKeyManager;
 	Shortkeys								m_oShortkeys;
