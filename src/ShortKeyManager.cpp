@@ -231,8 +231,8 @@ const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char*
 			EasyWindow::EKey eModifier[3] = { eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[2] };
 			//TODO: save
 			ShortKey* pShortkey = new ShortKey(
-				eDefaultPrimary, eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[1],
-				ePrimary, eModifier[0], eModifier[1], eModifier[1],
+				eDefaultPrimary, eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[2],
+				ePrimary, eModifier[0], eModifier[1], eModifier[2],
 				pCallback, pCallbackUp, bSave, bDeleteCallbacks);
 			 m_mShortKeys[pName] = pShortkey;
 			return pShortkey;
