@@ -62,6 +62,11 @@ void Menus::OnMenu()
 		{
 			Program::GetInstance()->SaveAs();
 		}
+		ImGui::Separator();
+		if (MenuItemPlus("Exit", NULL, oShortkeys.pClose->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true))
+		{
+			Program::GetInstance()->AskExit();
+		}
 		ImGui::EndMenu();
 	}
 
