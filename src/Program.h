@@ -6,7 +6,8 @@
 
 #include "Graphics/Texture.h"
 
-class ShortKeyManager;
+#include "ShortKeyManager.h"
+
 class Menus;
 class ID3D11Device;
 class ID3D11DeviceContext;
@@ -20,6 +21,15 @@ namespace Windows
 {
 	class WorkAreaWindow;
 }
+
+
+struct Shortkeys
+{
+	const ShortKeyManager::ShortKey* pClose;
+	const ShortKeyManager::ShortKey* pOpen;
+	const ShortKeyManager::ShortKey* pSave;
+	const ShortKeyManager::ShortKey* pSaveAs;
+};
 
 class Program
 {
@@ -49,6 +59,8 @@ public:
 	void									Save();
 	void									SaveAs();
 
+	const Shortkeys&						GetShortkeys() const { return m_oShortkeys; }
+
 protected:
 	static Program*							s_pInstance;
 
@@ -57,6 +69,7 @@ protected:
 	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
 
 	ShortKeyManager*						m_pShortKeyManager;
+	Shortkeys								m_oShortkeys;
 	Menus*									m_pMenus;
 
 	Windows::WorkAreaWindow*				m_pWorkAreaWindow;

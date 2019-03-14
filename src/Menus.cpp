@@ -1,24 +1,27 @@
 #include "Menus.h"
 
 #include "Program.h"
+#include "ShortKeyManager.h"
+
 #include "Graphics/Texture.h"
 #include "Graphics/TextureUtils.h"
 
 void Menus::OnMenu()
 {
 	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
+	const Shortkeys& oShortkeys = Program::GetInstance()->GetShortkeys();
 
 	if (ImGui::BeginMenu("File"))
 	{
-		if (ImGui::MenuItem("Open"))
+		if (ImGui::MenuItem("Open", oShortkeys.pOpen->m_sShortKey.c_str()))
 		{
 			Program::GetInstance()->Open();
 		}
-		if (ImGui::MenuItem("Save", NULL, false, oTexture.IsValid()))
+		if (ImGui::MenuItem("Save", oShortkeys.pSave->m_sShortKey.c_str(), false, oTexture.IsValid()))
 		{
 			Program::GetInstance()->Save();
 		}
-		if (ImGui::MenuItem("Save as", NULL, false, oTexture.IsValid()))
+		if (ImGui::MenuItem("Save as", oShortkeys.pSaveAs->m_sShortKey.c_str(), false, oTexture.IsValid()))
 		{
 			Program::GetInstance()->SaveAs();
 		}
