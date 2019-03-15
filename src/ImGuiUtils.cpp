@@ -74,7 +74,7 @@ namespace ImGuiUtils
 		bool pressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, flags );
 
 		// Render
-		const ImU32 col = ImGui::GetColorU32( ( hovered && held ) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button );
+		const ImU32 col = ImGui::GetColorU32( ( bSelected || (hovered && held) ) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button );
 		
 		int iRoundingFlag = 0;
 		if( ePart == GroupedPart::LEFT )
