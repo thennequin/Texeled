@@ -4,6 +4,7 @@
 #include "ShortKeyManager.h"
 #include "Menus.h"
 #include "StatusBars.h"
+#include "Toolbar.h"
 
 #include <D3D11.h>
 
@@ -79,6 +80,7 @@ Program::Program(int iArgCount, char** pArgs)
 
 	m_pMenus = new Menus();
 	new StatusBars();
+	new Toolbar();
 
 	m_pWorkAreaWindow = new Windows::WorkAreaWindow();
 
