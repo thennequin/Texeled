@@ -37,6 +37,21 @@ struct Fonts
 	ImFont* pFontConsolas;
 };
 
+struct ProgramMode
+{
+	enum Enum
+	{
+		VIEWER,
+		EDITION_COLOR,
+		EDITION_NORMAL,
+
+		_COUNT,
+		_LAST = _COUNT - 1
+	};
+};
+typedef ProgramMode::Enum ProgramModeEnum;
+extern const char* ProgramModeStrings[ProgramMode::_COUNT];
+
 class Program
 {
 	Program(int iArgCount, char** pArgs);
@@ -67,6 +82,9 @@ public:
 
 	const Shortkeys&						GetShortkeys() const { return m_oShortkeys; }
 	const Fonts&							GetFonts() const { return m_oFonts; }
+
+	ProgramModeEnum							GetMode() const { return m_eMode; }
+	void									SetMode(ProgramModeEnum eMode) { m_eMode = eMode; }
 protected:
 	static Program*							s_pInstance;
 
@@ -79,6 +97,8 @@ protected:
 	ShortKeyManager*						m_pShortKeyManager;
 	Shortkeys								m_oShortkeys;
 	Menus*									m_pMenus;
+
+	ProgramModeEnum							m_eMode;
 
 	Windows::WorkAreaWindow*				m_pWorkAreaWindow;
 

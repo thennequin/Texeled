@@ -27,10 +27,18 @@
 
 #include "GraphicResources/Texture2D.h"
 
+const char* ProgramModeStrings[ProgramMode::_COUNT] =
+{
+	"Viewer",
+	"Edition Color",
+	"Edition Normal",
+};
+
 Program* Program::s_pInstance = NULL;
 
 Program::Program(int iArgCount, char** pArgs)
 	: m_bRun(true)
+	, m_eMode(ProgramMode::VIEWER)
 	, m_oImWindowMgrDX11(true)
 	, m_pTexture2D(NULL)
 {
