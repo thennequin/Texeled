@@ -31,8 +31,8 @@
 const char* ProgramModeStrings[ProgramMode::_COUNT] =
 {
 	"Viewer",
-	"Edition Color",
-	"Edition Normal",
+	"Edit color",
+	"Edit normal",
 };
 
 Program* Program::s_pInstance = NULL;

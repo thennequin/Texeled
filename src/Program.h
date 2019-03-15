@@ -42,8 +42,8 @@ struct ProgramMode
 	enum Enum
 	{
 		VIEWER,
-		EDITION_COLOR,
-		EDITION_NORMAL,
+		EDIT_COLOR,
+		EDIT_NORMAL,
 
 		_COUNT,
 		_LAST = _COUNT - 1
