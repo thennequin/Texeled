@@ -66,7 +66,7 @@ public:
 	void									AskExit();
 	void									CloseCurrentWindow();
 
-	ImWindow::ImwWindowManager*				GetWindowManager() { return &m_oImWindowMgrDX11; }
+	ImWindow::ImwWindowManager*				GetWindowManager() { return &m_oImWindowMgr; }
 
 	IDXGIFactory*							GetDXGIFactory() const;
 	ID3D11Device*							GetDX11Device() const;
