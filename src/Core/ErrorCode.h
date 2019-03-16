@@ -12,6 +12,7 @@ class ErrorCode
 public:
 	static ErrorCode	Ok;
 	static ErrorCode	Fail;
+	static ErrorCode	NotImplemented;
 public:
 						ErrorCode(int iCode, const char* pMessage, ...);
 						ErrorCode(ErrorCode& oRight);
