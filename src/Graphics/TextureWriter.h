@@ -30,8 +30,8 @@ namespace Graphics
 
 	void							RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester);
 
-	ErrorCode						SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, TextureWriterInfo* pUseWriter = NULL);
-	ErrorCode						SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	void							GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount);
 }
 //namspace Graphics

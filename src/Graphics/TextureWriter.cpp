@@ -17,40 +17,53 @@ namespace Graphics
 		s_oTextureWriters.push_back(oInfo);
 	}
 
-	ErrorCode SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{
-			for (Core::Array<TextureWriterInfo>::iterator it = s_oTextureWriters.begin(), itEnd = s_oTextureWriters.end(); it != itEnd; ++it)
+			if (pUseWriter == NULL)
 			{
-				if (Core::StringUtils::Wildcard(it->pExt, pFilename))
+				for (Core::Array<TextureWriterInfo>::iterator it = s_oTextureWriters.begin(), itEnd = s_oTextureWriters.end(); it != itEnd; ++it)
 				{
-					if (it->pTester != NULL && it->pTester(pTexture) == E_SUPPORTED_WRITER_FALSE)
-						return ErrorCode(1, "Texture not supported by writer");
-
-					WriterSettings oSettings;
-					if (it->pWriter(pTexture, pSettings, pStream))
+					if (Core::StringUtils::Wildcard(it->pExt, pFilename))
 					{
-						return ErrorCode::Ok;
-					}
-					else
-					{
-						return ErrorCode::Fail;
+						pUseWriter = &*it;
+						break;
 					}
 				}
 			}
+
+			if (pUseWriter != NULL)
+			{
+				if (pUseWriter->pTester != NULL && pUseWriter->pTester(pTexture) == E_SUPPORTED_WRITER_FALSE)
+					return ErrorCode(1, "Texture not supported by writer");
+
+				WriterSettings oSettings;
+				if (pUseWriter->pWriter(pTexture, pSettings, pStream))
+				{
+					return ErrorCode::Ok;
+				}
+				else
+				{
+					return ErrorCode::Fail;
+				}
+			}
+			else
+			{
+				return ErrorCode(1, "Extension not supported");
+			}
 		}
-		return ErrorCode(1, "Extension not supported");
+		return ErrorCode(1, "Invalid arguments");
 	}
 
-	ErrorCode SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{
 			Core::FileStream oFileStream;
 			if (oFileStream.Open(pFilename, Core::FileStream::E_ACCESS_MODE_WRITE_SAFE))
 			{
-				ErrorCode oErr = SaveToStream(pTexture, pSettings, &oFileStream, pFilename, NULL);
+				ErrorCode oErr = SaveToStream(pTexture, pSettings, &oFileStream, pFilename, pUseWriter);
 
 				if (oErr == ErrorCode::Ok)
 				{
@@ -64,7 +77,7 @@ namespace Graphics
 				return oErr;
 			}
 		}
-		return ErrorCode(1, "Extension not supported");
+		return ErrorCode(1, "Invalid arguments");
 	}
 
 	void GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount)
