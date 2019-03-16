@@ -20,6 +20,9 @@ namespace Graphics
 
 	ErrorCode		ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, EPixelFormat eWantedPixelFormat);
 
+	bool			IsPixelFormatResizable(EPixelFormat ePixelFormat);
+	ErrorCode		ResizeTexture(const Texture* pTexture, Texture* pOutTexture, int iNewWidth, int iNewHeight);
+
 	bool			DetermineCubemapFormatFromImageSize(int iWidth, int iHeight, ECubemapFormat* pOutFormat, int* pOutFaceSize);
 	bool			GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::EFace eFace, int* pOutX, int* pOutY);
 

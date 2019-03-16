@@ -10,6 +10,8 @@
 #include <emmintrin.h> //SIMD
 #include <math.h> // sqrt/cos/sin/..
 
+#include "stb_image_resize.h"
+
 namespace Graphics
 {
 	const char* const ECubemapFormat_string[_E_CUBEMAPFORMAT_COUNT] = {
@@ -451,5 +453,86 @@ namespace Graphics
 			return ErrorCode::Ok;
 		}
 		return ErrorCode(1, "Same format");
+	}
+
+	bool IsPixelFormatResizable(EPixelFormat ePixelFormat)
+	{
+		switch (ePixelFormat)
+		{
+		case E_PIXELFORMAT_R8_UNORM:
+		case E_PIXELFORMAT_RG8_UNORM:
+		case E_PIXELFORMAT_RGB8_UNORM:
+		case E_PIXELFORMAT_BGR8_UNORM:
+		case E_PIXELFORMAT_RGBA8_UNORM:
+		case E_PIXELFORMAT_BGRA8_UNORM:
+		case E_PIXELFORMAT_RGB32_FLOAT:
+		case E_PIXELFORMAT_RGBA32_FLOAT:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	ErrorCode ResizeTexture(const Texture* pTexture, Texture* pOutTexture, int iNewWidth, int iNewHeight)
+	{
+		if (pTexture == NULL || pOutTexture == NULL || iNewWidth <= 0 || iNewHeight <= 0)
+		{
+			return ErrorCode(1, "Invalid argument");
+		}
+
+		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
+		{
+			return ErrorCode(1, "'%s' Pixel format can't be resized", EPixelFormat_string[pTexture->GetPixelFormat()]);
+		}
+
+		Texture oTemp;
+		Texture::Desc oDesc;
+		oDesc.ePixelFormat = pTexture->GetPixelFormat();
+		oDesc.iWidth = iNewWidth;
+		oDesc.iHeight = iNewHeight;
+		oDesc.iMipCount = 1;
+		oDesc.iFaceCount = pTexture->GetFaceCount();
+		ErrorCode oErr = oTemp.Create(oDesc);
+		if (oErr != ErrorCode::Ok)
+			return oErr;
+
+		const PixelFormatInfos& oFormatInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
+
+		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
+		{
+			int iRes;
+			const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(0, iFace);
+			const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(0, iFace);
+
+			if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_UNORM)
+			{
+				iRes = stbir_resize_uint8(
+					(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
+					(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+					oFormatInfos.iComponents
+				);
+			}
+			else if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_FLOAT)
+			{
+				iRes = stbir_resize_float(
+					(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
+					(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+					oFormatInfos.iComponents
+				);
+			}
+			else
+			{
+				return ErrorCode::NotImplemented;
+			}
+
+			if (iRes == 0)
+			{
+				return ErrorCode(2, "Internal error");
+			}
+		}
+
+		oTemp.Swap(*pOutTexture);
+
+		return ErrorCode::Ok;
 	}
 }
