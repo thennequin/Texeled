@@ -13,13 +13,13 @@ namespace Graphics
 		void RegisterLoaderSTBI()
 		{
 			const char* const pExts =
-				".PNG\0"
-				".JPG\0"
-				".JPEG\0"
-				".TGA\0"
-				".BMP\0"
-				".HDR\0"
-				".PSD\0"
+				"*.PNG\0"
+				"*.JPG\0"
+				"*.JPEG\0"
+				"*.TGA\0"
+				"*.BMP\0"
+				"*.HDR\0"
+				"*.PSD\0"
 				;
 			RegisterTextureLoader("STBI", pExts, Graphics::TextureLoader::TextureLoaderSTBI);
 		}
