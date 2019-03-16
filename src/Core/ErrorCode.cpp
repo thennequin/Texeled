@@ -39,7 +39,7 @@ ErrorCode::ErrorCode(int iCode, const char* pMessage, ...)
 	memcpy(m_pMessage, pBuffer, iLen);
 }
 
-ErrorCode::ErrorCode(ErrorCode& oRight)
+ErrorCode::ErrorCode(const ErrorCode& oRight)
 {
 	m_bChecked = true;
 	m_iCode = 0;
@@ -67,7 +67,7 @@ bool ErrorCode::operator!=(ErrorCode& oRight)
 	return oRight.m_iCode != m_iCode;
 }
 
-void ErrorCode::operator=(ErrorCode& oRight)
+void ErrorCode::operator=(const ErrorCode& oRight)
 {
 	Release();
 	m_bChecked = false;

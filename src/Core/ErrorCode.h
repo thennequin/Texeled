@@ -15,19 +15,19 @@ public:
 	static ErrorCode	NotImplemented;
 public:
 						ErrorCode(int iCode, const char* pMessage, ...);
-						ErrorCode(ErrorCode& oRight);
+						ErrorCode(const ErrorCode& oRight);
 						~ErrorCode();
 
 	bool				operator==(ErrorCode& oRight);
 	bool				operator!=(ErrorCode& oRight);
-	void				operator=(ErrorCode& oRight);
+	void				operator=(const ErrorCode& oRight);
 
 	int					GetCode() const { return m_iCode; }
 	const char*			ToString() const { return m_pMessage; }
 protected:
 	void				Release();
 protected:
-	bool				m_bChecked;
+	mutable bool		m_bChecked;
 	int					m_iCode;
 	char*				m_pMessage;
 	bool				m_bStatic;
