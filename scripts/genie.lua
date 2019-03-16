@@ -78,6 +78,7 @@ solution "Texeled"
 		
 		configuration		"Debug"
 			flags			{ "Symbols" }
+			defines 		{ "DEBUG" }
 			
 		configuration		"Release"
 			flags			{ "Optimize", "Symbols" }
