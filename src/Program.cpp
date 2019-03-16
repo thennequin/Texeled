@@ -40,7 +40,7 @@ Program* Program::s_pInstance = NULL;
 Program::Program(int iArgCount, char** pArgs)
 	: m_bRun(true)
 	, m_eMode(ProgramMode::VIEWER)
-	, m_oImWindowMgrDX11(true)
+	, m_oImWindowMgr(true)
 	, m_pTexture2D(NULL)
 {
 	s_pInstance = this;
@@ -60,8 +60,8 @@ Program::Program(int iArgCount, char** pArgs)
 
 	ImGui::GetIO().Fonts->Build();
 
-	m_oImWindowMgrDX11.Init();
-	m_oImWindowMgrDX11.SetMainTitle("Texeled");
+	m_oImWindowMgr.Init();
+	m_oImWindowMgr.SetMainTitle("Texeled");
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text]                  = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -128,23 +128,23 @@ void Program::DestroyInstance()
 
 IDXGIFactory* Program::GetDXGIFactory() const
 {
-	return m_oImWindowMgrDX11.GetDXGIFactory();
+	return m_oImWindowMgr.GetDXGIFactory();
 }
 
 ID3D11Device* Program::GetDX11Device() const
 {
-	return m_oImWindowMgrDX11.GetDX11Device();
+	return m_oImWindowMgr.GetDX11Device();
 }
 
 ID3D11DeviceContext* Program::GetDX11DeviceContext() const
 {
-	return m_oImWindowMgrDX11.GetDX11DeviceContext();
+	return m_oImWindowMgr.GetDX11DeviceContext();
 }
 
 bool Program::Run()
 {
 	m_pShortKeyManager->Manage(false);
-	return m_bRun && m_oImWindowMgrDX11.Run(false) && m_oImWindowMgrDX11.Run(true);
+	return m_bRun && m_oImWindowMgr.Run(false) && m_oImWindowMgr.Run(true);
 }
 
 void Program::AskExit()
@@ -154,9 +154,9 @@ void Program::AskExit()
 
 void Program::CloseCurrentWindow()
 {
-	if (m_oImWindowMgrDX11.GetFocusedPlatformWindow() != NULL)
+	if (m_oImWindowMgr.GetFocusedPlatformWindow() != NULL)
 	{
-		m_oImWindowMgrDX11.ClosePlatformWindow(m_oImWindowMgrDX11.GetFocusedPlatformWindow());
+		m_oImWindowMgr.ClosePlatformWindow(m_oImWindowMgr.GetFocusedPlatformWindow());
 	}
 }
 

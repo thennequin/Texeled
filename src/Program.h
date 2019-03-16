@@ -91,7 +91,7 @@ protected:
 
 	bool									m_bRun;
 
-	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgrDX11;
+	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgr;
 
 	Fonts									m_oFonts;
 
