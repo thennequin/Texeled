@@ -254,12 +254,7 @@ void Program::SaveAs()
 	char* pExts = oExts.Export();
 	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iIndex))
 	{
-		if (Core::StringUtils::Wildcard(pBuffer, pExts) == false)
-		{
-			//Append extension
-		}
-		//TODO testing iindex
-		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer));
+		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iIndex]));
 		LoadFile(pBuffer);
 	}
 	free(pExts);
