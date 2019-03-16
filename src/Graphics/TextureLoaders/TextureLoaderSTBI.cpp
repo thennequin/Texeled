@@ -12,16 +12,12 @@ namespace Graphics
 
 		void RegisterLoaderSTBI()
 		{
-			const char* const pExts =
-				"*.PNG\0"
-				"*.JPG\0"
-				"*.JPEG\0"
-				"*.TGA\0"
-				"*.BMP\0"
-				"*.HDR\0"
-				"*.PSD\0"
-				;
-			RegisterTextureLoader("STBI", pExts, Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("Portable Network Graphics", "*.png\0", Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("Jpeg", "*.jpg\0*.jpeg\0", Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("Targa", "*.tga\0", Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("Bitmap", "*.bmp\0", Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("HDR", "*.hdr\0", Graphics::TextureLoader::TextureLoaderSTBI);
+			RegisterTextureLoader("Photoshop", "*.psd\0", Graphics::TextureLoader::TextureLoaderSTBI);
 		}
 
 		int StreamRead(void* pUser, char* pData, int iSize)
