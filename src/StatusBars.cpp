@@ -15,14 +15,78 @@ StatusBars::~StatusBars()
 void StatusBars::OnStatusBar()
 {
 	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
+	const Fonts& oFonts = Program::GetInstance()->GetFonts();
 	if (oTexture.IsValid())
 	{
-		ImGui::Text("%d x %d (%d mip) : %s (%d channels)"
-			, oTexture.GetWidth()
-			, oTexture.GetHeight()
-			, oTexture.GetMipCount()
-			, Graphics::EPixelFormat_string[oTexture.GetPixelFormat()]
-			, Graphics::EPixelFormatInfos[oTexture.GetPixelFormat()].iComponents
-		);
+		//Width
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::TextUnformatted("Width:");
+		ImGui::PopFont();
+
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::SameLine(0, 0);
+		ImGui::Text("%d", oTexture.GetWidth());
+		ImGui::PopFont();
+
+		//Height
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::SameLine();
+		ImGui::TextUnformatted("Height:");
+		ImGui::PopFont();
+
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::SameLine(0, 0);
+		ImGui::Text("%d", oTexture.GetHeight());
+		ImGui::PopFont();
+
+		//Face/Slice
+		if (oTexture.GetFaceCount() > 1)
+		{
+			ImGui::PushFont(oFonts.pFontConsolas);
+			ImGui::SameLine();
+			ImGui::TextUnformatted("Face:");
+			ImGui::PopFont();
+
+			ImGui::PushFont(oFonts.pFontConsolasBold);
+			ImGui::SameLine(0, 0);
+			ImGui::Text("%d", oTexture.GetFaceCount());
+			ImGui::PopFont();
+		}
+
+		//Mips
+		if (oTexture.GetMipCount() > 1)
+		{
+			ImGui::PushFont(oFonts.pFontConsolas);
+			ImGui::SameLine();
+			ImGui::TextUnformatted("Mip:");
+			ImGui::PopFont();
+
+			ImGui::PushFont(oFonts.pFontConsolasBold);
+			ImGui::SameLine(0, 0);
+			ImGui::Text("%d", oTexture.GetMipCount());
+			ImGui::PopFont();
+		}
+
+		//Format
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::SameLine();
+		ImGui::TextUnformatted("Format:");
+		ImGui::PopFont();
+
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::SameLine(0, 0);
+		ImGui::Text("%s", Graphics::EPixelFormat_string[oTexture.GetPixelFormat()]);
+		ImGui::PopFont();
+
+		//Channels
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::SameLine();
+		ImGui::TextUnformatted("Channels:");
+		ImGui::PopFont();
+
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::SameLine(0, 0);
+		ImGui::Text("%d", Graphics::EPixelFormatInfos[oTexture.GetPixelFormat()].iComponents);
+		ImGui::PopFont();
 	}
 }
