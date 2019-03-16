@@ -24,6 +24,8 @@ namespace ImWindow
 
 		virtual float					GetTitleBarHeight() const;
 		virtual void					PaintTitleBar(ImwPlatformWindow* pPlatformWindow);
+
+		void							ClosePlatformWindow(ImwPlatformWindow* pPlatformWindow);
 	protected:
 		GraphicResources::Texture2D*	m_pIcon;
 	};

@@ -64,6 +64,7 @@ public:
 
 	bool									Run();
 	void									AskExit();
+	void									CloseCurrentWindow();
 
 	ImWindow::ImwWindowManager*				GetWindowManager() { return &m_oImWindowMgrDX11; }
 

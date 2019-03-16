@@ -85,7 +85,7 @@ Program::Program(int iArgCount, char** pArgs)
 	style.Colors[ImGuiCol_HeaderActive]          = ImVec4(0.25f, 0.25f, 0.25f, 0.50f);
 
 	m_pShortKeyManager = new ShortKeyManager();
-	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::AskExit), false);
+	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
 	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", "CTRL+O", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
 	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", "CTRL+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
 	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", "CTRL+SHIFT+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
@@ -150,6 +150,14 @@ bool Program::Run()
 void Program::AskExit()
 {
 	m_bRun = false;
+}
+
+void Program::CloseCurrentWindow()
+{
+	if (m_oImWindowMgrDX11.GetFocusedPlatformWindow() != NULL)
+	{
+		m_oImWindowMgrDX11.ClosePlatformWindow(m_oImWindowMgrDX11.GetFocusedPlatformWindow());
+	}
 }
 
 void Program::UpdateTexture2DRes()
