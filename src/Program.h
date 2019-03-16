@@ -2,7 +2,7 @@
 #ifndef __PROGRAM_H__
 #define __PROGRAM_H__
 
-#include "ImwWindowManagerDX11Custom.h"
+#include "ImwWindowManagerCustom.h"
 
 #include "Graphics/Texture.h"
 
@@ -99,7 +99,7 @@ protected:
 
 	bool									m_bRun;
 
-	ImWindow::ImwWindowManagerDX11Custom	m_oImWindowMgr;
+	ImWindow::ImwWindowManagerCustom		m_oImWindowMgr;
 
 	Fonts									m_oFonts;
 

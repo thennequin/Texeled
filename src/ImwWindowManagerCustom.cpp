@@ -1,5 +1,5 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
-#include "ImwWindowManagerDX11Custom.h"
+#include "ImwWindowManagerCustom.h"
 using namespace ImWindow;
 
 
@@ -10,18 +10,18 @@ using namespace ImWindow;
 
 #include "Resources/Icons/Default_24_png.h"
 
-ImwWindowManagerDX11Custom::ImwWindowManagerDX11Custom(bool bCustomFrame)
+ImwWindowManagerCustom::ImwWindowManagerCustom(bool bCustomFrame)
 	: ImwWindowManagerDX11(bCustomFrame)
 	, m_pIcon(NULL)
 {
 }
 
-ImwWindowManagerDX11Custom::~ImwWindowManagerDX11Custom()
+ImwWindowManagerCustom::~ImwWindowManagerCustom()
 {
 	InternalDestroy();
 }
 
-bool ImwWindowManagerDX11Custom::InternalInit()
+bool ImwWindowManagerCustom::InternalInit()
 {
 	if (ImwWindowManagerDX11::InternalInit() == false)
 		return false;
@@ -37,7 +37,7 @@ bool ImwWindowManagerDX11Custom::InternalInit()
 	return true;
 }
 
-void ImwWindowManagerDX11Custom::InternalDestroy()
+void ImwWindowManagerCustom::InternalDestroy()
 {
 	if (m_pIcon)
 	{
@@ -48,7 +48,7 @@ void ImwWindowManagerDX11Custom::InternalDestroy()
 }
 
 const float c_fIconSize = 24.f;
-float ImwWindowManagerDX11Custom::GetTitleBarHeight() const
+float ImwWindowManagerCustom::GetTitleBarHeight() const
 {
 	ImGuiContext* pContext = m_pMainPlatformWindow->GetContext();
 	float fContentSize = pContext->Style.FramePadding.y * 2.f + pContext->FontSize;
@@ -57,7 +57,7 @@ float ImwWindowManagerDX11Custom::GetTitleBarHeight() const
 	return pContext->Style.WindowPadding.y + fContentSize;
 }
 
-void ImwWindowManagerDX11Custom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow)
+void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow)
 {
 	//Draw simple icon in title bar
 	/*ImGui::Dummy(ImVec2(c_fIconSize, c_fIconSize));
@@ -81,7 +81,7 @@ void ImwWindowManagerDX11Custom::PaintTitleBar(ImwPlatformWindow* pPlatformWindo
 	ImwWindowManager::PaintTitleBar(pPlatformWindow);
 }
 
-void ImwWindowManagerDX11Custom::ClosePlatformWindow(ImwPlatformWindow* pPlatformWindow)
+void ImwWindowManagerCustom::ClosePlatformWindow(ImwPlatformWindow* pPlatformWindow)
 {
 	OnClosePlatformWindow(pPlatformWindow);
 }

@@ -1,6 +1,5 @@
-
-#ifndef __IM_WINDOW_MANAGER_DX11_CUSTOM_H__
-#define __IM_WINDOW_MANAGER_DX11_CUSTOM_H__
+#ifndef __IM_WINDOW_MANAGER_CUSTOM_H__
+#define __IM_WINDOW_MANAGER_CUSTOM_H__
 
 #include "ImwConfig.h"
 
@@ -13,11 +12,11 @@ namespace GraphicResources
 
 namespace ImWindow
 {
-	class ImwWindowManagerDX11Custom : public ImwWindowManagerDX11
+	class ImwWindowManagerCustom : public ImwWindowManagerDX11
 	{
 	public:
-		ImwWindowManagerDX11Custom(bool bCustomFrame);
-		virtual							~ImwWindowManagerDX11Custom();
+		ImwWindowManagerCustom(bool bCustomFrame);
+		virtual							~ImwWindowManagerCustom();
 
 		virtual bool					InternalInit();
 		virtual void					InternalDestroy();
@@ -31,4 +30,4 @@ namespace ImWindow
 	};
 }
 
-#endif //__IM_WINDOW_MANAGER_DX11_CUSTOM_H__
+#endif //__IM_WINDOW_MANAGER_CUSTOM_H__
