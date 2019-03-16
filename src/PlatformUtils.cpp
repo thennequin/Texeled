@@ -6,7 +6,7 @@
 
 namespace PlatformUtils
 {
-	bool OpenFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pOutSelectedExt)
+	bool OpenFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pInOutSelectedExt)
 	{
 		OPENFILENAME of;
 		::memset(&of, 0, sizeof(of));
@@ -17,7 +17,7 @@ namespace PlatformUtils
 		of.lpstrFile = pInOut;
 		of.lpstrFilter = pExts;
 		of.nMaxFile = iOutSize;
-		of.nFilterIndex = 0;
+		of.nFilterIndex = (pInOutSelectedExt != NULL) ? *pInOutSelectedExt : 0;
 		of.lpstrFileTitle = NULL;
 		of.nMaxFileTitle = 0;
 		of.lpstrInitialDir = pInOut;
@@ -28,13 +28,13 @@ namespace PlatformUtils
 		if (FALSE == GetOpenFileName(&of))
 			return false;
 
-		if (pOutSelectedExt != NULL)
-			*pOutSelectedExt = of.nFilterIndex;
+		if (pInOutSelectedExt != NULL)
+			*pInOutSelectedExt = of.nFilterIndex;
 
 		return true;
 	}
 
-	bool SaveFileDialog(const char* pTitle, const char* pExts, char* pOut, int iOutSize, int* pOutSelectedExt)
+	bool SaveFileDialog(const char* pTitle, const char* pExts, char* pOut, int iOutSize, int* pInOutSelectedExt)
 	{
 		OPENFILENAME of;
 		::memset(&of, 0, sizeof(of));
@@ -45,7 +45,7 @@ namespace PlatformUtils
 		of.lpstrFile = pOut;
 		of.lpstrFilter = pExts;
 		of.nMaxFile = iOutSize;
-		of.nFilterIndex = 0;
+		of.nFilterIndex = (pInOutSelectedExt != NULL) ? *pInOutSelectedExt : 0;
 		of.lpstrFileTitle = NULL;
 		of.nMaxFileTitle = 0;
 		of.lpstrInitialDir = NULL;
@@ -56,8 +56,8 @@ namespace PlatformUtils
 		if (FALSE == GetSaveFileNameA(&of))
 			return false;
 
-		if (pOutSelectedExt != NULL)
-			*pOutSelectedExt = of.nFilterIndex;
+		if (pInOutSelectedExt != NULL)
+			*pInOutSelectedExt = of.nFilterIndex - 1;
 
 		return true;
 	}

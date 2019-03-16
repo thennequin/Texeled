@@ -3,8 +3,8 @@
 
 namespace PlatformUtils
 {
-	bool OpenFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pOutSelectedExt);
-	bool SaveFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pOutSelectedExt);
+	bool OpenFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pInOutSelectedExt);
+	bool SaveFileDialog(const char* pTitle, const char* pExts, char* pInOut, int iOutSize, int* pInOutSelectedExt);
 }
 //namespace PlatformUtils
 
