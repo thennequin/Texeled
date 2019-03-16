@@ -52,6 +52,12 @@ struct ProgramMode
 typedef ProgramMode::Enum ProgramModeEnum;
 extern const char* ProgramModeStrings[ProgramMode::_COUNT];
 
+struct DisplayOptions
+{
+	bool bShowPixelGrid;
+	bool bTiling;
+};
+
 class Program
 {
 	Program(int iArgCount, char** pArgs);
@@ -86,6 +92,8 @@ public:
 
 	ProgramModeEnum							GetMode() const { return m_eMode; }
 	void									SetMode(ProgramModeEnum eMode) { m_eMode = eMode; }
+
+	DisplayOptions&							GetDisplayOptions() { return m_oDisplayOptions; }
 protected:
 	static Program*							s_pInstance;
 
@@ -100,6 +108,7 @@ protected:
 	Menus*									m_pMenus;
 
 	ProgramModeEnum							m_eMode;
+	DisplayOptions							m_oDisplayOptions;
 
 	Windows::WorkAreaWindow*				m_pWorkAreaWindow;
 

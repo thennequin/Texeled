@@ -17,8 +17,6 @@ namespace Windows
 		SetTitle("WorkArea");
 		SetAlone(true);
 
-		m_bTiling = false;
-		m_bShowPixelGrid = true;
 		m_fZoom = 1.0;
 		m_oOffset = ImVec2(0.f, 0.f);
 
@@ -69,13 +67,14 @@ namespace Windows
 
 	void WorkAreaWindow::OnGui()
 	{
+		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
 		ImGuiIO& oIO = ImGui::GetIO();
 
 		ImGui::SameLine(0.f, 10.f);
-		ImGui::Checkbox("Show pixel grid", &m_bShowPixelGrid);
+		ImGui::Checkbox("Show pixel grid", &oDisplayOptions.bShowPixelGrid);
 
 		ImGui::SameLine(0.f, 10.f);
-		ImGui::Checkbox("Tiling", &m_bTiling);
+		ImGui::Checkbox("Tiling", &oDisplayOptions.bTiling);
 
 		const int iCurrentMip = 0;
 
@@ -162,7 +161,7 @@ namespace Windows
 			ImVec2 oUvRange = oUv1 - oUv0;
 			ImVec2 oTextureStart = oAreaMin - oAreaSize * ((oUv0) / oUvRange);
 			ImVec2 oTextureEnd = oAreaMin + oAreaSize * ((oUvRange - (oUv1 - ImVec2(1.f, 1.f))) / oUvRange);
-			if (!m_bTiling)
+			if (!oDisplayOptions.bTiling)
 			{
 				if (oUv0.x < 0.f)
 				{
@@ -213,7 +212,7 @@ namespace Windows
 				ImWindow::ImwPlatformWindowSokol::RestorePipeline();
 				*/
 
-				if (m_bShowPixelGrid && (fMipPixelRatio*m_fCurrentZoom) > 10.0)
+				if (oDisplayOptions.bShowPixelGrid && (fMipPixelRatio*m_fCurrentZoom) > 10.0)
 				{
 					double fStep = fMipPixelRatio * m_fCurrentZoom;
 					ImU32 iColor = ImGui::GetColorU32(ImVec4(0.4f, 0.4f, 0.4f, 1.f));
@@ -225,7 +224,7 @@ namespace Windows
 					while (fStart < oAreaMin.x)
 						fStart += fStep;
 
-					while (m_bTiling && fStart > oImageStart.y - fStep)
+					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStep)
 						fStart -= fStep;
 
 					for (; fStart <= oImageEnd.x && fStart <= oAreaMax.x; fStart += fStep)
@@ -237,7 +236,7 @@ namespace Windows
 					while (fStart < oAreaMin.y)
 						fStart += fStep;
 
-					while (m_bTiling && fStart > oImageStart.y - fStep)
+					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStep)
 						fStart -= fStep;
 
 					for (; fStart <= oImageEnd.y && fStart <= oAreaMax.y; fStart += fStep)
@@ -301,38 +300,6 @@ namespace Windows
 			m_fCurrentZoom = m_fZoom;
 			m_oCurrentOffset = m_oOffset;
 
-			//Display image informations
-			if (0)
-			{
-				char pInformations[2048];
-				snprintf(pInformations, 2048,
-					"Width: %d\n"
-					"Height: %d\n"
-					"Components: %d\n"
-					"Pixel format: %s",
-					oTexture.GetWidth(),
-					oTexture.GetHeight(),
-					Graphics::PixelFormat::ComponentCount(oTexture.GetPixelFormat()),
-					Graphics::EPixelFormat_string[oTexture.GetPixelFormat()]
-				);
-
-				ImVec2 vInformationSize = ImGui::CalcTextSize(pInformations);
-				const ImVec2& vPadding = ImGui::GetStyle().FramePadding;
-
-				if (vInformationSize.x > 0)
-				{
-					pDrawList->AddRectFilled(
-						ImVec2(oAreaMin.x + vPadding.x, oAreaMax.y - vPadding.y * 3.f - vInformationSize.y),
-						ImVec2(oAreaMin.x + vPadding.x * 3 + vInformationSize.x, oAreaMax.y - vPadding.y),
-						ImGui::GetColorU32(ImGuiCol_PopupBg),
-						5.f);
-
-					pDrawList->AddText(
-						ImVec2(oAreaMin.x + vPadding.x * 2.f, oAreaMax.y - vPadding.y * 2.f - vInformationSize.y),
-						ImGui::GetColorU32(ImGuiCol_Text),
-						pInformations);
-				}
-			}
 			ImGui::EndChild();
 		}
 	}

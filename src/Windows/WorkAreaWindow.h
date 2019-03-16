@@ -11,7 +11,7 @@ namespace GraphicResources
 
 namespace Windows
 {
-	class WorkAreaWindow : ImWindow::ImwWindow
+	class WorkAreaWindow : public ImWindow::ImwWindow
 	{
 	public:
 		WorkAreaWindow();
@@ -20,8 +20,6 @@ namespace Windows
 		virtual void			OnGui();
 		virtual void			OnDropFiles(int iCount, char** pFiles, const ImVec2& oPos) override;
 	protected:
-		bool					m_bTiling;
-		bool					m_bShowPixelGrid;
 		double					m_fZoom;
 		ImVec2					m_oOffset;
 
