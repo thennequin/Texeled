@@ -123,12 +123,12 @@ namespace Graphics
 			if (PixelFormat::IsCompressed(pTexture->GetPixelFormat()))
 			{
 				oDDSHeader.iHeaderFlags |= DDS_HEADER_FLAGS_PITCH;
-				oDDSHeader.iPitchOrLinearSize = Math::Max(1, ((pTexture->GetWidth() + 3) / 4) ) * PixelFormat::BlockSize(pTexture->GetPixelFormat());
+				oDDSHeader.iPitchOrLinearSize = PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
 			}
 			else
 			{
 				oDDSHeader.iHeaderFlags |= DDS_HEADER_FLAGS_PITCH;
-				oDDSHeader.iPitchOrLinearSize = (pTexture->GetWidth() * PixelFormat::BitPerPixel(pTexture->GetPixelFormat()) + 7) / 8;
+				oDDSHeader.iPitchOrLinearSize = PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
 			}
 
 			if (bHasDX10Header)
@@ -158,8 +158,7 @@ namespace Graphics
 					uint32_t iPadMipWidth = oFaceData.iWidth;
 					uint32_t iPadMipHeight = oFaceData.iHeight;
 
-					size_t iSize = iPadMipWidth * iPadMipHeight * iBPP / 8;
-					if (pStream->Write(oFaceData.pData, iSize) != iSize)
+					if (pStream->Write(oFaceData.pData, oFaceData.iSize) != oFaceData.iSize)
 						return false;
 				}
 			}
