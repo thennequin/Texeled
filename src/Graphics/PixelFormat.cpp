@@ -568,8 +568,8 @@ namespace Graphics
 			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
 
 			RGBA8 iColors[4];
-			Convert_BGR565_To_RGB8(&pBlock->iColor[0], (RGB8*)&iColors[0], 0, 0);
-			Convert_BGR565_To_RGB8(&pBlock->iColor[1], (RGB8*)&iColors[1], 0, 0);
+			Convert_BGR565_To_RGB8(&pBlock->iColor[0], &iColors[0], 0, 0);
+			Convert_BGR565_To_RGB8(&pBlock->iColor[1], &iColors[1], 0, 0);
 			iColors[0].a = iColors[1].a = 255;
 
 			int iComp = 3;
@@ -795,14 +795,14 @@ namespace Graphics
 			}
 		}
 
-		void ConvertBC2_To_RGBA(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_BC2_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
 		{
 			BlockBC2* pBlock = (BlockBC2*)pIn;
 			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
 
 			RGBA8 iColors[4];
-			Convert_RGB565_To_RGB8(&pBlock->iColor[0], &iColors[0], 0, 0);
-			Convert_RGB565_To_RGB8(&pBlock->iColor[1], &iColors[1], 0, 0);
+			Convert_BGR565_To_RGB8(&pBlock->iColor[0], &iColors[0], 0, 0);
+			Convert_BGR565_To_RGB8(&pBlock->iColor[1], &iColors[1], 0, 0);
 			iColors[0].a = iColors[1].a = 255;
 
 			RGBA8Lerp(iColors[0], iColors[1], &iColors[2], 2, 1, 3, 0);
@@ -814,7 +814,7 @@ namespace Graphics
 				int x = i - y * 4;
 
 				int iColorIndex = (pBlock->iPixelIndex >> (i * 2)) & 0x3;
-				int iAlphaIndex = (pBlock->iAlphaIndex >> (i * 4)) & 0x15;
+				int iAlphaIndex = (pBlock->iAlphaIndex >> (i * 4)) & 0xF;
 
 				RGBA8& oOutPixel = pOut4x4RGBA[y * iPitchOut + x];
 				RGBA8& oInPixel = iColors[iColorIndex];
@@ -826,35 +826,51 @@ namespace Graphics
 			}
 		}
 
-		void DecodeBlockBC3(BlockBC3* pBlock, uint8_t* pOut4x4RGBA)
+		void Convert_BC3_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
 		{
-			RGBA8 iColors[4];
-			Convert_RGB565_To_RGB8(&pBlock->iColor[0], &iColors[0], 0, 0);
-			Convert_RGB565_To_RGB8(&pBlock->iColor[1], &iColors[1], 0, 0);
-			iColors[0].a = iColors[1].a = 255;
+			BlockBC3* pBlock = (BlockBC3*)pIn;
+			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
 
-			RGBA8Lerp(iColors[0], iColors[1], &iColors[2], 2, 1, 3, 0);
-			RGBA8Lerp(iColors[0], iColors[1], &iColors[3], 1, 2, 3, 0);
+			RGB8 iColors[4];
+			Convert_BGR565_To_RGB8(&pBlock->iColor[0], &iColors[0], 0, 0);
+			Convert_BGR565_To_RGB8(&pBlock->iColor[1], &iColors[1], 0, 0);
+
+			RGB8Lerp(iColors[0], iColors[1], &iColors[2], 2, 1, 3, 0);
+			RGB8Lerp(iColors[0], iColors[1], &iColors[3], 1, 2, 3, 0);
 
 			uint8_t iAlphas[8];
 			iAlphas[0] = pBlock->iAlpha[0];
 			iAlphas[1] = pBlock->iAlpha[1];
 
-			iAlphas[2] = (iAlphas[0] * 6 + iAlphas[1] * 1) / 7;
-			iAlphas[3] = (iAlphas[0] * 5 + iAlphas[1] * 2) / 7;
-			iAlphas[4] = (iAlphas[0] * 4 + iAlphas[1] * 3) / 7;
-			iAlphas[5] = (iAlphas[0] * 3 + iAlphas[1] * 4) / 7;
-			iAlphas[6] = (iAlphas[0] * 2 + iAlphas[1] * 5) / 7;
-			iAlphas[6] = (iAlphas[0] * 1 + iAlphas[1] * 6) / 7;
+			if (iAlphas[0] > iAlphas[1])
+			{
+				iAlphas[2] = (iAlphas[0] * 6 + iAlphas[1] * 1) / 7;
+				iAlphas[3] = (iAlphas[0] * 5 + iAlphas[1] * 2) / 7;
+				iAlphas[4] = (iAlphas[0] * 4 + iAlphas[1] * 3) / 7;
+				iAlphas[5] = (iAlphas[0] * 3 + iAlphas[1] * 4) / 7;
+				iAlphas[6] = (iAlphas[0] * 2 + iAlphas[1] * 5) / 7;
+				iAlphas[7] = (iAlphas[0] * 1 + iAlphas[1] * 6) / 7;
+			}
+			else
+			{
+				iAlphas[2] = (iAlphas[0] * 4 + iAlphas[1] * 1) / 5;
+				iAlphas[3] = (iAlphas[0] * 3 + iAlphas[1] * 2) / 5;
+				iAlphas[4] = (iAlphas[0] * 2 + iAlphas[1] * 3) / 5;
+				iAlphas[5] = (iAlphas[0] * 1 + iAlphas[1] * 4) / 5;
+				iAlphas[6] = 0;
+				iAlphas[7] = 255;
+			}
 
-			RGBA8* pOut = (RGBA8*)pOut4x4RGBA;
 			for (int i = 0; i < 16; ++i)
 			{
+				int y = i / 4;
+				int x = i - y * 4;
+
 				int iColorIndex = (pBlock->iPixelIndex >> (i * 2)) & 0x3;
 				int iAlphaIndex = (((uint64_t)pBlock->iAlphaIndex + ((uint64_t)pBlock->iAlphaIndex2 << 32)) >> (i * 3)) & 0x7;
 
-				RGBA8& oOutPixel = pOut[i];
-				RGBA8& oInPixel = iColors[iColorIndex];
+				RGBA8& oOutPixel = pOut4x4RGBA[y * iPitchOut + x];
+				RGB8& oInPixel = iColors[iColorIndex];
 
 				oOutPixel.r = oInPixel.r;
 				oOutPixel.g = oInPixel.g;
@@ -947,6 +963,12 @@ namespace Graphics
 			// BC1 => RGBA
 			s_pConvertionMatrix[E_PIXELFORMAT_BC1][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC1_To_RGBA8, 28 };
 			s_pConvertionMatrix[E_PIXELFORMAT_RGBA8_UNORM][E_PIXELFORMAT_BC1] = { Convert_RGBA8_To_BC1, -28 };
+
+			// BC2 => RGBA
+			s_pConvertionMatrix[E_PIXELFORMAT_BC2][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC2_To_RGBA8, 24 };
+
+			// BC3 => RGBA
+			s_pConvertionMatrix[E_PIXELFORMAT_BC3][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC3_To_RGBA8, 24 };
 		}
 
 		bool GetConvertionChain(EPixelFormat eSourcePixelFormat, EPixelFormat eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits)
