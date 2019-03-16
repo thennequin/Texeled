@@ -70,6 +70,8 @@ void Menus::OnMenu()
 		ImGui::EndMenu();
 	}
 
+	bool bOpenResizeMenu = false;
+
 	if (ImGui::BeginMenu("Edit"))
 	{
 		if (ImGui::BeginMenu("Convert pixel format to", oTexture.IsValid()))
@@ -96,7 +98,81 @@ void Menus::OnMenu()
 
 			ImGui::EndMenu();
 		}
+
+		ImGui::Separator();
+
+		bool bIsResizablePixelFormat = oTexture.IsValid() && Graphics::IsPixelFormatResizable(oTexture.GetPixelFormat());
+		if (ImGui::MenuItem("Resize", NULL, false, bIsResizablePixelFormat))
+		{
+			bOpenResizeMenu = true;
+		}
+		if (oTexture.IsValid() && bIsResizablePixelFormat == false && ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Resize not supported for this pixel format");
+		}
+
 		ImGui::EndMenu();
+	}
+
+	if (bOpenResizeMenu)
+	{
+		if (oTexture.IsValid())
+		{
+			ImGui::OpenPopup("TextureResize");
+			m_bResizeKeepRatio = true;
+			m_iResizeNewWidth = oTexture.GetWidth();
+			m_iResizeNewHeight = oTexture.GetHeight();
+			m_fResizeRatio = (double)m_iResizeNewWidth / (double)m_iResizeNewHeight;
+		}
+	}
+
+	if (ImGui::BeginPopupModal("TextureResize", 0, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Checkbox("Keep ratio", &m_bResizeKeepRatio);
+		if (ImGui::DragInt("Width", &m_iResizeNewWidth, 0.5f))
+		{
+			if (m_iResizeNewWidth < 1)
+				m_iResizeNewWidth = 1;
+			if (m_iResizeNewWidth > 65536)
+				m_iResizeNewWidth = 65536;
+
+			if (m_bResizeKeepRatio)
+				m_iResizeNewHeight = m_iResizeNewWidth / m_fResizeRatio;
+		}
+
+		if (ImGui::DragInt("Height", &m_iResizeNewHeight, 0.5f))
+		{
+			if (m_iResizeNewHeight < 1)
+				m_iResizeNewHeight = 1;
+			if (m_iResizeNewHeight > 16384)
+				m_iResizeNewHeight = 16384;
+
+			if (m_bResizeKeepRatio)
+				m_iResizeNewWidth = m_iResizeNewHeight * m_fResizeRatio;
+		}
+
+		if (oTexture.GetMipCount() > 1)
+		{
+			ImGui::TextDisabled("Mip maps will be erased");
+		}
+
+		if (ImGui::Button("Resize"))
+		{
+			ErrorCode oErr = Graphics::ResizeTexture(&oTexture, &oTexture, m_iResizeNewWidth, m_iResizeNewHeight);
+			CORE_VERIFY_OK(oErr);
+			if (oErr == ErrorCode::Ok)
+			{
+				Program::GetInstance()->UpdateTexture2DRes();
+			}
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 
 }

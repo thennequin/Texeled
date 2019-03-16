@@ -6,6 +6,11 @@
 class Menus : ImWindow::ImwMenu
 {
 	virtual void OnMenu();
+protected:
+	bool						m_bResizeKeepRatio;
+	int							m_iResizeNewWidth;
+	int							m_iResizeNewHeight;
+	double						m_fResizeRatio;
 };
 
 #endif //_MENUS_H_
