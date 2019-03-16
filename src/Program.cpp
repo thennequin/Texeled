@@ -185,7 +185,7 @@ bool Program::LoadFile(const char* pFile)
 void Program::Open()
 {
 	char pBuffer[1024] = { 0 };
-	int iIndex;
+	int iSelectedIndex = 0;
 
 	Core::StringBuilder oExts;
 	static char* s_pExts = NULL;
@@ -196,27 +196,27 @@ void Program::Open()
 
 	oExts += "All supported formats";
 	oExts += (char)0;
-	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	for (int iLoaderIndex = 0; iLoaderIndex < iLoaderCount; ++iLoaderIndex)
 	{
-		if (iIndex > 0)
+		if (iLoaderIndex > 0)
 			oExts += ';';
-		oExts += pLoaders[iIndex].pExts;
+		oExts += pLoaders[iLoaderIndex].pExts;
 	}
 	oExts += (char)0;
 
-	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	for (int iLoaderIndex = 0; iLoaderIndex < iLoaderCount; ++iLoaderIndex)
 	{
-		oExts += pLoaders[iIndex].pName;
+		oExts += pLoaders[iLoaderIndex].pName;
 		oExts += " (";
-		oExts += pLoaders[iIndex].pExts;
+		oExts += pLoaders[iLoaderIndex].pExts;
 		oExts += ')';
 		oExts += (char)0;
-		oExts += pLoaders[iIndex].pExts;
+		oExts += pLoaders[iLoaderIndex].pExts;
 		oExts += (char)0;
 	}
 
 	char* pExts = oExts.Export();
-	if (PlatformUtils::OpenFileDialog("Open file", pExts, pBuffer, sizeof(pBuffer), &iIndex))
+	if (PlatformUtils::OpenFileDialog("Open file", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
 		//TODO testing iindex
 		LoadFile(pBuffer);
@@ -234,7 +234,7 @@ void Program::SaveAs()
 		return;
 
 	char pBuffer[1024] = { 0 };
-	int iIndex = 0;
+	int iSelectedIndex = 0;
 
 	Core::StringBuilder oExts;
 	static char* s_pExts = NULL;
@@ -243,21 +243,21 @@ void Program::SaveAs()
 	int iWriterCount;
 	Graphics::GetTextureWriters(&pWriters, &iWriterCount);
 
-	for (int iIndex = 0; iIndex < iWriterCount; ++iIndex)
+	for (int iWriterIndex = 0; iWriterIndex < iWriterCount; ++iWriterIndex)
 	{
-		oExts += pWriters[iIndex].pName;
+		oExts += pWriters[iWriterIndex].pName;
 		oExts += " (";
-		oExts += pWriters[iIndex].pExt;
+		oExts += pWriters[iWriterIndex].pExt;
 		oExts += ')';
 		oExts += (char)0;
-		oExts += pWriters[iIndex].pExt;
+		oExts += pWriters[iWriterIndex].pExt;
 		oExts += (char)0;
 	}
 
 	char* pExts = oExts.Export();
-	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iIndex))
+	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
-		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iIndex]));
+		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iSelectedIndex]));
 		LoadFile(pBuffer);
 	}
 	free(pExts);
