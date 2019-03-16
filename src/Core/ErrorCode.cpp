@@ -12,6 +12,7 @@ bool ErrorCode::s_bStaticTime = true;
 ErrorCode ErrorCode::Ok(0, "Ok");
 ErrorCode ErrorCode::Fail(-1, "Fail");
 ErrorCode ErrorCode::NotImplemented(-2, "Not Implemented");
+ErrorCode ErrorCode::InvalidArgument(-3, "Invalid argument(s)");
 
 ErrorCode::StaticResolver ErrorCode::s_oStaticResolver;
 

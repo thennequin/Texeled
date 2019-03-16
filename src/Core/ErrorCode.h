@@ -13,6 +13,7 @@ public:
 	static ErrorCode	Ok;
 	static ErrorCode	Fail;
 	static ErrorCode	NotImplemented;
+	static ErrorCode	InvalidArgument;
 public:
 						ErrorCode(int iCode, const char* pMessage, ...);
 						ErrorCode(const ErrorCode& oRight);
