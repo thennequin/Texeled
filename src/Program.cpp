@@ -227,17 +227,20 @@ void Program::Save()
 
 void Program::SaveAs()
 {
+	if (m_oTexture.IsValid() == false)
+		return;
+
 	char pBuffer[1024] = { 0 };
-	int iIndex;
+	int iIndex = 0;
 
 	Core::StringBuilder oExts;
 	static char* s_pExts = NULL;
 
 	const Graphics::TextureWriterInfo* pWriters;
-	int iLoaderCount;
-	Graphics::GetTextureWriters(&pWriters, &iLoaderCount);
+	int iWriterCount;
+	Graphics::GetTextureWriters(&pWriters, &iWriterCount);
 
-	for (int iIndex = 0; iIndex < iLoaderCount; ++iIndex)
+	for (int iIndex = 0; iIndex < iWriterCount; ++iIndex)
 	{
 		oExts += pWriters[iIndex].pName;
 		oExts += " (";
