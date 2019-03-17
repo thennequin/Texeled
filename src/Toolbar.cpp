@@ -18,6 +18,7 @@ Toolbar::~Toolbar()
 
 void Toolbar::OnToolBar()
 {
+	/*
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 15.f);
 	ProgramModeEnum eMode = Program::GetInstance()->GetMode();
 	for (int iMode = 0; iMode < ProgramModeEnum::_COUNT; ++iMode)
@@ -32,6 +33,7 @@ void Toolbar::OnToolBar()
 		}
 	}
 	ImGui::PopStyleVar();
+	*/
 
 	DisplayOptions& oDisplay = Program::GetInstance()->GetDisplayOptions();
 
