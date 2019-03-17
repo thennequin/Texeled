@@ -111,6 +111,18 @@ void Menus::OnMenu()
 			ImGui::SetTooltip("Resize not supported for this pixel format");
 		}
 
+		if (ImGui::MenuItem("Generate all mips", NULL, false, bIsResizablePixelFormat))
+		{
+			if (Graphics::GenerateMips(&oTexture, &oTexture, false) == ErrorCode::Ok)
+				Program::GetInstance()->UpdateTexture2DRes();
+		}
+
+		if (ImGui::MenuItem("Generate missing mips", NULL, false, bIsResizablePixelFormat))
+		{
+			if (Graphics::GenerateMips(&oTexture, &oTexture, true) == ErrorCode::Ok)
+				Program::GetInstance()->UpdateTexture2DRes();
+		}
+
 		ImGui::EndMenu();
 	}
 

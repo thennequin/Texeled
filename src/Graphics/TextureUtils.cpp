@@ -539,4 +539,90 @@ namespace Graphics
 
 		return ErrorCode::Ok;
 	}
+
+	ErrorCode GenerateMips(const Texture* pTexture, Texture* pOutTexture, bool bOnlyMissingMips)
+	{
+		if (pTexture == NULL || pOutTexture == NULL)
+		{
+			return ErrorCode(1, "Invalid argument");
+		}
+
+		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
+		{
+			return ErrorCode(1, "'%s' Pixel format can't be resized", EPixelFormat_string[pTexture->GetPixelFormat()]);
+		}
+
+		int iSize = Math::Max(pTexture->GetWidth(), pTexture->GetHeight());
+		int iMipCount = 1;
+		while (iSize > 1)
+		{
+			++iMipCount;
+			iSize = iSize >> 1;
+		}
+
+		Texture oTemp;
+		Texture::Desc oDesc;
+		oDesc.ePixelFormat = pTexture->GetPixelFormat();
+		oDesc.iWidth = pTexture->GetWidth();
+		oDesc.iHeight = pTexture->GetHeight();
+		oDesc.iMipCount = iMipCount;
+		oDesc.iFaceCount = pTexture->GetFaceCount();
+		ErrorCode oErr = oTemp.Create(oDesc);
+		if (oErr != ErrorCode::Ok)
+			return oErr;
+
+		const PixelFormatInfos& oFormatInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
+
+		int iStartMip = bOnlyMissingMips;
+
+		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
+		{
+			for (int iMip = 0; iMip < iMipCount; ++iMip)
+			{
+				const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(iMip, iFace);
+
+				if (iMip == 0 || (bOnlyMissingMips && iMip < pTexture->GetMipCount()))
+				{
+					const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+					memcpy(oDstFaceData.pData, oSrcFaceData.pData, oSrcFaceData.iSize);
+				}
+				else
+				{
+					const Texture::TextureFaceData& oSrcFaceData = oTemp.GetData().GetFaceData(iMip - 1, iFace);
+
+					int iRes;
+
+					if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_UNORM)
+					{
+						iRes = stbir_resize_uint8(
+							(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
+							(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+							oFormatInfos.iComponents
+						);
+					}
+					else if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_FLOAT)
+					{
+						iRes = stbir_resize_float(
+							(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
+							(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+							oFormatInfos.iComponents
+						);
+					}
+					else
+					{
+						return ErrorCode::NotImplemented;
+					}
+
+					if (iRes == 0)
+					{
+						return ErrorCode(2, "Internal error");
+					}
+				}
+			}
+		}
+
+		oTemp.Swap(*pOutTexture);
+
+		return ErrorCode::Ok;
+	}
 }
