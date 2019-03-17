@@ -114,7 +114,7 @@ namespace Core
 			}
 			else
 			{
-				T* pNewData = (T*)malloc(iNewCapacity * sizeof(T));
+				pNewData = (T*)malloc(iNewCapacity * sizeof(T));
 				if (m_pData != NULL && pNewData != NULL)
 				{
 					memcpy(pNewData, m_pData, iNewCapacity * sizeof(T));
