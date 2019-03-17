@@ -149,7 +149,7 @@ void Menus::OnMenu()
 				m_iResizeNewWidth = 65536;
 
 			if (m_bResizeKeepRatio)
-				m_iResizeNewHeight = m_iResizeNewWidth / m_fResizeRatio;
+				m_iResizeNewHeight = (int)(m_iResizeNewWidth / m_fResizeRatio);
 		}
 
 		if (ImGui::DragInt("Height", &m_iResizeNewHeight, 0.5f))
@@ -160,7 +160,7 @@ void Menus::OnMenu()
 				m_iResizeNewHeight = 16384;
 
 			if (m_bResizeKeepRatio)
-				m_iResizeNewWidth = m_iResizeNewHeight * m_fResizeRatio;
+				m_iResizeNewWidth = (int)(m_iResizeNewHeight * m_fResizeRatio);
 		}
 
 		if (oTexture.GetMipCount() > 1)
