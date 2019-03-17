@@ -211,7 +211,7 @@ bool ShortKeyManager::Manage(bool bCaptureKeyboard)
 
 const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKey(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, bool bSave, bool bDeleteCallbacks)
 {
-	return RegisterShortKeyUp(pName, pDefaultShortKey, pCallback, NULL, bSave);
+	return RegisterShortKeyUp(pName, pDefaultShortKey, pCallback, NULL, bSave, bDeleteCallbacks);
 }
 
 const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave, bool bDeleteCallbacks)
