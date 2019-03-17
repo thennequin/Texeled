@@ -5,7 +5,6 @@
 #include "imgui.h"
 
 #include "GraphicResources/SamplerState.h"
-#include "GraphicResources/Shader.h"
 
 #include <d3d11.h>
 
