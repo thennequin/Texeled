@@ -52,7 +52,6 @@ solution "Texeled"
 							"../Externals/ImWindow/ImWindowDX11",
 							"../Externals/ImWindow/Externals/imgui",
 							"../Externals/ImWindow/Externals/EasyWindow",
-							"../Externals/ImWindow/Externals/DirectX/include",
 
 							"../Externals/stb"
 		}
@@ -70,12 +69,6 @@ solution "Texeled"
 		configuration 		"**.ico"
 			buildaction 	"Embed"
 
-		configuration		"x32"
-			libdirs			"../Externals/ImWindow/Externals/DirectX/lib/x86"
-			
-		configuration		"x64"
-			libdirs			"../Externals/ImWindow/Externals/DirectX/lib/x64"
-		
 		configuration		"Debug"
 			flags			{ "Symbols" }
 			defines 		{ "DEBUG" }
