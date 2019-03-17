@@ -8,4 +8,3 @@ if not exist "ResourceEmbedder_x64.exe" (
 rmdir /S /Q "%~dp0..\src\Resources"
 "%~dp0\ResourceEmbedder_x64.exe" "%~dp0..\Resources" "%~dp0..\src\Resources"
 echo "Finish"
-pause
