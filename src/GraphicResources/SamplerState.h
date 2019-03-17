@@ -7,7 +7,7 @@ struct ID3D11SamplerState;
 
 namespace GraphicResources
 {
-	struct SamplerFilter
+	struct _SamplerFilterEnum
 	{
 		enum Enum
 		{
@@ -19,9 +19,9 @@ namespace GraphicResources
 			LINEAR_MIPMAP_LINEAR
 		};
 	};
-	typedef SamplerFilter::Enum SamplerFilterEnum;
+	typedef _SamplerFilterEnum::Enum SamplerFilterEnum;
 
-	struct Wrap
+	struct _WrapEnum
 	{
 		enum Enum
 		{
@@ -30,7 +30,7 @@ namespace GraphicResources
 			MIRRORED_REPEAT,
 		};
 	};
-	typedef Wrap::Enum WrapEnum;
+	typedef _WrapEnum::Enum WrapEnum;
 
 	class SamplerState
 	{

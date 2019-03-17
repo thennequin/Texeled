@@ -10,17 +10,17 @@ namespace GraphicResources
 	{
 		switch (eFilter)
 		{
-		case SamplerFilter::NEAREST:
+		case SamplerFilterEnum::NEAREST:
 			return D3D11_FILTER_MIN_MAG_MIP_POINT;
-		case SamplerFilter::LINEAR:
+		case SamplerFilterEnum::LINEAR:
 			return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
-		case SamplerFilter::NEAREST_MIPMAP_NEAREST:
+		case SamplerFilterEnum::NEAREST_MIPMAP_NEAREST:
 			return D3D11_FILTER_MIN_MAG_MIP_POINT;
-		case SamplerFilter::NEAREST_MIPMAP_LINEAR:
+		case SamplerFilterEnum::NEAREST_MIPMAP_LINEAR:
 			return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
-		case SamplerFilter::LINEAR_MIPMAP_NEAREST:
+		case SamplerFilterEnum::LINEAR_MIPMAP_NEAREST:
 			return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
-		case SamplerFilter::LINEAR_MIPMAP_LINEAR:
+		case SamplerFilterEnum::LINEAR_MIPMAP_LINEAR:
 			return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		}
 	}
@@ -30,11 +30,11 @@ namespace GraphicResources
 	{
 		switch (eWrap)
 		{
-		case Wrap::REPEAT:
+		case WrapEnum::REPEAT:
 			return D3D11_TEXTURE_ADDRESS_WRAP;
-		case Wrap::CLAMP_TO_EDGE:
+		case WrapEnum::CLAMP_TO_EDGE:
 			return D3D11_TEXTURE_ADDRESS_CLAMP;
-		case Wrap::MIRRORED_REPEAT:
+		case WrapEnum::MIRRORED_REPEAT:
 			return D3D11_TEXTURE_ADDRESS_MIRROR;
 		}
 	}
