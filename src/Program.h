@@ -39,7 +39,7 @@ struct Fonts
 	ImFont* pFontConsolas;
 };
 
-struct ProgramMode
+struct _ProgramModeEnum
 {
 	enum Enum
 	{
@@ -51,8 +51,8 @@ struct ProgramMode
 		_LAST = _COUNT - 1
 	};
 };
-typedef ProgramMode::Enum ProgramModeEnum;
-extern const char* ProgramModeStrings[ProgramMode::_COUNT];
+typedef _ProgramModeEnum::Enum ProgramModeEnum;
+extern const char* ProgramModeEnumStrings[ProgramModeEnum::_COUNT];
 
 struct DisplayOptions
 {
