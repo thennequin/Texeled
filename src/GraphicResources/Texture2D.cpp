@@ -159,36 +159,56 @@ namespace GraphicResources
 			pInputTexture = &oNewTexture;
 		}
 
-		D3D11_SUBRESOURCE_DATA oInitData[Graphics::Texture::c_iMaxMip];
-		memset(oInitData, 0, sizeof(oInitData));
-		for (int iMip = 0; iMip < pInputTexture->GetMipCount(); ++iMip)
+		Core::Array<D3D11_SUBRESOURCE_DATA> oInitData;
+		oInitData.resize(pInputTexture->GetMipCount() * pInputTexture->GetFaceCount());
+		for (int iMip = 0, iMipCount = pInputTexture->GetMipCount(); iMip < iMipCount; ++iMip)
 		{
-			const Graphics::Texture::TextureFaceData& oFaceData = pInputTexture->GetData().GetFaceData(iMip, 0);
-			oInitData[iMip].pSysMem = oFaceData.pData;
-			oInitData[iMip].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
+			for (int iFace = 0, iFaceCount = pInputTexture->GetFaceCount(); iFace < iFaceCount; ++iFace)
+			{
+				const Graphics::Texture::TextureFaceData& oFaceData = pInputTexture->GetData().GetFaceData(iMip, iFace);
+				int iIndex = iMip * iFaceCount + iFace;
+				iIndex = iMip + iFace * iMipCount;
+				oInitData[iIndex].pSysMem = oFaceData.pData;
+				oInitData[iIndex].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
+				oInitData[iIndex].SysMemSlicePitch = oFaceData.iSize;
+			}
 		}
-
 
 		D3D11_TEXTURE2D_DESC desc = { 0 };
 		desc.Width = pInputTexture->GetWidth();
 		desc.Height = pInputTexture->GetHeight();
 		desc.MipLevels = pInputTexture->GetMipCount();
-		desc.ArraySize = 1;
+		desc.ArraySize = pInputTexture->GetFaceCount();
 		desc.Format = eDXGIFormat;
 		desc.SampleDesc.Count = 1;
 		//desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE /*| D3D11_BIND_RENDER_TARGET*/;
-		HRESULT hRes = Program::GetInstance()->GetDX11Device()->CreateTexture2D(&desc, oInitData, &pDX11Texture);
+		HRESULT hRes = Program::GetInstance()->GetDX11Device()->CreateTexture2D(&desc, oInitData.begin(), &pDX11Texture);
+		if (hRes != S_OK)
+		{
+			char pErrorMsg[512];
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
+			return ErrorCode(1, "CreateTexture2D error: %s", pErrorMsg);
+		}
 
 		// Create texture view
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = { 0 };
 		srvDesc.Format = eDXGIFormat;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
-		Program::GetInstance()->GetDX11Device()->CreateShaderResourceView(pDX11Texture, &srvDesc, &pDX11TextureView);
+		srvDesc.Texture2DArray.ArraySize = pTexture->GetFaceCount();
+		srvDesc.Texture2DArray.MipLevels = desc.MipLevels;
+		srvDesc.Texture2DArray.MostDetailedMip = 0;
+		hRes = Program::GetInstance()->GetDX11Device()->CreateShaderResourceView(pDX11Texture, &srvDesc, &pDX11TextureView);
+		if (hRes != S_OK)
+		{
+			char pErrorMsg[512];
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
+			return ErrorCode(1, "CreateShaderResourceView error: %s", pErrorMsg);
+		}
 
 		Texture2D* pNewTexture = new Texture2D();
 
