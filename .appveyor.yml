@@ -12,8 +12,8 @@ configuration:
   - Release
 
 install:
+  - git submodule update --init --recursive
   - cd scripts
-  - InitSubmodules.bat
   - EmbedResources.bat
   - "build 2017.bat"
 
