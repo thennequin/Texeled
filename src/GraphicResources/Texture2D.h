@@ -49,7 +49,6 @@ namespace GraphicResources
 		static ErrorCode				CreateFromTexture(Graphics::Texture* pTexture, Texture2D** pOutTexture2D);
 
 		static bool						GetDXGIFormatFromPixelFormat(Graphics::EPixelFormat ePixelFormat, DXGI_FORMAT* pOutDXGIFormat, Graphics::EPixelFormat* pOutConvertionFormatRequired);
-		static Graphics::EPixelFormat	GetPixelFormatFromDXGIFromat(DXGI_FORMAT eDXGIFormat);
 	protected:
 		ID3D11Texture2D*				m_pTexture;
 		ID3D11Texture2D*				m_pStagingTexture;

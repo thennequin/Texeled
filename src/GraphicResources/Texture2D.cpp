@@ -170,7 +170,7 @@ namespace GraphicResources
 				iIndex = iMip + iFace * iMipCount;
 				oInitData[iIndex].pSysMem = oFaceData.pData;
 				oInitData[iIndex].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
-				oInitData[iIndex].SysMemSlicePitch = oFaceData.iSize;
+				oInitData[iIndex].SysMemSlicePitch = (UINT)oFaceData.iSize;
 			}
 		}
 
@@ -335,10 +335,5 @@ namespace GraphicResources
 			*pOutConvertionFormatRequired = eConvertionFormat;
 
 		return true;
-	}
-
-	Graphics::EPixelFormat Texture2D::GetPixelFormatFromDXGIFromat(DXGI_FORMAT eDXGIFormat)
-	{
-		return Graphics::E_PIXELFORMAT_NONE;
 	}
 }
