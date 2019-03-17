@@ -9,8 +9,10 @@
 #include "ShortKeyManager.h"
 
 class Menus;
-class ID3D11Device;
-class ID3D11DeviceContext;
+
+struct IDXGIFactory;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
 
 namespace GraphicResources
 {
