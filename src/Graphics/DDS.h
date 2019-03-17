@@ -1,3 +1,11 @@
+// Refs
+// https://docs.microsoft.com/en-us/windows/desktop/direct3ddds/dx-graphics-dds-pguide
+// https://docs.microsoft.com/en-us/windows/desktop/direct3d10/d3d10-graphics-programming-guide-resources-block-compression
+// https://docs.microsoft.com/en-us/windows/desktop/direct3d11/texture-block-compression-in-direct3d-11
+// https://docs.microsoft.com/en-us/windows/desktop/direct3d9/opaque-and-1-bit-alpha-textures
+// https://github.com/HeliumProject/NvidiaTextureTools/blob/master/src/nvimage/BlockDXT.cpp
+// https://github.com/baldurk/renderdoc/blob/v1.x/renderdoc/common/dds_readwrite.cpp
+
 #ifndef _DDS_H_
 #define _DDS_H_
 
@@ -241,110 +249,7 @@ const DDS_PIXELFORMAT DDSPF_R16G16B16A16_UNORM        = { sizeof(DDS_PIXELFORMAT
 const DDS_PIXELFORMAT DDSPF_R16G16B16A16_FLOAT        = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, 113, 0, 0, 0, 0, 0 }; // D3DFMT_A16B16G16R16F
 const DDS_PIXELFORMAT DDSPF_R32G32B32A32_FLOAT        = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, 116, 0, 0, 0, 0, 0 }; // D3DFMT_A32B32G32R32F
 
-typedef struct
-{
-	union
-	{
-		struct
-		{
-			uint16_t b : 5;
-			uint16_t g : 6;
-			uint16_t r : 5;
-		};
-		uint16_t u;
-	};
-} B5G6R5;
-
-typedef struct
-{
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-} RGB888;
-
-typedef struct
-{
-	union
-	{
-		struct
-		{
-			uint8_t r;
-			uint8_t g;
-			uint8_t b;
-			uint8_t a;
-		};
-		uint32_t u;
-	};
-} RGBA8888;
-
-typedef struct
-{
-	uint64_t _val;
-
-	int operator[](int iIndex)
-	{
-		return (_val >> (iIndex * 4)) & 0x15;
-	}
-} Alpha4x16;
-
-typedef struct
-{
-	uint32_t _val;
-
-	int operator[](int iIndex)
-	{
-		return (_val >> (iIndex * 2)) & 0x3;
-	}
-} Index2x16;
-
-typedef struct
-{
-	uint32_t _val;
-	uint16_t _val2;
-
-	int operator[](int iIndex)
-	{
-		return (((uint64_t)_val + ((uint64_t)_val2 << 32)) >> (iIndex * 3)) & 0x7;
-	}
-} Index3x16;
-
-
-typedef struct
-{
-	B5G6R5		iColor[2];
-	Index2x16	iPixelIndex;
-} BlockBC1;
-
-typedef struct
-{
-	Alpha4x16	iAlpha;
-
-	B5G6R5		iColor[2];
-	Index2x16	iPixelIndex;
-} BlockBC2;
-
-typedef struct
-{
-	uint8_t		iAlpha[2];
-	Index3x16	iAlphaIndex;
-
-	B5G6R5		iColor[2];
-	Index2x16	iPixelIndex;
-} BlockBC3;
-
-static_assert(sizeof(RGB888) == 3, "Size of RGB888 is not correct");
-static_assert(sizeof(B5G6R5) == 2, "Size of BGR565 is not correct");
-static_assert(sizeof(Index2x16) == 4, "Size of Index2x4 is not correct");
-static_assert(sizeof(Index3x16) == 6, "Size of Index3x8 is not correct");
-static_assert(sizeof(BlockBC1) == 8, "Size of BlockBC1 is not correct");
-static_assert(sizeof(BlockBC2) == 16, "Size of BlockBC2 is not correct");
-static_assert(sizeof(BlockBC3) == 16, "Size of BlockBC3 is not correct");
-
 static_assert((0xA0B70708 & 0xFF) == 8, "Platform is not LittleEndian");
-
-int DecodeBlockBC1(BlockBC1* pBlock, uint8_t* pOut4x4RGBA);
-void DecodeBlockBC2(BlockBC2* pBlock, uint8_t* pOut4x4RGBA);
-void DecodeBlockBC3(BlockBC3* pBlock, uint8_t* pOut4x4RGBA);
 
 #pragma pack(pop)
 
