@@ -21,7 +21,7 @@ namespace GraphicResources
 		case SamplerFilter::LINEAR_MIPMAP_NEAREST:
 			return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
 		case SamplerFilter::LINEAR_MIPMAP_LINEAR:
-			return D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+			return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace GraphicResources
 		oSamplerDesc.MipLODBias = 0.f;
 		oSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 		oSamplerDesc.MinLOD = 0.f;
-		oSamplerDesc.MaxLOD = 0.f;
+		oSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 		if (Program::GetInstance()->GetDX11Device()->CreateSamplerState(&oSamplerDesc, &m_pSamplerState) == S_OK)
 		{
 			return ErrorCode::Ok;
