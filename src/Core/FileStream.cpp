@@ -1,9 +1,10 @@
 #include "Core/FileStream.h"
 
+#include "Core/StringUtils.h"
+
 #include <stdio.h> //fopen/fread/fwrite/fclose/rename/unlink
 #include <time.h> //time
 #include <stdlib.h> //srand/rand
-#include <string> //strdup
 
 namespace Core
 {
@@ -40,7 +41,7 @@ namespace Core
 
 		if (eAccessMode == E_ACCESS_MODE_WRITE_SAFE)
 		{
-			srand(time(NULL));
+			srand((unsigned int)time(NULL));
 			int iRand = rand();
 			const int c_iBufferSize = 2048; // should be enough for a filename
 			char pNewName[c_iBufferSize];
@@ -54,8 +55,8 @@ namespace Core
 				m_pSourceFile = pSourceFile;
 				m_eAccessMode = eAccessMode;
 				m_iPos = 0;
-				m_pFileName = strdup(pNewName);
-				m_pSourceFileName = strdup(pFilename);
+				m_pFileName = StringUtils::StrDup(pNewName);
+				m_pSourceFileName = StringUtils::StrDup(pFilename);
 				return true;
 			}
 			if (pFile != NULL)
@@ -71,7 +72,7 @@ namespace Core
 				m_pFile = pFile;
 				m_eAccessMode = eAccessMode;
 				m_iPos = 0;
-				m_pFileName = strdup(pFilename);
+				m_pFileName = StringUtils::StrDup(pFilename);
 
 				return true;
 			}
