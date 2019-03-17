@@ -9,6 +9,7 @@ Simple texture viewer and editor
 Support:
  - Features:
     - Fast launch
+    - Small (less than 1 MB)
     - Conversion beetween pixel formats
     - Create simple mip maps
     
