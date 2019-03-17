@@ -69,15 +69,12 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 	const PixelFormatInfos& oInfos = EPixelFormatInfos[oDesc.ePixelFormat];
 
 	size_t iOffset = 0;
-	size_t iBits = PixelFormat::BitPerPixel(oDesc.ePixelFormat);
 	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
 	{
-		size_t iMipWidth = oDesc.iWidth >> iMipIndex;
+		uint32_t iMipWidth = oDesc.iWidth >> iMipIndex;
 		iMipWidth = iMipWidth > 0 ? iMipWidth : 1;
-		size_t iMipHeight = oDesc.iHeight >> iMipIndex;
+		uint32_t iMipHeight = oDesc.iHeight >> iMipIndex;
 		iMipHeight = iMipHeight > 0 ? iMipHeight : 1;
-		size_t iPadMipWidth;
-		size_t iPadMipHeight;
 
 		uint32_t iBlockCountX, iBlockCountY;
 		PixelFormat::GetBlockCount(oDesc.ePixelFormat, iMipWidth, iMipHeight, &iBlockCountX, &iBlockCountY);
@@ -259,8 +256,8 @@ void Texture::Swap(Texture& oOtherTexture)
 	}
 }
 
-Texture& Texture::operator=(const Texture& oTexture)
+Texture& Texture::operator=(const Texture& /*oTexture*/)
 {
-	//TODO
+	CORE_NOT_IMPLEMENTED();
 	return *this;
 }
