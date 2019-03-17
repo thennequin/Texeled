@@ -15,7 +15,7 @@ install:
   - git submodule update --init --recursive
   - cd scripts
   - EmbedResources.bat
-  - "build 2017.bat"
+  - build.bat vs2017
 
 build:
   project: .projects/vs2017/Texeled.sln
