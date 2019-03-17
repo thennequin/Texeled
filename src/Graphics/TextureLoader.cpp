@@ -58,6 +58,6 @@ namespace Graphics
 	void GetTextureLoaders(const TextureLoaderInfo** pOutLoaders, int* pOutCount)
 	{
 		*pOutLoaders = s_oTextureLoaders.begin();;
-		*pOutCount = s_oTextureLoaders.size();
+		*pOutCount = (int)s_oTextureLoaders.size();
 	}
 }

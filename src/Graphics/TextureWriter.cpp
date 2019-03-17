@@ -38,7 +38,6 @@ namespace Graphics
 				if (pUseWriter->pTester != NULL && pUseWriter->pTester(pTexture) == E_SUPPORTED_WRITER_FALSE)
 					return ErrorCode(1, "Texture not supported by writer");
 
-				WriterSettings oSettings;
 				if (pUseWriter->pWriter(pTexture, pSettings, pStream))
 				{
 					return ErrorCode::Ok;
@@ -83,6 +82,6 @@ namespace Graphics
 	void GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount)
 	{
 		*pOutWriters = s_oTextureWriters.begin();
-		*pOutCount = s_oTextureWriters.size();
+		*pOutCount = (int)s_oTextureWriters.size();
 	}
 }
