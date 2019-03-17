@@ -2,11 +2,22 @@
 
 #include <string.h> // strlen
 #include <ctype.h> // toupper
+#include <stdlib.h> // malloc
 
 namespace Core
 {
 	namespace StringUtils
 	{
+		char* StrDup(const char* pString)
+		{
+			char* pDup = (char*)malloc(strlen(pString) + 1);
+			if (pDup != NULL)
+			{
+				strcpy(pDup, pString);
+			}
+			return pDup;
+		}
+
 		bool EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive)
 		{
 			if (pString == NULL || pEnd == NULL)
