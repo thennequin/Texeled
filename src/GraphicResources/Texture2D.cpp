@@ -15,17 +15,17 @@ namespace GraphicResources
 	// Texture2D::LockData
 	////////////////////////////////////////////////////////////////
 
-	unsigned char* Texture2D::LockData::GetRow(int iY)
+	unsigned char* Texture2D::LockData::GetRow(unsigned int iY)
 	{
 		return &pData[iRowPitch * iY];
 	}
 
-	unsigned char* Texture2D::LockData::GetAt(int iX, int iY)
+	unsigned char* Texture2D::LockData::GetAt(unsigned int iX, unsigned int iY)
 	{
 		return &pData[iRowPitch *iY + iX];
 	}
 
-	unsigned char* Texture2D::LockData::GetRowSafe(int iY)
+	unsigned char* Texture2D::LockData::GetRowSafe(unsigned int iY)
 	{
 		while (iY < 0) iY += iWidth;
 		while (iY >= iHeight) iY -= iWidth;
@@ -33,7 +33,7 @@ namespace GraphicResources
 		return &pData[iRowPitch * iY];
 	}
 
-	unsigned char* Texture2D::LockData::GetAtSafe(int iX, int iY)
+	unsigned char* Texture2D::LockData::GetAtSafe(unsigned int iX, unsigned int iY)
 	{
 		while (iX < 0) iX += iWidth;
 		while (iX >= iWidth) iX -= iWidth;

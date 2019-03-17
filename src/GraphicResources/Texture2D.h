@@ -27,10 +27,10 @@ namespace GraphicResources
 			unsigned int	iWidth;
 			unsigned int	iHeight;
 
-			unsigned char*	GetRow(int iY);
-			unsigned char*	GetAt(int iX, int iY);
-			unsigned char*	GetRowSafe(int iY);
-			unsigned char*	GetAtSafe(int iX, int iY);
+			unsigned char*	GetRow(unsigned int iY);
+			unsigned char*	GetAt(unsigned int iX, unsigned int iY);
+			unsigned char*	GetRowSafe(unsigned int iY);
+			unsigned char*	GetAtSafe(unsigned int iX, unsigned int iY);
 		};
 	public:
 		Texture2D();
