@@ -5,34 +5,37 @@
 #include "imgui.h"
 
 #include "GraphicResources/SamplerState.h"
+#include "GraphicResources/Shader.h"
 
 #include <d3d11.h>
 
 
 namespace ImGuiUtils
 {
-	const int c_iMaxPushedSampler = 32;
-	ID3D11SamplerState* s_oPushedSampler[c_iMaxPushedSampler];
-	int s_iCurrentSamplerIndex = 0;
-	void PushSamplerCallback(const ImDrawList* pDrawList, const ImDrawCmd* pCmd)
+	const int					c_iMaxPushedSampler = 32;
+	ID3D11SamplerState*			s_oPushedSampler[c_iMaxPushedSampler];
+	int							s_iCurrentSamplerIndex = 0;
+
+	void PushSamplerCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* pCmd)
 	{
-		ID3D11SamplerState* pBackupedSampler;
-		Program::GetInstance()->GetDX11DeviceContext()->PSGetSamplers(0, 1, &pBackupedSampler);
-		s_oPushedSampler[s_iCurrentSamplerIndex] = pBackupedSampler;
+		CORE_ASSERT(s_iCurrentSamplerIndex < (c_iMaxPushedSampler - 1));
+		Program::GetInstance()->GetDX11DeviceContext()->PSGetSamplers(
+			0, 1,
+			&s_oPushedSampler[s_iCurrentSamplerIndex]
+		);
 		++s_iCurrentSamplerIndex;
 
 		ID3D11SamplerState* pResource = (ID3D11SamplerState*)pCmd->UserCallbackData;
 		Program::GetInstance()->GetDX11DeviceContext()->PSSetSamplers(0, 1, &pResource);
 	}
 
-	void PopSamplerCallback(const ImDrawList* pDrawList, const ImDrawCmd* /*pCmd*/)
+	void PopSamplerCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* /*pCmd*/)
 	{
+		CORE_ASSERT(s_iCurrentSamplerIndex > 0);
 		--s_iCurrentSamplerIndex;
 		ID3D11SamplerState* pBackupedSampler = s_oPushedSampler[s_iCurrentSamplerIndex];
 		Program::GetInstance()->GetDX11DeviceContext()->PSSetSamplers(0, 1, &pBackupedSampler);
-		s_oPushedSampler[s_iCurrentSamplerIndex] = NULL;
 	}
-
 
 	void PushSampler(GraphicResources::SamplerState* pSampler)
 	{
@@ -43,6 +46,94 @@ namespace ImGuiUtils
 	void PopSampler()
 	{
 		ImGui::GetWindowDrawList()->AddCallback(PopSamplerCallback, NULL);
+	}
+
+
+	const int					c_iMaxPushedPixelShader = 32;
+	ID3D11PixelShader*			s_oPushedPixelShader[c_iMaxPushedPixelShader];
+	ID3D11ClassInstance*		s_oPushedPixelShaderInstances[c_iMaxPushedPixelShader][256];   // 256 is max according to PSSetShader documentation
+	UINT						s_oPushedPixelShaderInstanceCount[c_iMaxPushedPixelShader];
+	int							s_iCurrentPixelShaderIndex = 0;
+
+	void PushPixelShaderCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* pCmd)
+	{
+		CORE_ASSERT(s_iCurrentPixelShaderIndex < (c_iMaxPushedSampler - 1));
+		Program::GetInstance()->GetDX11DeviceContext()->PSGetShader(
+			&s_oPushedPixelShader[s_iCurrentPixelShaderIndex],
+			s_oPushedPixelShaderInstances[s_iCurrentPixelShaderIndex],
+			&s_oPushedPixelShaderInstanceCount[s_iCurrentPixelShaderIndex]
+		);
+		++s_iCurrentPixelShaderIndex;
+
+		ID3D11PixelShader* pShader = (ID3D11PixelShader*)pCmd->UserCallbackData;
+		Program::GetInstance()->GetDX11DeviceContext()->PSSetShader(pShader, NULL, 0);
+	}
+
+	void PopPixelShaderCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* /*pCmd*/)
+	{
+		CORE_ASSERT(s_iCurrentPixelShaderIndex > 0);
+		--s_iCurrentPixelShaderIndex;
+		Program::GetInstance()->GetDX11DeviceContext()->PSSetShader(
+			s_oPushedPixelShader[s_iCurrentPixelShaderIndex],
+			s_oPushedPixelShaderInstances[s_iCurrentPixelShaderIndex],
+			s_oPushedPixelShaderInstanceCount[s_iCurrentPixelShaderIndex]
+		);
+	}
+
+	void PushPixelShader(ID3D11PixelShader* pShader)
+	{
+		CORE_ASSERT(pShader != NULL);
+		ImGui::GetWindowDrawList()->AddCallback(PushPixelShaderCallback, pShader);
+	}
+
+	void PopPixelShader()
+	{
+		ImGui::GetWindowDrawList()->AddCallback(PopPixelShaderCallback, NULL);
+	}
+
+
+	const int					c_iMaxPushedPixelShaderConstantBuffer = 32;
+	ID3D11Buffer*				s_oPushedPixelShaderConstantBuffer[c_iMaxPushedPixelShaderConstantBuffer];
+	int							s_iCurrentPixelShaderConstantBufferIndex = 0;
+
+	void PushPixelShaderConstantBufferCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* pCmd)
+	{
+		CORE_ASSERT(s_iCurrentPixelShaderConstantBufferIndex < (c_iMaxPushedSampler - 1));
+		Program::GetInstance()->GetDX11DeviceContext()->PSGetConstantBuffers(
+			0,
+			1,
+			&s_oPushedPixelShaderConstantBuffer[s_iCurrentPixelShaderConstantBufferIndex]
+		);
+		++s_iCurrentPixelShaderConstantBufferIndex;
+
+		ID3D11Buffer* pBuffer = (ID3D11Buffer*)pCmd->UserCallbackData;
+		Program::GetInstance()->GetDX11DeviceContext()->PSSetConstantBuffers(
+			0,
+			1,
+			&pBuffer
+		);
+	}
+
+	void PopPixelShaderConstantBufferCallback(const ImDrawList* /*pDrawList*/, const ImDrawCmd* /*pCmd*/)
+	{
+		CORE_ASSERT(s_iCurrentPixelShaderConstantBufferIndex > 0);
+		--s_iCurrentPixelShaderConstantBufferIndex;
+		Program::GetInstance()->GetDX11DeviceContext()->PSSetConstantBuffers(
+			0,
+			1,
+			&s_oPushedPixelShaderConstantBuffer[s_iCurrentPixelShaderConstantBufferIndex]
+		);
+	}
+
+	void PushPixelShaderConstantBuffer(ID3D11Buffer* pBuffer)
+	{
+		CORE_ASSERT(pBuffer != NULL);
+		ImGui::GetWindowDrawList()->AddCallback(PushPixelShaderConstantBufferCallback, pBuffer);
+	}
+
+	void PopPixelShaderConstantBuffer()
+	{
+		ImGui::GetWindowDrawList()->AddCallback(PopPixelShaderConstantBufferCallback, NULL);
 	}
 
 	bool GroupedButton( const char* label, bool bSelected, GroupedPartEnum ePart)
@@ -68,14 +159,13 @@ namespace ImGuiUtils
 		if( !ImGui::ItemAdd( bb, &id ) )
 			return false;
 
-		
 		if( window->DC.ButtonRepeat ) flags |= ImGuiButtonFlags_Repeat;
 		bool hovered, held;
 		bool pressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, flags );
 
 		// Render
 		const ImU32 col = ImGui::GetColorU32( ( bSelected || (hovered && held) ) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button );
-		
+
 		int iRoundingFlag = 0;
 		if( ePart == GroupedPart::LEFT )
 		{
