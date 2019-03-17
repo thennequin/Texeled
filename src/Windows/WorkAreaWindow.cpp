@@ -11,6 +11,89 @@
 
 namespace Windows
 {
+#define SHADER_SOURCE(...) #__VA_ARGS__
+	const char* const c_pWorkAreaWindowPixelShader = SHADER_SOURCE(
+		float4 RedChannel = float4(1,0,0,0);
+		float4 GreenChannel = float4(0, 1, 0, 0);
+		float4 BlueChannel = float4(0, 0, 1, 0);
+		float4 AlphaChannel = float4(0, 0, 0, 1);
+		float4 AddChannel = float4(0, 0, 0, 0);
+		int Mip = 0;
+		int TextureIndex = 0;
+
+		sampler sampler0;
+		Texture2DArray texture0;
+
+		struct PS_INPUT
+		{
+			float4 pos : SV_POSITION;
+			float4 col : COLOR0;
+			float2 uv : TEXCOORD0;
+		};
+
+		float4 main(PS_INPUT input) : SV_Target
+		{
+			float4 out_col = input.col * texture0.SampleLevel(sampler0, float3(input.uv, TextureIndex), Mip);
+			out_col =
+				out_col.r * RedChannel
+				+ out_col.g * GreenChannel
+				+ out_col.b * BlueChannel
+				+ out_col.a * AlphaChannel
+				+ AddChannel;
+			return out_col;
+		}
+	);
+
+	void WorkAreaWindow::BufferData::BuildChannelMix(ChannelFlags eShowChannel)
+	{
+		const float c_fRGB[4]{ 1.f, 1.f, 1.f, 0.f };
+		const float c_fAlpha[4]{ 0.f, 0.f, 0.f, 1.f };
+		const float c_fZero[4]{ 0.f, 0.f, 0.f, 0.f };
+
+
+		if ((eShowChannel == ChannelFlag::ALPHA) || ((eShowChannel & ChannelFlag::ALPHA) == 0))
+		{
+			memcpy(fChannelsAdd, c_fAlpha, sizeof(c_fAlpha));
+		}
+		else
+		{
+			memcpy(fChannelsAdd, c_fZero, sizeof(c_fZero));
+		}
+
+		memcpy(fChannelsMix[0], c_fZero, sizeof(c_fZero));
+		memcpy(fChannelsMix[1], c_fZero, sizeof(c_fZero));
+		memcpy(fChannelsMix[2], c_fZero, sizeof(c_fZero));
+		memcpy(fChannelsMix[3], c_fZero, sizeof(c_fZero));
+
+		if (eShowChannel == ChannelFlag::RED)
+		{
+			memcpy(fChannelsMix[0], c_fRGB, sizeof(c_fRGB));
+		}
+		else if (eShowChannel == ChannelFlag::GREEN)
+		{
+			memcpy(fChannelsMix[1], c_fRGB, sizeof(c_fRGB));
+		}
+		else if (eShowChannel == ChannelFlag::BLUE)
+		{
+			memcpy(fChannelsMix[2], c_fRGB, sizeof(c_fRGB));
+		}
+		else if (eShowChannel == ChannelFlag::ALPHA)
+		{
+			memcpy(fChannelsMix[3], c_fRGB, sizeof(c_fRGB));
+		}
+		else
+		{
+			if ((eShowChannel & ChannelFlag::RED) != 0)
+				fChannelsMix[0][0] = 1.f;
+			if ((eShowChannel & ChannelFlag::GREEN) != 0)
+				fChannelsMix[1][1] = 1.f;
+			if ((eShowChannel & ChannelFlag::BLUE) != 0)
+				fChannelsMix[2][2] = 1.f;
+			if ((eShowChannel & ChannelFlag::ALPHA) != 0)
+				fChannelsMix[3][3] = 1.f;
+		}
+	}
+
 	WorkAreaWindow::WorkAreaWindow()
 		: m_pCheckboardTexture2DRes(NULL)
 	{
@@ -52,22 +135,54 @@ namespace Windows
 
 		m_pSamplerStatePoint = new GraphicResources::SamplerState();
 		GraphicResources::SamplerState::Desc oSamplerDesc;
-		oSamplerDesc.eFilter = GraphicResources::SamplerFilter::NEAREST_MIPMAP_LINEAR;
-		oSamplerDesc.eWrapU = GraphicResources::Wrap::REPEAT;
-		oSamplerDesc.eWrapV = GraphicResources::Wrap::REPEAT;
-		oSamplerDesc.eWrapW = GraphicResources::Wrap::REPEAT;
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::NEAREST_MIPMAP_LINEAR;
+		oSamplerDesc.eWrapU = GraphicResources::WrapEnum::REPEAT;
+		oSamplerDesc.eWrapV = GraphicResources::WrapEnum::REPEAT;
+		oSamplerDesc.eWrapW = GraphicResources::WrapEnum::REPEAT;
 		CORE_VERIFY_OK(m_pSamplerStatePoint->Create(oSamplerDesc));
+
+		m_pSamplerStateLinear = new GraphicResources::SamplerState();
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::LINEAR_MIPMAP_LINEAR;
+		oSamplerDesc.eWrapU = GraphicResources::WrapEnum::REPEAT;
+		oSamplerDesc.eWrapV = GraphicResources::WrapEnum::REPEAT;
+		oSamplerDesc.eWrapW = GraphicResources::WrapEnum::REPEAT;
+		CORE_VERIFY_OK(m_pSamplerStateLinear->Create(oSamplerDesc));
+
+		CORE_VERIFY_OK(GraphicResources::CompilePixelShader(c_pWorkAreaWindowPixelShader, "main", &m_pPixelShader, &m_oGlobalConstantBufferDesc));
+
+		m_oGlobalConstantBufferDesc.InitBuffer(&m_oBufferData);
+
+		CORE_VERIFY_OK(GraphicResources::CreateConstanteBuffer(&m_oGlobalConstantBufferDesc, &m_pGlobalConstantBuffer));
+
+		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
+		m_eCurrentShowChannels = oDisplayOptions.eShowChannels;
+		m_oBufferData.iMip = oDisplayOptions.iMip;
+		m_oBufferData.iFace = oDisplayOptions.iFace;
+		m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
+		CORE_VERIFY_OK(GraphicResources::FillConstantBuffer(m_pGlobalConstantBuffer, &m_oBufferData));
 	}
 
 	WorkAreaWindow::~WorkAreaWindow()
 	{
 		ImwSafeDelete(m_pCheckboardTexture2DRes);
+		ImwSafeDelete(m_pSamplerStateLinear);
 		ImwSafeDelete(m_pSamplerStatePoint);
 	}
 
 	void WorkAreaWindow::OnGui()
 	{
+		ID3D11DeviceContext* pDX11DeviceContext = Program::GetInstance()->GetDX11DeviceContext();
 		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
+
+		if (m_oBufferData.iMip != oDisplayOptions.iMip || m_oBufferData.iFace != oDisplayOptions.iFace || m_eCurrentShowChannels != oDisplayOptions.eShowChannels)
+		{
+			m_eCurrentShowChannels = oDisplayOptions.eShowChannels;
+			m_oBufferData.iMip = oDisplayOptions.iMip;
+			m_oBufferData.iFace = oDisplayOptions.iFace;
+			m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
+			CORE_VERIFY_OK(GraphicResources::FillConstantBuffer(m_pGlobalConstantBuffer, &m_oBufferData));
+		}
+
 		ImGuiIO& oIO = ImGui::GetIO();
 
 		ImGui::SameLine(0.f, 10.f);
@@ -76,7 +191,7 @@ namespace Windows
 		ImGui::SameLine(0.f, 10.f);
 		ImGui::Checkbox("Tiling", &oDisplayOptions.bTiling);
 
-		const int iCurrentMip = 0;
+		const int iCurrentMip = oDisplayOptions.iMip;
 
 		Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
 		GraphicResources::Texture2D* pTexture2DRes = Program::GetInstance()->GetTexture2DRes();
@@ -196,21 +311,16 @@ namespace Windows
 						oImageStart, oImageEnd,
 						ImVec2(0.f, 0.f), (oImageEnd - oImageStart) / ImVec2(16.f, (float)16.f));
 				}
-				/*
-				ImWindow::ImwPlatformWindowSokol::SetPipeline(m_hPipeline);
-				ImWindow::ImwPlatformWindowSokol::SetUniformBlock(SG_SHADERSTAGE_FS, 0, &m_oUniformBlock, sizeof(m_oUniformBlock));
-				*/
 
-				ImGuiUtils::PushSampler(m_pSamplerStatePoint);
+				ImGuiUtils::PushPixelShader(m_pPixelShader);
+				ImGuiUtils::PushSampler(oDisplayOptions.bShowPixelGrid ? m_pSamplerStatePoint : m_pSamplerStateLinear);
+				ImGuiUtils::PushPixelShaderConstantBuffer(m_pGlobalConstantBuffer);
 				pDrawList->AddImage((ImTextureID)pTexture2DRes->GetTextureView(),
 					oImageStart, oImageEnd,
 					oUv0, oUv1);
 				ImGuiUtils::PopSampler();
-
-				/*
-				ImWindow::ImwPlatformWindowSokol::ReleaseUniformBlock(SG_SHADERSTAGE_FS, 0);
-				ImWindow::ImwPlatformWindowSokol::RestorePipeline();
-				*/
+				ImGuiUtils::PopPixelShaderConstantBuffer();
+				ImGuiUtils::PopPixelShader();
 
 				if (oDisplayOptions.bShowPixelGrid && (fMipPixelRatio*m_fCurrentZoom) > 10.0)
 				{

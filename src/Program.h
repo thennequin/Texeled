@@ -54,10 +54,32 @@ struct _ProgramModeEnum
 typedef _ProgramModeEnum::Enum ProgramModeEnum;
 extern const char* ProgramModeEnumStrings[ProgramModeEnum::_COUNT];
 
+struct _ChannelFlag
+{
+	enum Enum
+	{
+		RED		= (1 << 0),
+		GREEN	= (1 << 1),
+		BLUE	= (1 << 2),
+		ALPHA	= (1 << 3),
+
+		_COUNT,
+		_NONE = 0
+	};
+};
+typedef _ChannelFlag::Enum ChannelFlag;
+typedef int ChannelFlags;
+extern const char* ChannelFlagStrings[ChannelFlag::_COUNT];
+
 struct DisplayOptions
 {
 	bool bShowPixelGrid;
 	bool bTiling;
+
+	ChannelFlags eShowChannels;
+
+	int iMip;
+	int iFace;
 };
 
 class Program

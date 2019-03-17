@@ -3,6 +3,13 @@
 
 #include "ImWindow/ImwWindow.h"
 
+#include "Program.h"
+
+#include "GraphicResources/ShaderUtils.h"
+
+struct ID3D11PixelShader;
+struct ID3D11Buffer;
+
 namespace GraphicResources
 {
 	class Texture2D;
@@ -13,6 +20,15 @@ namespace Windows
 {
 	class WorkAreaWindow : public ImWindow::ImwWindow
 	{
+		struct BufferData
+		{
+			float				fChannelsMix[4][4];
+			float				fChannelsAdd[4];
+			int					iMip;
+			int					iFace;
+
+			void				BuildChannelMix(ChannelFlags eShowChannel);
+		};
 	public:
 		WorkAreaWindow();
 		virtual ~WorkAreaWindow();
@@ -26,8 +42,14 @@ namespace Windows
 		double					m_fCurrentZoom;
 		ImVec2					m_oCurrentOffset;
 
-		GraphicResources::Texture2D*	m_pCheckboardTexture2DRes;
-		GraphicResources::SamplerState*	m_pSamplerStatePoint;
+		GraphicResources::Texture2D*				m_pCheckboardTexture2DRes;
+		GraphicResources::SamplerState*				m_pSamplerStatePoint;
+		GraphicResources::SamplerState*				m_pSamplerStateLinear;
+		ID3D11PixelShader*							m_pPixelShader;
+		GraphicResources::ConstantBufferDesc		m_oGlobalConstantBufferDesc;
+		ID3D11Buffer*								m_pGlobalConstantBuffer;
+		BufferData									m_oBufferData;
+		ChannelFlags								m_eCurrentShowChannels;
 	};
 }
 //namespace Windows

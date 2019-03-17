@@ -60,6 +60,9 @@ Program::Program(int iArgCount, char** pArgs)
 
 	m_oDisplayOptions.bShowPixelGrid = true;
 	m_oDisplayOptions.bTiling = false;
+	m_oDisplayOptions.eShowChannels = ChannelFlag::RED | ChannelFlag::GREEN | ChannelFlag::BLUE | ChannelFlag::ALPHA;
+	m_oDisplayOptions.iMip = 0;
+	m_oDisplayOptions.iFace = 0;
 
 	ImGui::GetIO().Fonts->Build();
 
@@ -147,6 +150,17 @@ ID3D11DeviceContext* Program::GetDX11DeviceContext() const
 bool Program::Run()
 {
 	m_pShortKeyManager->Manage(false);
+
+	if (m_oTexture.IsValid() && m_oDisplayOptions.iMip >= m_oTexture.GetMipCount())
+	{
+		m_oDisplayOptions.iMip = m_oTexture.GetMipCount() - 1;
+	}
+
+	if (m_oTexture.IsValid() && m_oDisplayOptions.iFace >= m_oTexture.GetFaceCount())
+	{
+		m_oDisplayOptions.iFace = m_oTexture.GetFaceCount() - 1;
+	}
+
 	return m_bRun && m_oImWindowMgr.Run(false) && m_oImWindowMgr.Run(true);
 }
 
