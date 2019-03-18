@@ -1,6 +1,7 @@
 # Texeled
 
 [![Build status](https://ci.appveyor.com/api/projects/status/4oxhg62kiwrglghb/branch/master?svg=true)](https://ci.appveyor.com/project/thennequin/texeled/branch/master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3994ad06b426497191628431c945fa5e)](https://www.codacy.com/app/thennequin/Texeled?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=thennequin/Texeled&amp;utm_campaign=Badge_Grade)
 
 Simple texture viewer and editor
 
