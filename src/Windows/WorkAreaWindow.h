@@ -43,8 +43,10 @@ namespace Windows
 		ImVec2					m_oCurrentOffset;
 
 		GraphicResources::Texture2D*				m_pCheckboardTexture2DRes;
-		GraphicResources::SamplerState*				m_pSamplerStatePoint;
-		GraphicResources::SamplerState*				m_pSamplerStateLinear;
+		GraphicResources::SamplerState*				m_pSamplerStatePointRepeat;
+		GraphicResources::SamplerState*				m_pSamplerStatePointClamp;
+		GraphicResources::SamplerState*				m_pSamplerStateLinearRepeat;
+		GraphicResources::SamplerState*				m_pSamplerStateLinearClamp;
 		ID3D11PixelShader*							m_pPixelShader;
 		GraphicResources::ConstantBufferDesc		m_oGlobalConstantBufferDesc;
 		ID3D11Buffer*								m_pGlobalConstantBuffer;

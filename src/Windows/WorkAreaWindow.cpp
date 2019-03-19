@@ -133,20 +133,31 @@ namespace Windows
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oCheckerboardTexture, &m_pCheckboardTexture2DRes));
 		}
 
-		m_pSamplerStatePoint = new GraphicResources::SamplerState();
 		GraphicResources::SamplerState::Desc oSamplerDesc;
-		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::NEAREST_MIPMAP_LINEAR;
-		oSamplerDesc.eWrapU = GraphicResources::WrapEnum::REPEAT;
-		oSamplerDesc.eWrapV = GraphicResources::WrapEnum::REPEAT;
-		oSamplerDesc.eWrapW = GraphicResources::WrapEnum::REPEAT;
-		CORE_VERIFY_OK(m_pSamplerStatePoint->Create(oSamplerDesc));
 
-		m_pSamplerStateLinear = new GraphicResources::SamplerState();
-		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::LINEAR_MIPMAP_LINEAR;
 		oSamplerDesc.eWrapU = GraphicResources::WrapEnum::REPEAT;
 		oSamplerDesc.eWrapV = GraphicResources::WrapEnum::REPEAT;
 		oSamplerDesc.eWrapW = GraphicResources::WrapEnum::REPEAT;
-		CORE_VERIFY_OK(m_pSamplerStateLinear->Create(oSamplerDesc));
+
+		m_pSamplerStatePointRepeat = new GraphicResources::SamplerState();
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::NEAREST_MIPMAP_LINEAR;
+		CORE_VERIFY_OK(m_pSamplerStatePointRepeat->Create(oSamplerDesc));
+
+		m_pSamplerStateLinearRepeat = new GraphicResources::SamplerState();
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::LINEAR_MIPMAP_LINEAR;
+		CORE_VERIFY_OK(m_pSamplerStateLinearRepeat->Create(oSamplerDesc));
+
+		oSamplerDesc.eWrapU = GraphicResources::WrapEnum::CLAMP_TO_EDGE;
+		oSamplerDesc.eWrapV = GraphicResources::WrapEnum::CLAMP_TO_EDGE;
+		oSamplerDesc.eWrapW = GraphicResources::WrapEnum::CLAMP_TO_EDGE;
+
+		m_pSamplerStatePointClamp = new GraphicResources::SamplerState();
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::NEAREST_MIPMAP_LINEAR;
+		CORE_VERIFY_OK(m_pSamplerStatePointClamp->Create(oSamplerDesc));
+
+		m_pSamplerStateLinearClamp = new GraphicResources::SamplerState();
+		oSamplerDesc.eFilter = GraphicResources::SamplerFilterEnum::LINEAR_MIPMAP_LINEAR;
+		CORE_VERIFY_OK(m_pSamplerStateLinearClamp->Create(oSamplerDesc));
 
 		CORE_VERIFY_OK(GraphicResources::CompilePixelShader(c_pWorkAreaWindowPixelShader, "main", &m_pPixelShader, &m_oGlobalConstantBufferDesc));
 
@@ -165,8 +176,10 @@ namespace Windows
 	WorkAreaWindow::~WorkAreaWindow()
 	{
 		ImwSafeDelete(m_pCheckboardTexture2DRes);
-		ImwSafeDelete(m_pSamplerStateLinear);
-		ImwSafeDelete(m_pSamplerStatePoint);
+		ImwSafeDelete(m_pSamplerStatePointRepeat);
+		ImwSafeDelete(m_pSamplerStatePointClamp);
+		ImwSafeDelete(m_pSamplerStateLinearRepeat);
+		ImwSafeDelete(m_pSamplerStateLinearClamp);
 	}
 
 	void WorkAreaWindow::OnGui()
@@ -313,7 +326,10 @@ namespace Windows
 				}
 
 				ImGuiUtils::PushPixelShader(m_pPixelShader);
-				ImGuiUtils::PushSampler(oDisplayOptions.bShowPixelGrid ? m_pSamplerStatePoint : m_pSamplerStateLinear);
+				ImGuiUtils::PushSampler(oDisplayOptions.bShowPixelGrid
+					? (oDisplayOptions.bTiling ? m_pSamplerStatePointRepeat : m_pSamplerStatePointClamp)
+					: (oDisplayOptions.bTiling ? m_pSamplerStateLinearRepeat : m_pSamplerStateLinearClamp)
+				);
 				ImGuiUtils::PushPixelShaderConstantBuffer(m_pGlobalConstantBuffer);
 				pDrawList->AddImage((ImTextureID)pTexture2DRes->GetTextureView(),
 					oImageStart, oImageEnd,
