@@ -508,7 +508,7 @@ namespace Graphics
 			const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(0, iFace);
 			const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(0, iFace);
 
-			if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_UNORM)
+			if (oFormatInfos.eEncoding == ComponentEncodingEnum::UNORM)
 			{
 				iRes = stbir_resize_uint8(
 					(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
@@ -516,7 +516,7 @@ namespace Graphics
 					oFormatInfos.iComponents
 				);
 			}
-			else if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_FLOAT)
+			else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
 			{
 				iRes = stbir_resize_float(
 					(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
@@ -592,7 +592,7 @@ namespace Graphics
 
 					int iRes;
 
-					if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_UNORM)
+					if (oFormatInfos.eEncoding == ComponentEncodingEnum::UNORM)
 					{
 						iRes = stbir_resize_uint8(
 							(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
@@ -600,7 +600,7 @@ namespace Graphics
 							oFormatInfos.iComponents
 						);
 					}
-					else if (oFormatInfos.eEncoding == E_COMPONENT_ENCODING_FLOAT)
+					else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
 					{
 						iRes = stbir_resize_float(
 							(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,

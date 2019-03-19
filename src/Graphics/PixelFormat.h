@@ -5,19 +5,23 @@
 
 namespace Graphics
 {
-	enum EComponentEncoding
+	struct _ComponentEncodingEnum
 	{
-		E_COMPONENT_ENCODING_NONE = 0,
+		enum Enum
+		{
+			_NONE = 0,
 
-		E_COMPONENT_ENCODING_UNORM,
-		E_COMPONENT_ENCODING_INT,
-		E_COMPONENT_ENCODING_UINT,
-		E_COMPONENT_ENCODING_FLOAT,
-		E_COMPONENT_ENCODING_SNORM,
+			UNORM,
+			INT,
+			UINT,
+			FLOAT,
+			SNORM,
 
-		_E_COMPONENT_ENCODING_COUNT
+			_COUNT
+		};
 	};
-	extern const char* const EComponentEncoding_string[_E_COMPONENT_ENCODING_COUNT];
+	typedef _ComponentEncodingEnum::Enum ComponentEncodingEnum;
+	extern const char* const ComponentEncodingEnumString[ComponentEncodingEnum::_COUNT];
 
 	//https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkFormat.html
 	struct _PixelFormatEnum
@@ -73,7 +77,7 @@ namespace Graphics
 		int iBlockHeight;
 		int iBlockSize;
 		int iComponents;
-		EComponentEncoding eEncoding;
+		ComponentEncodingEnum eEncoding;
 	} PixelFormatInfos;
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];
