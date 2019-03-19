@@ -330,7 +330,7 @@ namespace Graphics
 		return ErrorCode::Fail;
 	}
 
-	ErrorCode ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, EPixelFormat eWantedPixelFormat)
+	ErrorCode ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, PixelFormatEnum eWantedPixelFormat)
 	{
 		if (pTexture == NULL || pOutTexture == NULL)
 		{
@@ -370,8 +370,8 @@ namespace Graphics
 					int iSourceBits = PixelFormat::BitPerPixel(pTexture->GetPixelFormat());
 					int iDestBits = PixelFormat::BitPerPixel(eWantedPixelFormat);
 
-					const PixelFormatInfos& oSrcPFInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
-					const PixelFormatInfos& oDstPFInfos = EPixelFormatInfos[eWantedPixelFormat];
+					const PixelFormatInfos& oSrcPFInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
+					const PixelFormatInfos& oDstPFInfos = PixelFormatEnumInfos[eWantedPixelFormat];
 
 					uint32_t iSrcMipBlockX;
 					uint32_t iSrcMipBlockY;
@@ -400,12 +400,12 @@ namespace Graphics
 							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY / oSrcPFInfos.iBlockHeight * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX / oSrcPFInfos.iBlockWidth * oSrcPFInfos.iBlockSize);
 							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY / oDstPFInfos.iBlockHeight * iDstMipBlockX * oDstPFInfos.iBlockSize + iX / oDstPFInfos.iBlockWidth * oDstPFInfos.iBlockSize);
 
-							EPixelFormat eCurrentFormat = pTexture->GetPixelFormat();
+							PixelFormatEnum eCurrentFormat = pTexture->GetPixelFormat();
 							uint32_t iCurrentBits = PixelFormat::BitPerPixel(eCurrentFormat);
 							uint32_t iCurrentPaddingX, iCurrentPaddingY;
 
-							iCurrentPaddingX = EPixelFormatInfos[eCurrentFormat].iBlockWidth;
-							iCurrentPaddingY = EPixelFormatInfos[eCurrentFormat].iBlockHeight;
+							iCurrentPaddingX = PixelFormatEnumInfos[eCurrentFormat].iBlockWidth;
+							iCurrentPaddingY = PixelFormatEnumInfos[eCurrentFormat].iBlockHeight;
 
 							for (int iChain = 0; iChain < iConvertionChainLength; ++iChain)
 							{
@@ -422,8 +422,8 @@ namespace Graphics
 								uint32_t iNextBits = PixelFormat::BitPerPixel(oFunc.eFormat);
 
 								uint32_t iNextPaddingX, iNextPaddingY;
-								iNextPaddingX = EPixelFormatInfos[oFunc.eFormat].iBlockWidth;
-								iNextPaddingY = EPixelFormatInfos[oFunc.eFormat].iBlockHeight;
+								iNextPaddingX = PixelFormatEnumInfos[oFunc.eFormat].iBlockWidth;
+								iNextPaddingY = PixelFormatEnumInfos[oFunc.eFormat].iBlockHeight;
 
 								uint32_t iFuncPaddingX = Math::Max(iCurrentPaddingX, iNextPaddingX);
 								uint32_t iFuncPaddingY = Math::Max(iCurrentPaddingY, iNextPaddingY);
@@ -459,18 +459,18 @@ namespace Graphics
 		return ErrorCode(1, "Same format");
 	}
 
-	bool IsPixelFormatResizable(EPixelFormat ePixelFormat)
+	bool IsPixelFormatResizable(PixelFormatEnum ePixelFormat)
 	{
 		switch (ePixelFormat)
 		{
-		case E_PIXELFORMAT_R8_UNORM:
-		case E_PIXELFORMAT_RG8_UNORM:
-		case E_PIXELFORMAT_RGB8_UNORM:
-		case E_PIXELFORMAT_BGR8_UNORM:
-		case E_PIXELFORMAT_RGBA8_UNORM:
-		case E_PIXELFORMAT_BGRA8_UNORM:
-		case E_PIXELFORMAT_RGB32_FLOAT:
-		case E_PIXELFORMAT_RGBA32_FLOAT:
+		case PixelFormatEnum::R8_UNORM:
+		case PixelFormatEnum::RG8_UNORM:
+		case PixelFormatEnum::RGB8_UNORM:
+		case PixelFormatEnum::BGR8_UNORM:
+		case PixelFormatEnum::RGBA8_UNORM:
+		case PixelFormatEnum::BGRA8_UNORM:
+		case PixelFormatEnum::RGB32_FLOAT:
+		case PixelFormatEnum::RGBA32_FLOAT:
 			return true;
 		default:
 			return false;
@@ -486,7 +486,7 @@ namespace Graphics
 
 		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
 		{
-			return ErrorCode(1, "'%s' Pixel format can't be resized", EPixelFormat_string[pTexture->GetPixelFormat()]);
+			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumString[pTexture->GetPixelFormat()]);
 		}
 
 		Texture oTemp;
@@ -500,7 +500,7 @@ namespace Graphics
 		if (oErr != ErrorCode::Ok)
 			return oErr;
 
-		const PixelFormatInfos& oFormatInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
+		const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
 
 		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
 		{
@@ -549,7 +549,7 @@ namespace Graphics
 
 		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
 		{
-			return ErrorCode(1, "'%s' Pixel format can't be resized", EPixelFormat_string[pTexture->GetPixelFormat()]);
+			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumString[pTexture->GetPixelFormat()]);
 		}
 
 		int iSize = Math::Max(pTexture->GetWidth(), pTexture->GetHeight());
@@ -571,7 +571,7 @@ namespace Graphics
 		if (oErr != ErrorCode::Ok)
 			return oErr;
 
-		const PixelFormatInfos& oFormatInfos = EPixelFormatInfos[pTexture->GetPixelFormat()];
+		const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
 
 		int iStartMip = bOnlyMissingMips;
 

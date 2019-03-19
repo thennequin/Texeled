@@ -20,46 +20,51 @@ namespace Graphics
 	extern const char* const EComponentEncoding_string[_E_COMPONENT_ENCODING_COUNT];
 
 	//https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkFormat.html
-	enum EPixelFormat
+	struct _PixelFormatEnum
 	{
-		E_PIXELFORMAT_NONE = 0,
+		enum Enum
+		{
+			_NONE = 0,
 
-		E_PIXELFORMAT_R8_UNORM,
+			R8_UNORM,
 
-		E_PIXELFORMAT_RG8_UNORM,
+			RG8_UNORM,
 
-		E_PIXELFORMAT_RGB8_UNORM,
-		E_PIXELFORMAT_BGR8_UNORM,
+			RGB8_UNORM,
+			BGR8_UNORM,
 
-		E_PIXELFORMAT_RGBA8_UNORM,
-		E_PIXELFORMAT_BGRA8_UNORM,
+			RGBA8_UNORM,
+			BGRA8_UNORM,
 
-		E_PIXELFORMAT_R5G6B5_UNORM,
-		E_PIXELFORMAT_B5G6BR_UNORM,
+			R5G6B5_UNORM,
+			B5G6BR_UNORM,
 
-		E_PIXELFORMAT_RGB16_FLOAT,
+			RGB16_FLOAT,
 
-		E_PIXELFORMAT_RGBA16_UNORM,
-		E_PIXELFORMAT_RGBA16_FLOAT,
+			RGBA16_UNORM,
+			RGBA16_FLOAT,
 
-		E_PIXELFORMAT_RGB32_FLOAT,
-		E_PIXELFORMAT_RGBA32_FLOAT,
+			RGB32_FLOAT,
+			RGBA32_FLOAT,
 
-		E_PIXELFORMAT_R10G10B10A2_UNORM,
+			R10G10B10A2_UNORM,
 
-		E_PIXELFORMAT_R9G9B9E5_SHAREDEXP,
+			R9G9B9E5_SHAREDEXP,
 
-		E_PIXELFORMAT_BC1, // DXT1
-		E_PIXELFORMAT_BC2, // DXT2 / DXT3
-		E_PIXELFORMAT_BC3, // DXT4 / DXT5
-		E_PIXELFORMAT_BC4,
-		E_PIXELFORMAT_BC5,
-		E_PIXELFORMAT_BC6H,
-		E_PIXELFORMAT_BC7,
+			BC1, // DXT1
+			BC2, // DXT2 / DXT3
+			BC3, // DXT4 / DXT5
+			BC4,
+			BC5,
+			BC6H,
+			BC7,
 
-		_E_PIXELFORMAT_COUNT
+			_COUNT,
+			_LAST = _COUNT - 1
+		};
 	};
-	extern const char* const EPixelFormat_string[_E_PIXELFORMAT_COUNT];
+	typedef _PixelFormatEnum::Enum PixelFormatEnum;
+	extern const char* const PixelFormatEnumString[PixelFormatEnum::_COUNT];
 
 	typedef struct
 	{
@@ -71,7 +76,7 @@ namespace Graphics
 		EComponentEncoding eEncoding;
 	} PixelFormatInfos;
 
-	extern const PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT];
+	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];
 
 	namespace PixelFormat
 	{
@@ -79,28 +84,28 @@ namespace Graphics
 		typedef struct
 		{
 			ConvertionFunc pFunc;
-			EPixelFormat eFormat;
+			PixelFormatEnum eFormat;
 		} ConvertionFuncInfo;
 
-		typedef ConvertionFuncInfo ConvertionFuncChain[_E_PIXELFORMAT_COUNT];
+		typedef ConvertionFuncInfo ConvertionFuncChain[PixelFormatEnum::_COUNT];
 		typedef uint8_t ConvertionTemporaryData[16*4*4]; // 16 pixels RGBA Float
 
 		typedef struct
 		{
-			EPixelFormat eFormat;
+			PixelFormatEnum eFormat;
 			int iAdditionalBits;
 		} ConvertionInfo;
 
-		typedef ConvertionInfo ConvertionInfoList[_E_PIXELFORMAT_COUNT];
+		typedef ConvertionInfo ConvertionInfoList[PixelFormatEnum::_COUNT];
 
-		bool					GetConvertionChain(EPixelFormat eSourcePixelFormat, EPixelFormat eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits);
-		int						GetAvailableConvertion(EPixelFormat eSourcePixelFormat, bool bIncludeChains, ConvertionInfoList* pOutAvailablePixelFormat);
-		bool					IsCompressed(EPixelFormat ePixelFormat);
-		int						BitPerPixel(EPixelFormat ePixelFormat);
-		int						BlockSize(EPixelFormat ePixelFormat);
-		int						ComponentCount(EPixelFormat ePixelFormat);
-		void					GetBlockCount(EPixelFormat ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY);
-		uint32_t				GetPitch(EPixelFormat ePixelFormat, uint32_t iWidth);
+		bool					GetConvertionChain(PixelFormatEnum eSourcePixelFormat, PixelFormatEnum eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits);
+		int						GetAvailableConvertion(PixelFormatEnum eSourcePixelFormat, bool bIncludeChains, ConvertionInfoList* pOutAvailablePixelFormat);
+		bool					IsCompressed(PixelFormatEnum ePixelFormat);
+		int						BitPerPixel(PixelFormatEnum ePixelFormat);
+		int						BlockSize(PixelFormatEnum ePixelFormat);
+		int						ComponentCount(PixelFormatEnum ePixelFormat);
+		void					GetBlockCount(PixelFormatEnum ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY);
+		uint32_t				GetPitch(PixelFormatEnum ePixelFormat, uint32_t iWidth);
 
 #pragma pack(push,1)
 

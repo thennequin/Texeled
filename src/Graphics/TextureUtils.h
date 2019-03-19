@@ -18,9 +18,9 @@ namespace Graphics
 	};
 	extern const char* const ECubemapFormat_string[_E_CUBEMAPFORMAT_COUNT];
 
-	ErrorCode		ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, EPixelFormat eWantedPixelFormat);
+	ErrorCode		ConvertPixelFormat(const Texture* pTexture, Texture* pOutTexture, PixelFormatEnum eWantedPixelFormat);
 
-	bool			IsPixelFormatResizable(EPixelFormat ePixelFormat);
+	bool			IsPixelFormatResizable(PixelFormatEnum ePixelFormat);
 	ErrorCode		ResizeTexture(const Texture* pTexture, Texture* pOutTexture, int iNewWidth, int iNewHeight);
 	ErrorCode		GenerateMips(const Texture* pTexture, Texture* pOutTexture, bool bOnlyMissingMips);
 

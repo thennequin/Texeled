@@ -49,7 +49,7 @@ namespace Graphics
 				Desc();
 				int						iWidth;
 				int						iHeight;
-				EPixelFormat			ePixelFormat;
+				PixelFormatEnum			ePixelFormat;
 				int						iFaceCount;
 				int						iMipCount;
 			};
@@ -92,7 +92,7 @@ namespace Graphics
 
 		int								GetWidth() const { return m_iWidth; }
 		int								GetHeight() const { return m_iHeight; }
-		EPixelFormat					GetPixelFormat() const { return m_ePixelFormat; }
+		PixelFormatEnum					GetPixelFormat() const { return m_ePixelFormat; }
 		int								GetFaceCount() const { return m_iFaceCount; }
 		int								GetMipCount() const { return m_iMipCount; }
 
@@ -104,7 +104,7 @@ namespace Graphics
 	protected:
 		int								m_iWidth;
 		int								m_iHeight;
-		EPixelFormat					m_ePixelFormat;
+		PixelFormatEnum					m_ePixelFormat;
 		int								m_iFaceCount;
 		int								m_iMipCount;
 		TextureData						m_oData;

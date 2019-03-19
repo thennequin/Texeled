@@ -99,82 +99,82 @@ namespace Graphics
 				|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UNORM
 				|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UINT)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R10G10B10A2_UNORM;
+					oDesc.ePixelFormat = PixelFormatEnum::R10G10B10A2_UNORM;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R16G16B16A16_FLOAT)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_FLOAT;
+					oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R9G9B9E5_SHAREDEXP)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R9G9B9E5_SHAREDEXP;
+					oDesc.ePixelFormat = PixelFormatEnum::R9G9B9E5_SHAREDEXP;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_TYPELESS
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_UNORM
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_SNORM)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC4;
+					oDesc.ePixelFormat = PixelFormatEnum::BC4;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC5_TYPELESS
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC5_UNORM
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC5_SNORM)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC6H;
+					oDesc.ePixelFormat = PixelFormatEnum::BC6H;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC6H_TYPELESS
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC6H_UF16
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC6H_SF16)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC6H;
+					oDesc.ePixelFormat = PixelFormatEnum::BC6H;
 				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC7_TYPELESS
 						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC7_UNORM
 						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC7_UNORM_SRGB)
 				{
-					oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC7;
+					oDesc.ePixelFormat = PixelFormatEnum::BC7;
 				}
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_A8R8G8B8, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGRA8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::BGRA8_UNORM;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGB8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RGB8_UNORM;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_B8G8R8, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGR8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::BGR8_UNORM;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_R5G6B5, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R5G6B5_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::R5G6B5_UNORM;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC1;
+				oDesc.ePixelFormat = PixelFormatEnum::BC1;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT2, sizeof(DDS_PIXELFORMAT)) == 0
 				  || memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT3, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC2;
+				oDesc.ePixelFormat = PixelFormatEnum::BC2;
 			}
 			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT4, sizeof(DDS_PIXELFORMAT)) == 0
 				|| memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT5, sizeof(DDS_PIXELFORMAT)) == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BC3;
+				oDesc.ePixelFormat = PixelFormatEnum::BC3;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R16G16B16A16_UNORM.iFourCC)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RGBA16_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R16G16B16A16_FLOAT.iFourCC)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA16_FLOAT;
+				oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R32G32B32A32_FLOAT.iFourCC)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA32_FLOAT;
+				oDesc.ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 8
@@ -183,7 +183,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::R8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 8
@@ -192,7 +192,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff
 				&& oDDSHeader.oPixelFormat.iABitMask == 0xff)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_R8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::R8_UNORM;
 				//TODO : copy channel R to GBA
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
@@ -202,7 +202,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RG8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RG8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 16
@@ -211,7 +211,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iABitMask == 0
 				&& oDDSHeader.oPixelFormat.iABitMask == 0) // Declaration seems weird
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RG8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RG8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
@@ -220,7 +220,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff
 				&& oDDSHeader.oPixelFormat.iABitMask == 0xff000000)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGRA8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::BGRA8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
@@ -229,7 +229,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff0000
 				&& oDDSHeader.oPixelFormat.iABitMask == 0xff000000)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
@@ -238,7 +238,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_BGRA8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::BGRA8_UNORM;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == 0
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
@@ -247,17 +247,17 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff0000
 				&& oDDSHeader.oPixelFormat.iABitMask == 0)
 			{
-				oDesc.ePixelFormat = EPixelFormat::E_PIXELFORMAT_RGBA8_UNORM;
+				oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
 			}
 
-			if (oDesc.ePixelFormat != EPixelFormat::E_PIXELFORMAT_NONE)
+			if (oDesc.ePixelFormat != PixelFormatEnum::_NONE)
 			{
 				if (pTexture->Create(oDesc) != ErrorCode::Ok)
 				{
 					return false;
 				}
 
-				const PixelFormatInfos& oInfos = EPixelFormatInfos[oDesc.ePixelFormat];
+				const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
 
 				for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
 				{

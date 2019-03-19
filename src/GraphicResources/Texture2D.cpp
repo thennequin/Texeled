@@ -140,10 +140,10 @@ namespace GraphicResources
 		if (pTexture == NULL || pOutTexture2D == NULL)
 			return ErrorCode(1, "Invalid argument");
 
-		Graphics::EPixelFormat ePixelFormat = pTexture->GetPixelFormat();
+		Graphics::PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
 
 		DXGI_FORMAT eDXGIFormat;
-		Graphics::EPixelFormat eNeededConvertionFormat;
+		Graphics::PixelFormatEnum eNeededConvertionFormat;
 		if (GetDXGIFormatFromPixelFormat(ePixelFormat, &eDXGIFormat, &eNeededConvertionFormat) == false || eDXGIFormat == DXGI_FORMAT_UNKNOWN)
 			return ErrorCode(1, "Can't convert format");
 
@@ -154,7 +154,7 @@ namespace GraphicResources
 		{
 			if (Graphics::ConvertPixelFormat(pTexture, &oNewTexture, eNeededConvertionFormat) != ErrorCode::Ok)
 			{
-				return ErrorCode(1, "Pixel format conversion '%s to '%s' is not supported", Graphics::EPixelFormat_string[ePixelFormat], Graphics::EPixelFormat_string[eNeededConvertionFormat]);
+				return ErrorCode(1, "Pixel format conversion '%s to '%s' is not supported", Graphics::PixelFormatEnumString[ePixelFormat], Graphics::PixelFormatEnumString[eNeededConvertionFormat]);
 			}
 			pInputTexture = &oNewTexture;
 		}
@@ -219,106 +219,106 @@ namespace GraphicResources
 		return ErrorCode::Ok;
 	}
 
-	bool Texture2D::GetDXGIFormatFromPixelFormat(Graphics::EPixelFormat ePixelFormat, DXGI_FORMAT* pOutDXGIFormat, Graphics::EPixelFormat* pOutConvertionFormatRequired)
+	bool Texture2D::GetDXGIFormatFromPixelFormat(Graphics::PixelFormatEnum ePixelFormat, DXGI_FORMAT* pOutDXGIFormat, Graphics::PixelFormatEnum* pOutConvertionFormatRequired)
 	{
 		if (pOutDXGIFormat == NULL)
 			return false;
 
 		DXGI_FORMAT eDXGIOutput = DXGI_FORMAT_UNKNOWN;
-		Graphics::EPixelFormat eConvertionFormat = ePixelFormat;
+		Graphics::PixelFormatEnum eConvertionFormat = ePixelFormat;
 
 		switch (ePixelFormat)
 		{
-			case Graphics::E_PIXELFORMAT_R8_UNORM:
+			case Graphics::PixelFormatEnum::R8_UNORM:
 				eDXGIOutput = DXGI_FORMAT_R8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RG8_UNORM:
+			case Graphics::PixelFormatEnum::RG8_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_R8G8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGB8_UNORM:
+			case Graphics::PixelFormatEnum::RGB8_UNORM:
 				eDXGIOutput = DXGI_FORMAT_R8G8B8A8_UNORM;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA8_UNORM;
+				eConvertionFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BGR8_UNORM:
+			case Graphics::PixelFormatEnum::BGR8_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_B8G8R8A8_UNORM;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_BGRA8_UNORM;
+				eConvertionFormat = Graphics::PixelFormatEnum::BGRA8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA8_UNORM:
+			case Graphics::PixelFormatEnum::RGBA8_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_R8G8B8A8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BGRA8_UNORM:
+			case Graphics::PixelFormatEnum::BGRA8_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_B8G8R8A8_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_R5G6B5_UNORM:
+			case Graphics::PixelFormatEnum::R5G6B5_UNORM:
 				eDXGIOutput = DXGI_FORMAT_B5G6R5_UNORM;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_B5G6BR_UNORM;
+				eConvertionFormat = Graphics::PixelFormatEnum::B5G6BR_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_B5G6BR_UNORM:
+			case Graphics::PixelFormatEnum::B5G6BR_UNORM:
 				eDXGIOutput = DXGI_FORMAT_B5G6R5_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGB16_FLOAT:
+			case Graphics::PixelFormatEnum::RGB16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA16_FLOAT;
+				eConvertionFormat = Graphics::PixelFormatEnum::RGBA16_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA16_UNORM:
+			case Graphics::PixelFormatEnum::RGBA16_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA16_FLOAT:
+			case Graphics::PixelFormatEnum::RGBA16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGB32_FLOAT:
+			case Graphics::PixelFormatEnum::RGB32_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R32G32B32A32_FLOAT;
-				eConvertionFormat = Graphics::E_PIXELFORMAT_RGBA32_FLOAT;
+				eConvertionFormat = Graphics::PixelFormatEnum::RGBA32_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_RGBA32_FLOAT:
+			case Graphics::PixelFormatEnum::RGBA32_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R32G32B32A32_FLOAT;
 				break;
 
-			case Graphics::E_PIXELFORMAT_R10G10B10A2_UNORM:
+			case Graphics::PixelFormatEnum::R10G10B10A2_UNORM:
 				eDXGIOutput =  DXGI_FORMAT_R10G10B10A2_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
+			case Graphics::PixelFormatEnum::R9G9B9E5_SHAREDEXP:
 				eDXGIOutput =  DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC1: // DXT1
+			case Graphics::PixelFormatEnum::BC1: // DXT1
 				eDXGIOutput =  DXGI_FORMAT_BC1_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC2: // DXT2 / DXT3
+			case Graphics::PixelFormatEnum::BC2: // DXT2 / DXT3
 				eDXGIOutput =  DXGI_FORMAT_BC2_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC3: // DXT4 / DXT5
+			case Graphics::PixelFormatEnum::BC3: // DXT4 / DXT5
 				eDXGIOutput =  DXGI_FORMAT_BC3_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC4:
+			case Graphics::PixelFormatEnum::BC4:
 				eDXGIOutput =  DXGI_FORMAT_BC4_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC5:
+			case Graphics::PixelFormatEnum::BC5:
 				*pOutDXGIFormat =  DXGI_FORMAT_BC5_UNORM;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC6H:
+			case Graphics::PixelFormatEnum::BC6H:
 				*pOutDXGIFormat =  DXGI_FORMAT_BC6H_SF16;
 				break;
 
-			case Graphics::E_PIXELFORMAT_BC7:
+			case Graphics::PixelFormatEnum::BC7:
 				*pOutDXGIFormat =  DXGI_FORMAT_BC7_UNORM;
 				break;
 

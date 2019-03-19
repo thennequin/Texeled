@@ -16,7 +16,7 @@ namespace Graphics
 		"SNorm"
 	};
 
-	const char* const EPixelFormat_string[_E_PIXELFORMAT_COUNT] = {
+	const char* const PixelFormatEnumString[PixelFormatEnum::_COUNT] = {
 			"None",
 
 			"R8 UNorm",
@@ -52,7 +52,7 @@ namespace Graphics
 			"BC7"
 	};
 
-	const PixelFormatInfos EPixelFormatInfos[_E_PIXELFORMAT_COUNT] =
+	const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT] =
 	{
 		//  /--------------------------------------------------------- iBitsPerPixel
 		//  |    /---------------------------------------------------- iBlockWidth
@@ -62,71 +62,71 @@ namespace Graphics
 		//  |    |    |    |    |    /-------------------------------- eEncoding
 		//  |    |    |    |    |    |
 		//  |    |    |    |    |    |
-		{   0,   0,   0,   0,   0,   E_COMPONENT_ENCODING_NONE  }, // E_PIXELFORMAT_NONE
+		{   0,   0,   0,   0,   0,   E_COMPONENT_ENCODING_NONE  }, // NONE
 
-		{   8,   1,   1,   1,   1,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_R8_UNORM
+		{   8,   1,   1,   1,   1,   E_COMPONENT_ENCODING_UNORM }, // R8_UNORM
 
-		{  16,   1,   1,   2,   2,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_RG8_UNORM
+		{  16,   1,   1,   2,   2,   E_COMPONENT_ENCODING_UNORM }, // RG8_UNORM
 
-		{  24,   1,   1,   3,   3,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_RGB8_UNORM
-		{  24,   1,   1,   3,   3,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BGR8_UNORM
+		{  24,   1,   1,   3,   3,   E_COMPONENT_ENCODING_UNORM }, // RGB8_UNORM
+		{  24,   1,   1,   3,   3,   E_COMPONENT_ENCODING_UNORM }, // BGR8_UNORM
 
-		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_RGBA8_UNORM
-		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BGRA8_UNORM
+		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // RGBA8_UNORM
+		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // BGRA8_UNORM
 
-		{  24,   1,   1,   2,   3,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_R5G6B5_UNORM
-		{  24,   1,   1,   2,   3,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_B5G6BR_UNORM
+		{  24,   1,   1,   2,   3,   E_COMPONENT_ENCODING_UNORM }, // R5G6B5_UNORM
+		{  24,   1,   1,   2,   3,   E_COMPONENT_ENCODING_UNORM }, // B5G6BR_UNORM
 
-		{  48,   1,   1,   6,   3,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_RGB16_FLOAT
+		{  48,   1,   1,   6,   3,   E_COMPONENT_ENCODING_FLOAT }, // RGB16_FLOAT
 
-		{  64,   1,   1,   6,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_RGBA16_UNORM
-		{  64,   1,   1,   8,   4,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_RGBA16_FLOAT
+		{  64,   1,   1,   6,   4,   E_COMPONENT_ENCODING_UNORM }, // RGBA16_UNORM
+		{  64,   1,   1,   8,   4,   E_COMPONENT_ENCODING_FLOAT }, // RGBA16_FLOAT
 
-		{  96,   1,   1,  12,   3,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_RGB32_FLOAT
+		{  96,   1,   1,  12,   3,   E_COMPONENT_ENCODING_FLOAT }, // RGB32_FLOAT
 
-		{ 128,   1,   1,  16,   4,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_RGBA32_FLOAT
+		{ 128,   1,   1,  16,   4,   E_COMPONENT_ENCODING_FLOAT }, // RGBA32_FLOAT
 
-		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_R10G10B10A2_UNORM
+		{  32,   1,   1,   4,   4,   E_COMPONENT_ENCODING_UNORM }, // R10G10B10A2_UNORM
 
-		{  32,   1,   1,   4,   3,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_R9G9B9E5_SHAREDEXP
+		{  32,   1,   1,   4,   3,   E_COMPONENT_ENCODING_FLOAT }, // R9G9B9E5_SHAREDEXP
 
-		{   4,   4,   4,   8,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BC1
-		{   8,   4,   4,  16,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BC2
-		{   8,   4,   4,  16,   4,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BC3
-		{   4,   4,   4,   8,   1,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BC4
-		{   8,   4,   4,  16,   2,   E_COMPONENT_ENCODING_UNORM }, // E_PIXELFORMAT_BC5
-		{   8,   4,   4,  16,   3,   E_COMPONENT_ENCODING_FLOAT }, // E_PIXELFORMAT_BC6H
-		{   8,   4,   4,  16,   3,   E_COMPONENT_ENCODING_UNORM }  // E_PIXELFORMAT_BC7
+		{   4,   4,   4,   8,   4,   E_COMPONENT_ENCODING_UNORM }, // BC1
+		{   8,   4,   4,  16,   4,   E_COMPONENT_ENCODING_UNORM }, // BC2
+		{   8,   4,   4,  16,   4,   E_COMPONENT_ENCODING_UNORM }, // BC3
+		{   4,   4,   4,   8,   1,   E_COMPONENT_ENCODING_UNORM }, // BC4
+		{   8,   4,   4,  16,   2,   E_COMPONENT_ENCODING_UNORM }, // BC5
+		{   8,   4,   4,  16,   3,   E_COMPONENT_ENCODING_FLOAT }, // BC6H
+		{   8,   4,   4,  16,   3,   E_COMPONENT_ENCODING_UNORM }  // BC7
 	};
 
 	namespace PixelFormat
 	{
-		bool IsCompressed(EPixelFormat ePixelFormat)
+		bool IsCompressed(PixelFormatEnum ePixelFormat)
 		{
-			return (ePixelFormat >= E_PIXELFORMAT_BC1 && ePixelFormat <= E_PIXELFORMAT_BC7);
+			return (ePixelFormat >= PixelFormatEnum::BC1 && ePixelFormat <= PixelFormatEnum::BC7);
 		}
 
-		int BitPerPixel(EPixelFormat ePixelFormat)
+		int BitPerPixel(PixelFormatEnum ePixelFormat)
 		{
-			return EPixelFormatInfos[ePixelFormat].iBitsPerPixel;
+			return PixelFormatEnumInfos[ePixelFormat].iBitsPerPixel;
 		}
 
 		//Return Bytes
-		int BlockSize(EPixelFormat ePixelFormat)
+		int BlockSize(PixelFormatEnum ePixelFormat)
 		{
-			return EPixelFormatInfos[ePixelFormat].iBlockSize;
+			return PixelFormatEnumInfos[ePixelFormat].iBlockSize;
 		}
 
-		int ComponentCount(EPixelFormat ePixelFormat)
+		int ComponentCount(PixelFormatEnum ePixelFormat)
 		{
-			return EPixelFormatInfos[ePixelFormat].iComponents;
+			return PixelFormatEnumInfos[ePixelFormat].iComponents;
 		}
 
-		void GetBlockCount(EPixelFormat ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY)
+		void GetBlockCount(PixelFormatEnum ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY)
 		{
 			if (pOutCountX != NULL)
 			{
-				const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+				const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
 				uint32_t iBlockCount = ((iWidth + (oInfos.iBlockWidth - 1)) / oInfos.iBlockWidth);
 				if (iBlockCount == 0)
 					iBlockCount = 1;
@@ -135,7 +135,7 @@ namespace Graphics
 
 			if (pOutCountY != NULL)
 			{
-				const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+				const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
 				uint32_t iBlockCount = ((iHeight + (oInfos.iBlockHeight - 1)) / oInfos.iBlockHeight);
 				if (iBlockCount == 0)
 					iBlockCount = 1;
@@ -143,9 +143,9 @@ namespace Graphics
 			}
 		}
 
-		uint32_t GetPitch(EPixelFormat ePixelFormat, uint32_t iWidth)
+		uint32_t GetPitch(PixelFormatEnum ePixelFormat, uint32_t iWidth)
 		{
-			const PixelFormatInfos& oInfos = EPixelFormatInfos[ePixelFormat];
+			const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
 			uint32_t iBlockCount = ((iWidth + (oInfos.iBlockWidth - 1)) / oInfos.iBlockWidth);
 			if (iBlockCount == 0)
 				iBlockCount = 1;
@@ -887,7 +887,7 @@ namespace Graphics
 			int iAdditionalBits;
 		} ConvertionFuncDeclaration;
 
-		ConvertionFuncDeclaration s_pConvertionMatrix[_E_PIXELFORMAT_COUNT][_E_PIXELFORMAT_COUNT] = {};
+		ConvertionFuncDeclaration s_pConvertionMatrix[PixelFormatEnum::_COUNT][PixelFormatEnum::_COUNT] = {};
 
 		void InitConvertionMatrix()
 		{
@@ -896,82 +896,82 @@ namespace Graphics
 
 			s_bConvertionMatrixInit = true;
 
-			memset(s_pConvertionMatrix, 0, _E_PIXELFORMAT_COUNT * _E_PIXELFORMAT_COUNT * sizeof(ConvertionFunc));
+			memset(s_pConvertionMatrix, 0, PixelFormatEnum::_COUNT * PixelFormatEnum::_COUNT * sizeof(ConvertionFunc));
 
 			// RGB8 <=> RGBA8
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_RGB8_To_RGBA8, 8 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA8_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_RGBA8_To_RGB8, -8 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::RGBA8_UNORM] = { Convert_RGB8_To_RGBA8, 8 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_RGBA8_To_RGB8, -8 };
 
 			// R8 <=> RGB8
-			s_pConvertionMatrix[E_PIXELFORMAT_R8_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_R8_To_RGB8, 16 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_R8_UNORM] = { Convert_RGB8_To_R8, -16 };
+			s_pConvertionMatrix[PixelFormatEnum::R8_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_R8_To_RGB8, 16 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::R8_UNORM] = { Convert_RGB8_To_R8, -16 };
 
 			// RG8 <=> RGB8
-			s_pConvertionMatrix[E_PIXELFORMAT_RG8_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_RG8_To_RGB8, 8 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_RG8_UNORM] = { Convert_RGB8_To_RG8, -8 };
+			s_pConvertionMatrix[PixelFormatEnum::RG8_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_RG8_To_RGB8, 8 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::RG8_UNORM] = { Convert_RGB8_To_RG8, -8 };
 
 			// BGR8 <=> RGB8
-			s_pConvertionMatrix[E_PIXELFORMAT_BGR8_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_BGR8_To_RGB8, 1 }; // Not added bits but different
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_BGR8_UNORM] = { Convert_RGB8_To_BGR8, 1 };
+			s_pConvertionMatrix[PixelFormatEnum::BGR8_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_BGR8_To_RGB8, 1 }; // Not added bits but different
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::BGR8_UNORM] = { Convert_RGB8_To_BGR8, 1 };
 
 			// BGRA8 <=> RGBA8
-			s_pConvertionMatrix[E_PIXELFORMAT_BGRA8_UNORM][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BGRA8_To_RGBA8, 1 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA8_UNORM][E_PIXELFORMAT_BGRA8_UNORM] = { Convert_RGBA8_To_BGRA8, 1 };
+			s_pConvertionMatrix[PixelFormatEnum::BGRA8_UNORM][PixelFormatEnum::RGBA8_UNORM] = { Convert_BGRA8_To_RGBA8, 1 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BGRA8_UNORM] = { Convert_RGBA8_To_BGRA8, 1 };
 
 			// RGB565 <=> RGB8
-			s_pConvertionMatrix[E_PIXELFORMAT_R5G6B5_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_RGB565_To_RGB8, 8 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_R5G6B5_UNORM] = { Convert_RGB8_To_RGB565, -8 };
+			s_pConvertionMatrix[PixelFormatEnum::R5G6B5_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_RGB565_To_RGB8, 8 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::R5G6B5_UNORM] = { Convert_RGB8_To_RGB565, -8 };
 
 			// BGR565 <=> RGB8
-			s_pConvertionMatrix[E_PIXELFORMAT_B5G6BR_UNORM][E_PIXELFORMAT_RGB8_UNORM] = { Convert_BGR565_To_RGB8, 8 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_B5G6BR_UNORM] = { Convert_RGB8_To_BGR565, -8 };
+			s_pConvertionMatrix[PixelFormatEnum::B5G6BR_UNORM][PixelFormatEnum::RGB8_UNORM] = { Convert_BGR565_To_RGB8, 8 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::B5G6BR_UNORM] = { Convert_RGB8_To_BGR565, -8 };
 
 			// RGB16F <=> RGB32F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB16_FLOAT][E_PIXELFORMAT_RGB32_FLOAT] = { Convert_RGB16F_To_RGB32F, 48 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB32_FLOAT][E_PIXELFORMAT_RGB16_FLOAT] = { Convert_RGB32F_To_RGB16F, -48 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB16_FLOAT][PixelFormatEnum::RGB32_FLOAT] = { Convert_RGB16F_To_RGB32F, 48 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RGB16_FLOAT] = { Convert_RGB32F_To_RGB16F, -48 };
 
 			// RGBA16F <=> RGBA32F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA16_FLOAT][E_PIXELFORMAT_RGBA32_FLOAT] = { Convert_RGBA16F_To_RGBA32F, 64 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA32_FLOAT][E_PIXELFORMAT_RGBA16_FLOAT] = { Convert_RGBA32F_To_RGBA16F, -64 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA16_FLOAT][PixelFormatEnum::RGBA32_FLOAT] = { Convert_RGBA16F_To_RGBA32F, 64 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA32_FLOAT][PixelFormatEnum::RGBA16_FLOAT] = { Convert_RGBA32F_To_RGBA16F, -64 };
 
 			// RGB32F <=> RGBA32F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB32_FLOAT][E_PIXELFORMAT_RGBA32_FLOAT] = { Convert_RGB32F_To_RGBA32F, 32 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA32_FLOAT][E_PIXELFORMAT_RGB32_FLOAT] = { Convert_RGBA32F_To_RGB32F, -32 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RGBA32_FLOAT] = { Convert_RGB32F_To_RGBA32F, 32 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA32_FLOAT][PixelFormatEnum::RGB32_FLOAT] = { Convert_RGBA32F_To_RGB32F, -32 };
 
 			// RGBA16 => RGBA16F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA16_UNORM][E_PIXELFORMAT_RGBA16_FLOAT] = { Convert_RGBA16_To_RGBA16F, -1 }; //Losing quality?
+			s_pConvertionMatrix[PixelFormatEnum::RGBA16_UNORM][PixelFormatEnum::RGBA16_FLOAT] = { Convert_RGBA16_To_RGBA16F, -1 }; //Losing quality?
 
 			// RGB16F <=> RGBA16F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB16_FLOAT][E_PIXELFORMAT_RGBA16_FLOAT] = { Convert_RGB16F_To_RGBA16F, 16 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA16_FLOAT][E_PIXELFORMAT_RGB16_FLOAT] = { Convert_RGBA16F_To_RGB16F, -16 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB16_FLOAT][PixelFormatEnum::RGBA16_FLOAT] = { Convert_RGB16F_To_RGBA16F, 16 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA16_FLOAT][PixelFormatEnum::RGB16_FLOAT] = { Convert_RGBA16F_To_RGB16F, -16 };
 
 			// RGBA8 <=> RGBA32F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA8_UNORM][E_PIXELFORMAT_RGBA32_FLOAT] = { Convert_RGBA8_To_RGBA32F, 96 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA32_FLOAT][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_RGBA32F_To_RGBA8, -96 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::RGBA32_FLOAT] = { Convert_RGBA8_To_RGBA32F, 96 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA32_FLOAT][PixelFormatEnum::RGBA8_UNORM] = { Convert_RGBA32F_To_RGBA8, -96 };
 
 			// RGB8 >=> RGB32F
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB8_UNORM][E_PIXELFORMAT_RGB32_FLOAT] = { Convert_RGB8_To_RGB32F, 72 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGB32_FLOAT][E_PIXELFORMAT_RGB8_UNORM] = { Convert_RGB32F_To_RGB8, -72 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB8_UNORM][PixelFormatEnum::RGB32_FLOAT] = { Convert_RGB8_To_RGB32F, 72 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RGB8_UNORM] = { Convert_RGB32F_To_RGB8, -72 };
 
 			// R10G10B10A2 <=> RGBA32F
-			s_pConvertionMatrix[E_PIXELFORMAT_R10G10B10A2_UNORM][E_PIXELFORMAT_RGBA32_FLOAT] = { Convert_R10G10B10A2_To_RGBA32F, 96 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA32_FLOAT][E_PIXELFORMAT_R10G10B10A2_UNORM] = { Convert_RGBA32F_To_R10G10B10A2, -96 };
+			s_pConvertionMatrix[PixelFormatEnum::R10G10B10A2_UNORM][PixelFormatEnum::RGBA32_FLOAT] = { Convert_R10G10B10A2_To_RGBA32F, 96 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA32_FLOAT][PixelFormatEnum::R10G10B10A2_UNORM] = { Convert_RGBA32F_To_R10G10B10A2, -96 };
 
 			// R9G9B9E5 => RGB32F
-			s_pConvertionMatrix[E_PIXELFORMAT_R9G9B9E5_SHAREDEXP][E_PIXELFORMAT_RGB32_FLOAT] = { Convert_R9G9B9E5_To_RGB32F, 64 };
+			s_pConvertionMatrix[PixelFormatEnum::R9G9B9E5_SHAREDEXP][PixelFormatEnum::RGB32_FLOAT] = { Convert_R9G9B9E5_To_RGB32F, 64 };
 
 			// BC1 => RGBA
-			s_pConvertionMatrix[E_PIXELFORMAT_BC1][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC1_To_RGBA8, 28 };
-			s_pConvertionMatrix[E_PIXELFORMAT_RGBA8_UNORM][E_PIXELFORMAT_BC1] = { Convert_RGBA8_To_BC1, -28 };
+			s_pConvertionMatrix[PixelFormatEnum::BC1][PixelFormatEnum::RGBA8_UNORM] = { Convert_BC1_To_RGBA8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BC1] = { Convert_RGBA8_To_BC1, -28 };
 
 			// BC2 => RGBA
-			s_pConvertionMatrix[E_PIXELFORMAT_BC2][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC2_To_RGBA8, 24 };
+			s_pConvertionMatrix[PixelFormatEnum::BC2][PixelFormatEnum::RGBA8_UNORM] = { Convert_BC2_To_RGBA8, 24 };
 
 			// BC3 => RGBA
-			s_pConvertionMatrix[E_PIXELFORMAT_BC3][E_PIXELFORMAT_RGBA8_UNORM] = { Convert_BC3_To_RGBA8, 24 };
+			s_pConvertionMatrix[PixelFormatEnum::BC3][PixelFormatEnum::RGBA8_UNORM] = { Convert_BC3_To_RGBA8, 24 };
 		}
 
-		bool GetConvertionChain(EPixelFormat eSourcePixelFormat, EPixelFormat eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits)
+		bool GetConvertionChain(PixelFormatEnum eSourcePixelFormat, PixelFormatEnum eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits)
 		{
 			InitConvertionMatrix();
 
@@ -991,15 +991,15 @@ namespace Graphics
 				return true;
 			}
 
-			EPixelFormat eCurrentFormat = eSourcePixelFormat;
-			EPixelFormat eChain[32] = { E_PIXELFORMAT_NONE };
+			PixelFormatEnum eCurrentFormat = eSourcePixelFormat;
+			PixelFormatEnum eChain[32] = { PixelFormatEnum::_NONE };
 			int iCurrentChain = 0;
 
 			while (iCurrentChain < 32)
 			{
 				ConvertionFuncDeclaration* pInfos = s_pConvertionMatrix[eCurrentFormat];
 
-				EPixelFormat eBestFormat = E_PIXELFORMAT_NONE;
+				PixelFormatEnum eBestFormat = PixelFormatEnum::_NONE;
 				int iBestAddBits = -999;
 				if (pInfos[eDestPixelFormat].pFunc != NULL)
 				{
@@ -1007,7 +1007,7 @@ namespace Graphics
 				}
 				else
 				{
-					for (int i = 0; i < _E_PIXELFORMAT_COUNT; ++i)
+					for (int i = 0; i < PixelFormatEnum::_COUNT; ++i)
 					{
 						if (pInfos[i].pFunc != NULL)
 						{
@@ -1024,9 +1024,9 @@ namespace Graphics
 							if (bAlreadyInChain)
 								continue;
 
-							if (eBestFormat == E_PIXELFORMAT_NONE || pInfos[i].iAdditionalBits >= 0)
+							if (eBestFormat == PixelFormatEnum::_NONE || pInfos[i].iAdditionalBits >= 0)
 							{
-								eBestFormat = (EPixelFormat)i;
+								eBestFormat = (PixelFormatEnum)i;
 								if (pInfos[i].iAdditionalBits == 0)
 									break;
 							}
@@ -1034,7 +1034,7 @@ namespace Graphics
 					}
 				}
 
-				if (eBestFormat != E_PIXELFORMAT_NONE)
+				if (eBestFormat != PixelFormatEnum::_NONE)
 				{
 					eChain[iCurrentChain] = eBestFormat;
 					++iCurrentChain;
@@ -1069,7 +1069,7 @@ namespace Graphics
 			return false;
 		}
 
-		int GetAvailableConvertion(EPixelFormat eSourcePixelFormat, bool bIncludeChains, ConvertionInfoList* pOutAvailablePixelFormat)
+		int GetAvailableConvertion(PixelFormatEnum eSourcePixelFormat, bool bIncludeChains, ConvertionInfoList* pOutAvailablePixelFormat)
 		{
 			InitConvertionMatrix();
 			memset(pOutAvailablePixelFormat, 0, sizeof(ConvertionInfoList));
@@ -1080,20 +1080,20 @@ namespace Graphics
 			int iAdditionalBits;
 
 			ConvertionFuncDeclaration* pConvertionList = s_pConvertionMatrix[eSourcePixelFormat];
-			for (int i = 0; i < _E_PIXELFORMAT_COUNT; ++i)
+			for (int i = 0; i < PixelFormatEnum::_COUNT; ++i)
 			{
 				if (i == eSourcePixelFormat)
 					continue;
 
 				if (pConvertionList[i].pFunc != NULL) //TODO check bLosingQuality
 				{
-					(*pOutAvailablePixelFormat)[iCurrentOutIndex].eFormat = (EPixelFormat)i;
+					(*pOutAvailablePixelFormat)[iCurrentOutIndex].eFormat = (PixelFormatEnum)i;
 					(*pOutAvailablePixelFormat)[iCurrentOutIndex].iAdditionalBits = pConvertionList[i].iAdditionalBits;
 					++iCurrentOutIndex;
 				}
-				else if (bIncludeChains && GetConvertionChain(eSourcePixelFormat, (EPixelFormat)i, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits))
+				else if (bIncludeChains && GetConvertionChain(eSourcePixelFormat, (PixelFormatEnum)i, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits))
 				{
-					(*pOutAvailablePixelFormat)[iCurrentOutIndex].eFormat = (EPixelFormat)i;
+					(*pOutAvailablePixelFormat)[iCurrentOutIndex].eFormat = (PixelFormatEnum)i;
 					(*pOutAvailablePixelFormat)[iCurrentOutIndex].iAdditionalBits = iAdditionalBits;
 					++iCurrentOutIndex;
 				}

@@ -75,7 +75,7 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%s", Graphics::EPixelFormat_string[oTexture.GetPixelFormat()]);
+		ImGui::Text("%s", Graphics::PixelFormatEnumString[oTexture.GetPixelFormat()]);
 		ImGui::PopFont();
 
 		//Channels
@@ -86,7 +86,7 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%d", Graphics::EPixelFormatInfos[oTexture.GetPixelFormat()].iComponents);
+		ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponents);
 		ImGui::PopFont();
 	}
 }

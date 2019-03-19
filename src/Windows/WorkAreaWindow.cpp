@@ -107,7 +107,7 @@ namespace Windows
 		m_oCurrentOffset = m_oOffset;
 
 		Graphics::Texture::Desc oCheckerboardDesc;
-		oCheckerboardDesc.ePixelFormat = Graphics::E_PIXELFORMAT_RGBA8_UNORM;
+		oCheckerboardDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 		oCheckerboardDesc.iWidth = 16;
 		oCheckerboardDesc.iHeight = 16;
 		Graphics::Texture oCheckerboardTexture;

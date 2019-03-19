@@ -40,7 +40,7 @@ Texture::TextureFaceData::TextureFaceData()
 
 Texture::TextureData::Desc::Desc()
 {
-	ePixelFormat = E_PIXELFORMAT_NONE;
+	ePixelFormat = PixelFormatEnum::_NONE;
 	iWidth = 0;
 	iHeight = 0;
 	iMipCount = 1;
@@ -66,7 +66,7 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 {
 	Destroy();
 
-	const PixelFormatInfos& oInfos = EPixelFormatInfos[oDesc.ePixelFormat];
+	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
 
 	size_t iOffset = 0;
 	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
@@ -153,7 +153,7 @@ Texture::Desc::Desc()
 ////////////////////////////////////////////////////////////////
 
 Texture::Texture()
-	: m_ePixelFormat(E_PIXELFORMAT_NONE)
+	: m_ePixelFormat(PixelFormatEnum::_NONE)
 	, m_iWidth(0)
 	, m_iHeight(0)
 	, m_iMipCount(0)
@@ -173,7 +173,7 @@ bool Texture::IsValid() const
 
 ErrorCode Texture::Create(Desc& oDesc)
 {
-	if (!(oDesc.ePixelFormat != E_PIXELFORMAT_NONE
+	if (!(oDesc.ePixelFormat != PixelFormatEnum::_NONE
 		&& oDesc.iWidth > 0 && oDesc.iWidth <= c_iMaxSize
 		&& oDesc.iHeight > 0 && oDesc.iHeight <= c_iMaxSize
 		&& oDesc.iMipCount > 0 && oDesc.iMipCount <= c_iMaxMip))
@@ -227,7 +227,7 @@ ErrorCode Texture::Destroy()
 	if (m_oData.IsValid())
 	{
 		m_oData.Destroy();
-		m_ePixelFormat = E_PIXELFORMAT_NONE;
+		m_ePixelFormat = PixelFormatEnum::_NONE;
 		m_iWidth = 0;
 		m_iHeight = 0;
 		m_iMipCount = 0;

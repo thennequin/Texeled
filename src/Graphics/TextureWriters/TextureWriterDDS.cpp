@@ -64,53 +64,53 @@ namespace Graphics
 
 			switch (pTexture->GetPixelFormat())
 			{
-			case EPixelFormat::E_PIXELFORMAT_RGB8_UNORM:
+			case PixelFormatEnum::RGB8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8, sizeof(DDS_PIXELFORMAT));
 				break;
-			case EPixelFormat::E_PIXELFORMAT_RGBA8_UNORM:
+			case PixelFormatEnum::RGBA8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8A8, sizeof(DDS_PIXELFORMAT));
 				break;
-			//case EPixelFormat::E_PIXELFORMAT_B5G6BR_UNORM:
+			//case PixelFormatEnum::B5G6BR_UNORM:
 				//memcpy(&oDDSHeader.oPixelFormat, &DDSPF_);
 				//break;
 
-			case EPixelFormat::E_PIXELFORMAT_BC1:
+			case PixelFormatEnum::BC1:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT));
 				break;
-			case EPixelFormat::E_PIXELFORMAT_BC2:
+			case PixelFormatEnum::BC2:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT3, sizeof(DDS_PIXELFORMAT));
 				break;
-			case EPixelFormat::E_PIXELFORMAT_BC3:
+			case PixelFormatEnum::BC3:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT5, sizeof(DDS_PIXELFORMAT));
 				break;
 
 			//DX10
-			case EPixelFormat::E_PIXELFORMAT_RGBA16_FLOAT:
+			case PixelFormatEnum::RGBA16_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
-			case EPixelFormat::E_PIXELFORMAT_R10G10B10A2_UNORM:
+			case PixelFormatEnum::R10G10B10A2_UNORM:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R10G10B10A2_UNORM;
 				break;
-			case EPixelFormat::E_PIXELFORMAT_R9G9B9E5_SHAREDEXP:
+			case PixelFormatEnum::R9G9B9E5_SHAREDEXP:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
 				break;
 
-			case EPixelFormat::E_PIXELFORMAT_BC4:
+			case PixelFormatEnum::BC4:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC4_TYPELESS;
 				break;
-			case EPixelFormat::E_PIXELFORMAT_BC5:
+			case PixelFormatEnum::BC5:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC5_TYPELESS;
 				break;
-			case EPixelFormat::E_PIXELFORMAT_BC6H:
+			case PixelFormatEnum::BC6H:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC6H_TYPELESS;
 				break;
-			case EPixelFormat::E_PIXELFORMAT_BC7:
+			case PixelFormatEnum::BC7:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC7_TYPELESS;
 				break;

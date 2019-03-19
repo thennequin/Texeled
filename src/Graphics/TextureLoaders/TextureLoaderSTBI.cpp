@@ -57,10 +57,10 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGB32_FLOAT;
+						oDesc.ePixelFormat = PixelFormatEnum::RGB32_FLOAT;
 						break;
 					case 4:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGBA32_FLOAT;
+						oDesc.ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
@@ -76,10 +76,10 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						//oDesc.ePixelFormat = Texture::E_PIXELFORMAT_RGB16_UINT;
+						//oDesc.ePixelFormat = Texture::PixelFormatEnum::RGB16_UINT;
 						break;
 					case 4:
-						//oDesc.ePixelFormat = Texture::E_PIXELFORMAT_RGBA16_UINT;
+						//oDesc.ePixelFormat = Texture::PixelFormatEnum::RGBA16_UINT;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
@@ -95,17 +95,17 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGB8_UNORM;
+						oDesc.ePixelFormat = PixelFormatEnum::RGB8_UNORM;
 						break;
 					case 4:
-						oDesc.ePixelFormat = E_PIXELFORMAT_RGBA8_UNORM;
+						oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
 				}
 			}
 
-			if (oDesc.ePixelFormat != E_PIXELFORMAT_NONE && oDesc.pData[0][0] != NULL)
+			if (oDesc.ePixelFormat != PixelFormatEnum::_NONE && oDesc.pData[0][0] != NULL)
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
 				stbi_image_free((void*)oDesc.pData[0][0]);
