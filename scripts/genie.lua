@@ -1,5 +1,5 @@
 local PROJECT_DIR          = (path.getabsolute("..") .. "/")
-local PROJECT_OBJ_DIR    = path.join(PROJECT_DIR, ".obj")
+local PROJECT_OBJ_DIR      = path.join(PROJECT_DIR, ".obj")
 local PROJECT_PROJECTS_DIR = path.join(PROJECT_DIR, ".projects")
 local PROJECT_RUNTIME_DIR  = path.join(PROJECT_DIR, ".out/")
 local BGFX_ROOT_DIR        = path.join(PROJECT_DIR, "..")
