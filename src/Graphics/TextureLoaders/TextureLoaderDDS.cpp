@@ -292,7 +292,7 @@ namespace Graphics
 						{
 							if (iRowSize > iRemainingPitch)
 							{
-								pStream->Seek(iRemainingPitch, Core::Stream::E_SEEK_MODE_OFFSET);
+								pStream->Seek(iRemainingPitch, Core::Stream::SeekModeEnum::OFFSET);
 								iRemainingPitch = iPitchSize;
 							}
 

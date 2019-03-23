@@ -49,12 +49,12 @@ namespace Core
 		return m_bWritable;
 	}
 
-	bool MemoryStream::Seek(size_t iPos, ESeekMode eSeekMode)
+	bool MemoryStream::Seek(size_t iPos, SeekModeEnum eSeekMode)
 	{
 		if (iPos < 0)
 			return false;
 
-		if (eSeekMode == E_SEEK_MODE_BEGIN)
+		if (eSeekMode == SeekModeEnum::BEGIN)
 		{
 			if (iPos < m_iSize)
 			{
@@ -62,7 +62,7 @@ namespace Core
 				return true;
 			}
 		}
-		else if (eSeekMode == E_SEEK_MODE_BEGIN)
+		else if (eSeekMode == SeekModeEnum::BEGIN)
 		{
 			if ((m_iCursor + iPos) < m_iSize)
 			{
@@ -70,7 +70,7 @@ namespace Core
 				return true;
 			}
 		}
-		else if (eSeekMode == E_SEEK_MODE_END)
+		else if (eSeekMode == SeekModeEnum::END)
 		{
 			if (((m_iSize - 1) - iPos) >= 0)
 			{

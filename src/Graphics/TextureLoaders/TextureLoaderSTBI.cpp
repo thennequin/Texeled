@@ -29,7 +29,7 @@ namespace Graphics
 		void StreamSkip(void* pUser, int n)
 		{
 			Core::Stream* pStream = (Core::Stream*)pUser;
-			pStream->Seek(n, Core::Stream::E_SEEK_MODE_OFFSET);
+			pStream->Seek(n, Core::Stream::SeekModeEnum::OFFSET);
 		}
 
 		int StreamEof(void* pUser)
@@ -49,7 +49,7 @@ namespace Graphics
 
 			if (stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
-				pStream->Seek(0, Core::Stream::E_SEEK_MODE_BEGIN);
+				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 				int iComponentCount = 0;
 				float* pImage = stbi_loadf_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
@@ -68,7 +68,7 @@ namespace Graphics
 			}
 			else if (stbi_is_16_bit_from_callbacks(&oCallbacks, pStream))
 			{
-				pStream->Seek(0, Core::Stream::E_SEEK_MODE_BEGIN);
+				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 				int iComponentCount = 0;
 				stbi_us* pImage = stbi_load_16_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
@@ -87,7 +87,7 @@ namespace Graphics
 			}
 			else
 			{
-				pStream->Seek(0, Core::Stream::E_SEEK_MODE_BEGIN);
+				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 				int iComponentCount = 0;
 				stbi_uc* pImage = stbi_load_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)

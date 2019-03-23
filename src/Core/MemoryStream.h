@@ -18,7 +18,7 @@ namespace Core
 		virtual bool			IsReadable() const;
 		virtual bool			IsWritable() const;
 
-		virtual bool			Seek(size_t iPos, ESeekMode eSeekMode);
+		virtual bool			Seek(size_t iPos, SeekModeEnum eSeekMode);
 		virtual size_t			Read(void* pBuffer, size_t iSize);
 		virtual size_t			Write(void* pBuffer, size_t iSize);
 	protected:

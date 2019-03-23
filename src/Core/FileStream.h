@@ -8,17 +8,21 @@ namespace Core
 	class FileStream : public Stream
 	{
 	public:
-		enum EAccessMode
+		struct _AccessModeEnum
 		{
-			E_ACCESS_MODE_READ,
-			E_ACCESS_MODE_WRITE,
-			E_ACCESS_MODE_WRITE_SAFE
+			enum Enum
+			{
+				READ,
+				WRITE,
+				WRITE_SAFE
+			};
 		};
+		typedef _AccessModeEnum::Enum AccessModeEnum;
 
 								FileStream();
 		virtual					~FileStream();
 
-		bool					Open(const char* pFilename, EAccessMode eAccessMode);
+		bool					Open(const char* pFilename, AccessModeEnum eAccessMode);
 		bool					Close();
 		bool					Cancel(); //For WRITE_SAFE
 
@@ -28,13 +32,13 @@ namespace Core
 		virtual bool			IsReadable() const;
 		virtual bool			IsWritable() const;
 
-		virtual bool			Seek(size_t iPos, ESeekMode eSeekMode);
+		virtual bool			Seek(size_t iPos, SeekModeEnum eSeekMode);
 		virtual size_t			Read(void* pBuffer, size_t iSize);
 		virtual size_t			Write(void* pBuffer, size_t iSize);
 	protected:
 		void*					m_pFile;
 		void*					m_pSourceFile;
-		EAccessMode				m_eAccessMode;
+		AccessModeEnum			m_eAccessMode;
 		size_t					m_iPos;
 		char*					m_pFileName;
 		char*					m_pSourceFileName;

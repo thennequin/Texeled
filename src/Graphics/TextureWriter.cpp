@@ -60,7 +60,7 @@ namespace Graphics
 		if (pTexture != NULL)
 		{
 			Core::FileStream oFileStream;
-			if (oFileStream.Open(pFilename, Core::FileStream::E_ACCESS_MODE_WRITE_SAFE))
+			if (oFileStream.Open(pFilename, Core::FileStream::AccessModeEnum::WRITE_SAFE))
 			{
 				ErrorCode oErr = SaveToStream(pTexture, pSettings, &oFileStream, pFilename, pUseWriter);
 

@@ -27,7 +27,7 @@ namespace Graphics
 			Texture oTemp;
 			for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
 			{
-				pStream->Seek(0, Core::Stream::E_SEEK_MODE_BEGIN);
+				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 				if (it->pLoader(pStream, &oTemp) == ErrorCode::Ok)
 				{
 					pTexture->Swap(oTemp);
@@ -43,7 +43,7 @@ namespace Graphics
 		if (pTexture != NULL)
 		{
 			Core::FileStream oFileStream;
-			if (oFileStream.Open(pFilename, Core::FileStream::E_ACCESS_MODE_READ))
+			if (oFileStream.Open(pFilename, Core::FileStream::AccessModeEnum::READ))
 			{
 				ErrorCode oErr = LoadFromStream(pTexture, &oFileStream);
 

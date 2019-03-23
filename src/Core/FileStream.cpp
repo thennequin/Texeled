@@ -21,25 +21,25 @@ namespace Core
 		Close();
 	}
 
-	bool FileStream::Open(const char* pFilename, EAccessMode eAccessMode)
+	bool FileStream::Open(const char* pFilename, AccessModeEnum eAccessMode)
 	{
 		Close();
 
 		const char* pMode;
 		switch (eAccessMode)
 		{
-		case E_ACCESS_MODE_READ:
+		case AccessModeEnum::READ:
 			pMode = "rb";
 			break;
-		case E_ACCESS_MODE_WRITE:
-		case E_ACCESS_MODE_WRITE_SAFE:
+		case AccessModeEnum::WRITE:
+		case AccessModeEnum::WRITE_SAFE:
 			pMode = "wb";
 			break;
 		default:
 			return false;
 		}
 
-		if (eAccessMode == E_ACCESS_MODE_WRITE_SAFE)
+		if (eAccessMode == AccessModeEnum::WRITE_SAFE)
 		{
 			srand((unsigned int)time(NULL));
 			int iRand = rand();
@@ -94,7 +94,7 @@ namespace Core
 				m_pSourceFile = NULL;
 			}
 
-			if (m_eAccessMode == E_ACCESS_MODE_WRITE_SAFE)
+			if (m_eAccessMode == AccessModeEnum::WRITE_SAFE)
 			{
 				unlink(m_pSourceFileName);
 				if (rename(m_pFileName, m_pSourceFileName) != 0)
@@ -113,7 +113,7 @@ namespace Core
 
 	bool FileStream::Cancel()
 	{
-		if (m_eAccessMode == E_ACCESS_MODE_WRITE_SAFE && m_pFile != NULL && m_pSourceFile != NULL)
+		if (m_eAccessMode == AccessModeEnum::WRITE_SAFE && m_pFile != NULL && m_pSourceFile != NULL)
 		{
 			fclose((FILE*)m_pFile);
 			m_pFile = NULL;
@@ -137,12 +137,12 @@ namespace Core
 
 	bool FileStream::IsSeekable() const
 	{
-		return m_eAccessMode == E_ACCESS_MODE_READ;
+		return m_eAccessMode == AccessModeEnum::READ;
 	}
 
 	bool FileStream::IsEndOfStream() const
 	{
-		if (m_pFile != NULL && m_eAccessMode == E_ACCESS_MODE_READ)
+		if (m_pFile != NULL && m_eAccessMode == AccessModeEnum::READ)
 		{
 			return feof((FILE*)m_pFile) != 0;
 		}
@@ -151,30 +151,30 @@ namespace Core
 
 	bool FileStream::IsReadable() const
 	{
-		return m_eAccessMode == E_ACCESS_MODE_READ;
+		return m_eAccessMode == AccessModeEnum::READ;
 	}
 
 	bool FileStream::IsWritable() const
 	{
-		return m_eAccessMode == E_ACCESS_MODE_WRITE || m_eAccessMode == E_ACCESS_MODE_WRITE_SAFE;
+		return m_eAccessMode == AccessModeEnum::WRITE || m_eAccessMode == AccessModeEnum::WRITE_SAFE;
 	}
 
-	bool FileStream::Seek(size_t iPos, ESeekMode eSeekMode)
+	bool FileStream::Seek(size_t iPos, SeekModeEnum eSeekMode)
 	{
 		if (m_pFile != NULL)
 		{
 			int iOrigin;
 			switch (eSeekMode)
 			{
-			case E_SEEK_MODE_BEGIN:
+			case SeekModeEnum::BEGIN:
 				iOrigin = SEEK_SET;
 				m_iPos = iPos;
 				break;
-			case E_SEEK_MODE_OFFSET:
+			case SeekModeEnum::OFFSET:
 				iOrigin = SEEK_CUR;
 				m_iPos += iPos;
 				break;
-			case E_SEEK_MODE_END:
+			case SeekModeEnum::END:
 				iOrigin = SEEK_END;
 				m_iPos = -iPos;
 				break;

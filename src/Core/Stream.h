@@ -8,12 +8,16 @@ namespace Core
 	class Stream
 	{
 	public:
-		enum ESeekMode
+		struct _SeekModeEnum
 		{
-			E_SEEK_MODE_BEGIN,
-			E_SEEK_MODE_OFFSET,
-			E_SEEK_MODE_END
+			enum Enum
+			{
+				BEGIN,
+				OFFSET,
+				END
+			};
 		};
+		typedef _SeekModeEnum::Enum SeekModeEnum;
 
 		virtual bool			IsValid() const = 0;
 		virtual bool			IsSeekable() const = 0;
@@ -21,7 +25,7 @@ namespace Core
 		virtual bool			IsReadable() const = 0;
 		virtual bool			IsWritable() const = 0;
 
-		virtual bool			Seek(size_t iPos, ESeekMode eSeekMode) = 0;
+		virtual bool			Seek(size_t iPos, SeekModeEnum eSeekMode) = 0;
 		virtual size_t			Read(void* pBuffer, size_t iSize) = 0;
 		virtual size_t			Write(void* pBuffer, size_t iSize) = 0;
 
