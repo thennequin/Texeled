@@ -486,7 +486,7 @@ namespace Graphics
 
 		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
 		{
-			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumString[pTexture->GetPixelFormat()]);
+			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumInfos[pTexture->GetPixelFormat()].pName);
 		}
 
 		Texture oTemp;
@@ -549,7 +549,7 @@ namespace Graphics
 
 		if (IsPixelFormatResizable(pTexture->GetPixelFormat()) == false)
 		{
-			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumString[pTexture->GetPixelFormat()]);
+			return ErrorCode(1, "'%s' Pixel format can't be resized", PixelFormatEnumInfos[pTexture->GetPixelFormat()].pName);
 		}
 
 		int iSize = Math::Max(pTexture->GetWidth(), pTexture->GetHeight());

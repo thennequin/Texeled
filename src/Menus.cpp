@@ -86,7 +86,7 @@ void Menus::OnMenu()
 			for (int iIndex = 0; iIndex < s_iAvailableConvertionFormatCount; ++iIndex)
 			{
 				Graphics::PixelFormatEnum ePixelFormat = s_oAvailableConvertionFormats[iIndex].eFormat;
-				const char* pPixelFormatName = Graphics::PixelFormatEnumString[ePixelFormat];
+				const char* pPixelFormatName = Graphics::PixelFormatEnumInfos[ePixelFormat].pName;
 				if (ImGui::MenuItem(pPixelFormatName))
 				{
 					if (Graphics::ConvertPixelFormat(&oTexture, &oTexture, ePixelFormat) == ErrorCode::Ok)

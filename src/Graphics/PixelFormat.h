@@ -68,7 +68,6 @@ namespace Graphics
 		};
 	};
 	typedef _PixelFormatEnum::Enum PixelFormatEnum;
-	extern const char* const PixelFormatEnumString[PixelFormatEnum::_COUNT];
 
 	typedef struct
 	{
@@ -78,6 +77,7 @@ namespace Graphics
 		int iBlockSize;
 		int iComponents;
 		ComponentEncodingEnum eEncoding;
+		const char* const pName;
 	} PixelFormatInfos;
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];

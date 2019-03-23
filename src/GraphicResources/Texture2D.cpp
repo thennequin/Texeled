@@ -154,7 +154,7 @@ namespace GraphicResources
 		{
 			if (Graphics::ConvertPixelFormat(pTexture, &oNewTexture, eNeededConvertionFormat) != ErrorCode::Ok)
 			{
-				return ErrorCode(1, "Pixel format conversion '%s to '%s' is not supported", Graphics::PixelFormatEnumString[ePixelFormat], Graphics::PixelFormatEnumString[eNeededConvertionFormat]);
+				return ErrorCode(1, "Pixel format conversion '%s to '%s' is not supported", Graphics::PixelFormatEnumInfos[ePixelFormat].pName, Graphics::PixelFormatEnumInfos[eNeededConvertionFormat].pName);
 			}
 			pInputTexture = &oNewTexture;
 		}

@@ -75,7 +75,7 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%s", Graphics::PixelFormatEnumString[oTexture.GetPixelFormat()]);
+		ImGui::Text("%s", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].pName);
 		ImGui::PopFont();
 
 		//Channels
