@@ -10,7 +10,7 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		bool TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture);
 
 		void RegisterLoaderDDS()
 		{
@@ -18,28 +18,23 @@ namespace Graphics
 		}
 
 
-		bool TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture)
 		{
 			Texture::Desc oDesc;
 			uint32_t iDDSMagic;
 			DDS_HEADER oDDSHeader;
 			DDS_HEADER_DXT10 oDDSHeaderDX10;
 
-			if (pStream->Read(&iDDSMagic) == false)
+			if (pStream->Read(&iDDSMagic) == false || iDDSMagic != DDS_MAGIC)
 			{
-				return false;
-			}
-
-			if (iDDSMagic != DDS_MAGIC)
-			{
-				return false;
+				return ErrorCode(1, "Not a DDS");
 			}
 
 			if (pStream->Read(&oDDSHeader) == false
 				|| oDDSHeader.iSize != sizeof(DDS_HEADER)
 				|| oDDSHeader.oPixelFormat.iSize != sizeof(DDS_PIXELFORMAT))
 			{
-				return false;
+				return ErrorCode(1, "Invalid DDS header");
 			}
 
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_CAPS) != 0)
@@ -92,7 +87,7 @@ namespace Graphics
 			{
 				if (pStream->Read(&oDDSHeaderDX10) == false)
 				{
-					return false;
+					return ErrorCode(1, "Invalid DDS DX10 header");
 				}
 
 				if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_TYPELESS
@@ -250,88 +245,89 @@ namespace Graphics
 				oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
 			}
 
-			if (oDesc.ePixelFormat != PixelFormatEnum::_NONE)
+			if (oDesc.ePixelFormat == PixelFormatEnum::_NONE)
 			{
-				if (pTexture->Create(oDesc) != ErrorCode::Ok)
-				{
-					return false;
-				}
+				return ErrorCode(1, "Not supported pixel format");
+			}
 
-				const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
+			ErrorCode oErr = pTexture->Create(oDesc);
+			if (oErr != ErrorCode::Ok)
+			{
+				return oErr;
+			}
 
-				for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
+			const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
+
+			for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
+			{
+				for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
 				{
-					for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
+					const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+
+					uint32_t iBlockCountX, iBlockCountY;
+					PixelFormat::GetBlockCount(oDesc.ePixelFormat, oFaceData.iWidth, oFaceData.iHeight, &iBlockCountX, &iBlockCountY);
+
+					int iBlockCount = iBlockCountX * iBlockCountY;
+
+					size_t iBlocksSize = iBlockCount * oInfos.iBlockSize;
+
+					void* pBlocks = oFaceData.pData;
+
+					if (oFaceData.iSize != iBlocksSize)
+						return ErrorCode(2, "Internal : Invalid block size");
+
+					size_t iRowSize = iBlockCountX * oInfos.iBlockSize;
+
+					if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_PITCH) != 0)
 					{
-						const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
-
-						uint32_t iBlockCountX, iBlockCountY;
-						PixelFormat::GetBlockCount(oDesc.ePixelFormat, oFaceData.iWidth, oFaceData.iHeight, &iBlockCountX, &iBlockCountY);
-
-						int iBlockCount = iBlockCountX * iBlockCountY;
-
-						size_t iBlocksSize = iBlockCount * oInfos.iBlockSize;
-
-						void* pBlocks = oFaceData.pData;
-
-						if (oFaceData.iSize != iBlocksSize)
-							return false;
-
-						size_t iRowSize = iBlockCountX * oInfos.iBlockSize;
-
-						if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_PITCH) != 0)
+						size_t iPitchSize = oDDSHeader.iPitchOrLinearSize;
+						if (iRowSize > iPitchSize)
 						{
-							size_t iPitchSize = oDDSHeader.iPitchOrLinearSize;
-							if (iRowSize > iPitchSize)
-							{
-								return false;
-							}
-
-							size_t iDiff = iPitchSize - iRowSize;
-							size_t iRemainingPitch = iPitchSize;
-							for (int iLine = 0; iLine < iBlockCountY; ++iLine)
-							{
-								if (iRowSize > iRemainingPitch)
-								{
-									pStream->Seek(iRemainingPitch, Core::Stream::E_SEEK_MODE_OFFSET);
-									iRemainingPitch = iPitchSize;
-								}
-
-								{
-									if (pStream->Read((char*)pBlocks + iLine * iRowSize, iRowSize) != iRowSize)
-									{
-										return false;
-									}
-									iRemainingPitch -= iRowSize;
-								}
-							}
+							return ErrorCode(2, "Internal : Invalid pitch size");
 						}
-						else if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_LINEARSIZE) != 0)
+
+						size_t iDiff = iPitchSize - iRowSize;
+						size_t iRemainingPitch = iPitchSize;
+						for (int iLine = 0; iLine < iBlockCountY; ++iLine)
 						{
-							/*size_t iLinearSize = oDDSHeader.iPitchOrLinearSize;
-							if (iMip == 0 && (iBlockCountY * oInfos.iBlockSize) != iLinearSize)
+							if (iRowSize > iRemainingPitch)
 							{
-								return false;
-							}*/
-							if (pStream->Read(pBlocks, iBlocksSize) != iBlocksSize)
-							{
-								return false;
+								pStream->Seek(iRemainingPitch, Core::Stream::E_SEEK_MODE_OFFSET);
+								iRemainingPitch = iPitchSize;
 							}
-						}
-						else
-						{
-							if (pStream->Read(pBlocks, iBlocksSize) != iBlocksSize)
+
 							{
-								return false;
+								if (pStream->Read((char*)pBlocks + iLine * iRowSize, iRowSize) != iRowSize)
+								{
+									return ErrorCode(1, "Incomplete file");
+								}
+								iRemainingPitch -= iRowSize;
 							}
 						}
 					}
+					else if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_LINEARSIZE) != 0)
+					{
+						/*size_t iLinearSize = oDDSHeader.iPitchOrLinearSize;
+						if (iMip == 0 && (iBlockCountY * oInfos.iBlockSize) != iLinearSize)
+						{
+							return false;
+						}*/
+						if (pStream->Read(pBlocks, iBlocksSize) != iBlocksSize)
+						{
+							return ErrorCode(1, "Incomplete file");
+						}
+					}
+					else
+					{
+						if (pStream->Read(pBlocks, iBlocksSize) != iBlocksSize)
+						{
+							return ErrorCode(1, "Incomplete file");
+						}
+					}
 				}
-
-				return true;
 			}
 
-			return false;
+			return ErrorCode::Ok;
 		}
 	}
 	//namespace TextureLoader

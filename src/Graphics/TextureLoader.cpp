@@ -28,7 +28,7 @@ namespace Graphics
 			for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
 			{
 				pStream->Seek(0, Core::Stream::E_SEEK_MODE_BEGIN);
-				if (it->pLoader(pStream, &oTemp))
+				if (it->pLoader(pStream, &oTemp) == ErrorCode::Ok)
 				{
 					pTexture->Swap(oTemp);
 					return ErrorCode::Ok;

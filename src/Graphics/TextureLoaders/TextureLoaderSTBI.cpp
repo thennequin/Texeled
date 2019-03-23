@@ -8,7 +8,7 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		bool TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture);
 
 		void RegisterLoaderSTBI()
 		{
@@ -38,7 +38,7 @@ namespace Graphics
 			return pStream->IsEndOfStream() ? 1 : 0;
 		}
 
-		bool TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture)
 		{
 			stbi_io_callbacks oCallbacks;
 			oCallbacks.read = StreamRead;
@@ -109,10 +109,10 @@ namespace Graphics
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
 				stbi_image_free((void*)oDesc.pData[0][0]);
-				return oErr == ErrorCode::Ok;
+				return oErr;
 			}
 			const char* pError = stbi_failure_reason();
-			return false;
+			return ErrorCode::Fail;
 		}
 	}
 	//namespace TextureLoader

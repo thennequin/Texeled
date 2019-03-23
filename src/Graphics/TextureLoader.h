@@ -1,11 +1,12 @@
 #ifndef __GRAPHICS_TEXTURE_LOADER_H__
 #define __GRAPHICS_TEXTURE_LOADER_H__
 
+#include "Core/ErrorCode.h"
 #include "Graphics/Texture.h"
 
 namespace Graphics
 {
-	typedef bool(*TextureLoaderFunc)(Core::Stream* pStream, Texture* pTexture);
+	typedef ErrorCode(*TextureLoaderFunc)(Core::Stream* pStream, Texture* pTexture);
 
 	typedef struct
 	{
