@@ -613,7 +613,7 @@ namespace Graphics
 			//return iComp;
 		}
 
-		void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_RGBA8_To_BC1_new(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
 		{
 			RGBA8* pIn4x4RGBA = (RGBA8*)pIn;
 			BlockBC1* pOutBlock = (BlockBC1*)pOut;
@@ -632,7 +632,7 @@ namespace Graphics
 			}
 		}
 
-		void Convert_RGBA8_To_BC1_old(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
 		{
 			const uint8_t iAlphaThreashold = 128; // 128 or 255?
 
