@@ -528,7 +528,7 @@ namespace Graphics
 			pOut->b = (uint8_t)((iColorA.b * iMulA + iColorB.b * iMulB + iAdd) / iDiv);
 		}
 
-		void Convert_BC1_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_BC1_To_RGBA8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t iPitchOut)
 		{
 			BlockBC1* pBlock = (BlockBC1*)pIn;
 			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
@@ -577,7 +577,7 @@ namespace Graphics
 			//return iComp;
 		}
 
-		void Convert_RGBA8_To_BC1_new(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_RGBA8_To_BC1_new(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
 		{
 			RGBA8* pIn4x4RGBA = (RGBA8*)pIn;
 			BlockBC1* pOutBlock = (BlockBC1*)pOut;
@@ -596,7 +596,7 @@ namespace Graphics
 			}
 		}
 
-		void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
 		{
 			const uint8_t iAlphaThreashold = 128; // 128 or 255?
 
@@ -780,7 +780,7 @@ namespace Graphics
 			}
 		}
 
-		void Convert_BC2_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_BC2_To_RGBA8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t iPitchOut)
 		{
 			BlockBC2* pBlock = (BlockBC2*)pIn;
 			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
@@ -811,7 +811,7 @@ namespace Graphics
 			}
 		}
 
-		void Convert_BC3_To_RGBA8(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		void Convert_BC3_To_RGBA8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t iPitchOut)
 		{
 			BlockBC3* pBlock = (BlockBC3*)pIn;
 			RGBA8* pOut4x4RGBA = (RGBA8*)pOut;
