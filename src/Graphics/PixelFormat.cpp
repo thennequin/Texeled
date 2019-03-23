@@ -4,6 +4,8 @@
 
 #include "Math/Math.h"
 
+#include "stb_dxt.h"
+
 namespace Graphics
 {
 	extern const char* const ComponentEncodingEnumString[ComponentEncodingEnum::_COUNT] = {
@@ -612,6 +614,25 @@ namespace Graphics
 		}
 
 		void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
+		{
+			RGBA8* pIn4x4RGBA = (RGBA8*)pIn;
+			BlockBC1* pOutBlock = (BlockBC1*)pOut;
+
+			RGBA8 iTemp[16];
+			for (int iY = 0; iY < 4; ++iY)
+			{
+				memcpy(iTemp + iY * 4, pIn4x4RGBA + iY * iPitchIn, sizeof(RGBA8) * 4);
+			}
+
+			stb_compress_dxt_block((unsigned char*)pOutBlock, (unsigned char*)iTemp, 0, STB_DXT_HIGHQUAL);
+
+			for (int iY = 0; iY < 4; ++iY)
+			{
+				memcpy(iTemp + iY * 4, pIn4x4RGBA + iY * iPitchIn, sizeof(RGBA8) * 4);
+			}
+		}
+
+		void Convert_RGBA8_To_BC1_old(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut)
 		{
 			const uint8_t iAlphaThreashold = 128; // 128 or 255?
 
