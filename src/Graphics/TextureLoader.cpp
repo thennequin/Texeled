@@ -20,32 +20,43 @@ namespace Graphics
 		s_oTextureLoaders.push_back(oInfo);
 	}
 
-	ErrorCode LoadFromStream(Texture* pTexture, Core::Stream* pStream)
+	ErrorCode LoadFromStream(Texture* pTexture, Core::Stream* pStream, const TextureLoaderInfo* pUseLoader)
 	{
 		if (pTexture != NULL && pStream != NULL && pStream->IsReadable())
 		{
 			Texture oTemp;
-			for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
+			if (pUseLoader != NULL)
 			{
-				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
-				if (it->pLoader(pStream, &oTemp) == ErrorCode::Ok)
+				if (pUseLoader->pLoader(pStream, &oTemp) == ErrorCode::Ok)
 				{
 					pTexture->Swap(oTemp);
 					return ErrorCode::Ok;
+				}
+			}
+			else
+			{
+				for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
+				{
+					pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+					if (it->pLoader(pStream, &oTemp) == ErrorCode::Ok)
+					{
+						pTexture->Swap(oTemp);
+						return ErrorCode::Ok;
+					}
 				}
 			}
 		}
 		return ErrorCode::Fail;
 	}
 
-	ErrorCode LoadFromFile(Texture* pTexture, const char* pFilename)
+	ErrorCode LoadFromFile(Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader)
 	{
 		if (pTexture != NULL)
 		{
 			Core::FileStream oFileStream;
 			if (oFileStream.Open(pFilename, Core::FileStream::AccessModeEnum::READ))
 			{
-				ErrorCode oErr = LoadFromStream(pTexture, &oFileStream);
+				ErrorCode oErr = LoadFromStream(pTexture, &oFileStream, pUseLoader);
 
 				oFileStream.Close();
 				return oErr;

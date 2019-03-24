@@ -17,8 +17,8 @@ namespace Graphics
 
 	void						RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
 
-	ErrorCode					LoadFromStream(Texture* pTexture, Core::Stream* pStream);
-	ErrorCode					LoadFromFile(Texture* pTexture, const char* pFilename);
+	ErrorCode					LoadFromStream(Texture* pTexture, Core::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode					LoadFromFile(Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);
 	void						GetTextureLoaders(const TextureLoaderInfo** pOutLoaders, int* pOutCount);
 }
 

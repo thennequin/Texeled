@@ -191,9 +191,9 @@ void Program::UpdateTexture2DRes()
 	}
 }
 
-bool Program::LoadFile(const char* pFile)
+bool Program::LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
 {
-	if (Graphics::LoadFromFile(&m_oTexture, pFile) == ErrorCode::Ok)
+	if (Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader) == ErrorCode::Ok)
 	{
 		UpdateTexture2DRes();
 		return true;
@@ -237,8 +237,12 @@ void Program::Open()
 	char* pExts = oExts.Export();
 	if (PlatformUtils::OpenFileDialog("Open file", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
-		//TODO testing iindex
-		LoadFile(pBuffer);
+		const Graphics::TextureLoaderInfo* pLoaderInfo = NULL;
+		if (iSelectedIndex > 0)
+		{
+			pLoaderInfo = &pLoaders[iSelectedIndex - 1];
+		}
+		LoadFile(pBuffer, pLoaderInfo);
 	}
 	free(pExts);
 }
