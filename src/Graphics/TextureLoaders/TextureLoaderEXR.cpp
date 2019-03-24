@@ -83,6 +83,7 @@ namespace Graphics
 			if (LoadEXRImageFromMemory(&oExrImage, &oExrHeader, oStreamContent.begin(), oStreamContent.size(), &pErr) != 0) {
 				ErrorCode oErr = ErrorCode(1, "Load EXR error: %s", pErr);
 				FreeEXRErrorMessage(pErr);
+				FreeEXRHeader(&oExrHeader);
 				return oErr;
 			}
 
@@ -131,6 +132,7 @@ namespace Graphics
 			}
 
 			FreeEXRImage(&oExrImage);
+			FreeEXRHeader(&oExrHeader);
 
 			return ErrorCode(oErr);
 		}
