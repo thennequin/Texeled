@@ -29,7 +29,7 @@ namespace PlatformUtils
 			return false;
 
 		if (pInOutSelectedExt != NULL)
-			*pInOutSelectedExt = of.nFilterIndex;
+			*pInOutSelectedExt = of.nFilterIndex - 1;
 
 		return true;
 	}
