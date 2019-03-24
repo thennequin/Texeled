@@ -19,7 +19,7 @@ namespace Core
 		~Array();
 
 		void					clear();
-		bool 					resize(size_t iCount);
+		bool 					resize(size_t iCount, bool bGrowth = true);
 		bool 					reserve(size_t iCount);
 
 		bool					empty() const					{ return m_iSize == 0; }
@@ -74,9 +74,9 @@ namespace Core
 	}
 
 	template <typename T>
-	bool Array<T>::resize(size_t iSize)
+	bool Array<T>::resize(size_t iSize, bool bGrowth)
 	{
-		if (reserve(growCapacity(iSize)))
+		if (reserve(bGrowth ? growCapacity(iSize) : iSize))
 		{
 			m_iSize = iSize;
 			return true;
