@@ -160,7 +160,7 @@ namespace GraphicResources
 		}
 
 		Core::Array<D3D11_SUBRESOURCE_DATA> oInitData;
-		oInitData.resize(pInputTexture->GetMipCount() * pInputTexture->GetFaceCount());
+		oInitData.resize(pInputTexture->GetMipCount() * pInputTexture->GetFaceCount(), false);
 		for (int iMip = 0, iMipCount = pInputTexture->GetMipCount(); iMip < iMipCount; ++iMip)
 		{
 			for (int iFace = 0, iFaceCount = pInputTexture->GetFaceCount(); iFace < iFaceCount; ++iFace)

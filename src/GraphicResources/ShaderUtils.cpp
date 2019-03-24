@@ -129,7 +129,7 @@ namespace GraphicResources
 						memcpy(pGlobalConstantBufferDesc->sName, oConstantBufferDesc.Name, strlen(oConstantBufferDesc.Name) + 1);
 
 						pGlobalConstantBufferDesc->iSize = oConstantBufferDesc.Size;
-						pGlobalConstantBufferDesc->oConstants.resize(oConstantBufferDesc.Variables);
+						pGlobalConstantBufferDesc->oConstants.resize(oConstantBufferDesc.Variables, false);
 
 						for (unsigned int iVariableIndex = 0; iVariableIndex < oConstantBufferDesc.Variables; ++iVariableIndex)
 						{
