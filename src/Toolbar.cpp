@@ -7,6 +7,7 @@
 #include "ImGuiUtils.h"
 
 Toolbar::Toolbar()
+	: m_fBackupGamma(-1.f)
 {
 
 }
@@ -113,4 +114,85 @@ void Toolbar::OnToolBar()
 
 	ImGui::SameLine(0.f, 10.f);
 	ImGui::Checkbox("Tiling", &oDisplay.bTiling);
+
+	//Hack for keeping text alignement
+	ImGui::GetCurrentWindow()->DC.CurrentLineTextBaseOffset = ImGui::GetCurrentWindow()->DC.PrevLineTextBaseOffset;
+	ImGui::Text("Range:");
+	const float c_fEpsylon = 0.001f;
+	float fRange[2] = { oDisplay.fRange[0], oDisplay.fRange[1] };
+	ImGui::PushItemWidth(150.f);
+	ImGui::SameLine();
+	if (ImGui::DragFloat("Min##ColorRange", &fRange[0], 0.005f, -999.f, fRange[1] - c_fEpsylon))
+	{
+		if (fRange[0] >= (fRange[1]))
+			fRange[0] = fRange[1] - c_fEpsylon;
+
+		oDisplay.fRange[0] = fRange[0];
+	}
+
+	ImGui::SameLine();
+	if (ImGui::DragFloat("Max##ColorRange", &fRange[1], 0.005f, fRange[0] + c_fEpsylon, 999.f))
+	{
+		if (fRange[1] <= (fRange[0]))
+			fRange[1] = fRange[0] + c_fEpsylon;
+
+		oDisplay.fRange[1] = fRange[1];
+	}
+	ImGui::PopItemWidth();
+
+	char pFloatBuffer[65];
+	sprintf_s(pFloatBuffer, sizeof(pFloatBuffer), "%.1f", oDisplay.fGamma);
+
+	ImGui::SameLine();
+	ImGui::VerticalSeparator();
+
+	ImGui::SameLine();
+	ImGui::PushItemWidth(100.f);
+	if (ImGui::BeginCombo("Gamma", pFloatBuffer))
+	{
+		ImGui::PushItemWidth(75.f);
+		if (ImGui::InputFloat("Custom", &oDisplay.fGamma,0.f, 0.f, 2))
+		{
+			if (oDisplay.fGamma <= 0.f)
+			{
+				oDisplay.fGamma = 0.001f;
+			}
+		}
+		ImGui::PopItemWidth();
+
+		float fValue = m_fBackupGamma != -1.f ? m_fBackupGamma : oDisplay.fGamma;
+		float fHoverValue = ImGui::IsWindowHovered() ? (int)oDisplay.fGamma : -1.f;
+
+		const float c_fGammas[] = { 1.f, 1.4f, 1.8f, 2.2f, 2.6f };
+		for (int iGamma = 0; iGamma < (sizeof(c_fGammas) / sizeof(*c_fGammas)); ++iGamma)
+		{
+			sprintf_s(pFloatBuffer, sizeof(pFloatBuffer), "%.1f", c_fGammas[iGamma]);
+			if (ImGui::Selectable(pFloatBuffer, oDisplay.fGamma == c_fGammas[iGamma]))
+			{
+				fValue = c_fGammas[iGamma];
+				oDisplay.fGamma = c_fGammas[iGamma];
+				if (m_fBackupGamma != -1.f)
+					m_fBackupGamma = c_fGammas[iGamma];
+			}
+
+			if (ImGui::IsItemHovered())
+			{
+				fHoverValue = c_fGammas[iGamma];
+				oDisplay.fGamma = c_fGammas[iGamma];
+			}
+		}
+
+		if (fHoverValue != -1.f)
+		{
+			if (m_fBackupGamma == -1.f)
+				m_fBackupGamma = fValue;
+		}
+		else if (m_fBackupGamma != -1.f)
+		{
+			oDisplay.fGamma = m_fBackupGamma;
+		}
+
+		ImGui::EndCombo();
+	}
+	ImGui::PopItemWidth();
 }

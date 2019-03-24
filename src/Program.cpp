@@ -65,6 +65,9 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oDisplayOptions.eShowChannels = ChannelFlag::RED | ChannelFlag::GREEN | ChannelFlag::BLUE | ChannelFlag::ALPHA;
 	m_oDisplayOptions.iMip = 0;
 	m_oDisplayOptions.iFace = 0;
+	m_oDisplayOptions.fRange[0] = 0.f;
+	m_oDisplayOptions.fRange[1] = 1.f;
+	m_oDisplayOptions.fGamma = 1.f;
 
 	ImGui::GetIO().Fonts->Build();
 

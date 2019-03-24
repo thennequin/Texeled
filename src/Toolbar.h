@@ -9,6 +9,8 @@ public:
 	Toolbar();
 	~Toolbar();
 	virtual void				OnToolBar();
+protected:
+	float						m_fBackupGamma;
 };
 
 #endif //_TOOLBAR_H_

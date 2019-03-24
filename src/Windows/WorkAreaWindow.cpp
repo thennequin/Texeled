@@ -20,6 +20,9 @@ namespace Windows
 		float4 AddChannel = float4(0, 0, 0, 0);
 		int Mip = 0;
 		int TextureIndex = 0;
+		float Range0;
+		float Range1;
+		float Gamma = 1.f;
 
 		sampler sampler0;
 		Texture2DArray texture0;
@@ -34,12 +37,16 @@ namespace Windows
 		float4 main(PS_INPUT input) : SV_Target
 		{
 			float4 out_col = input.col * texture0.SampleLevel(sampler0, float3(input.uv, TextureIndex), Mip);
+
+			out_col = (pow(out_col, 1.0 / Gamma) - Range0) / (Range1 - Range0);
+
 			out_col =
 				out_col.r * RedChannel
 				+ out_col.g * GreenChannel
 				+ out_col.b * BlueChannel
 				+ out_col.a * AlphaChannel
 				+ AddChannel;
+
 			return out_col;
 		}
 	);
@@ -171,6 +178,9 @@ namespace Windows
 		m_oBufferData.iMip = oDisplayOptions.iMip;
 		m_oBufferData.iFace = oDisplayOptions.iFace;
 		m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
+		m_oBufferData.fRange[0] = oDisplayOptions.fRange[0];
+		m_oBufferData.fRange[1] = oDisplayOptions.fRange[1];
+		m_oBufferData.fGamma = oDisplayOptions.fGamma;
 		CORE_VERIFY_OK(GraphicResources::FillConstantBuffer(m_pGlobalConstantBuffer, &m_oBufferData));
 	}
 
@@ -185,15 +195,22 @@ namespace Windows
 
 	void WorkAreaWindow::OnGui()
 	{
-		ID3D11DeviceContext* pDX11DeviceContext = Program::GetInstance()->GetDX11DeviceContext();
 		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
 
-		if (m_oBufferData.iMip != oDisplayOptions.iMip || m_oBufferData.iFace != oDisplayOptions.iFace || m_eCurrentShowChannels != oDisplayOptions.eShowChannels)
+		if (m_oBufferData.iMip != oDisplayOptions.iMip
+			|| m_oBufferData.iFace != oDisplayOptions.iFace
+			|| m_eCurrentShowChannels != oDisplayOptions.eShowChannels
+			|| m_oBufferData.fRange[0] != oDisplayOptions.fRange[0]
+			|| m_oBufferData.fRange[1] != oDisplayOptions.fRange[1]
+			|| m_oBufferData.fGamma != oDisplayOptions.fGamma)
 		{
 			m_eCurrentShowChannels = oDisplayOptions.eShowChannels;
 			m_oBufferData.iMip = oDisplayOptions.iMip;
 			m_oBufferData.iFace = oDisplayOptions.iFace;
 			m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
+			m_oBufferData.fRange[0] = oDisplayOptions.fRange[0];
+			m_oBufferData.fRange[1] = oDisplayOptions.fRange[1];
+			m_oBufferData.fGamma = oDisplayOptions.fGamma;
 			CORE_VERIFY_OK(GraphicResources::FillConstantBuffer(m_pGlobalConstantBuffer, &m_oBufferData));
 		}
 

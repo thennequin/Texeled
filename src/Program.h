@@ -78,6 +78,9 @@ struct DisplayOptions
 
 	ChannelFlags eShowChannels;
 
+	float fRange[2];
+	float fGamma;
+
 	int iMip;
 	int iFace;
 };

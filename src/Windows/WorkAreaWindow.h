@@ -26,6 +26,8 @@ namespace Windows
 			float				fChannelsAdd[4];
 			int					iMip;
 			int					iFace;
+			float				fRange[2];
+			float				fGamma;
 
 			void				BuildChannelMix(ChannelFlags eShowChannel);
 		};
