@@ -38,8 +38,8 @@ void Toolbar::OnToolBar()
 	DisplayOptions& oDisplay = Program::GetInstance()->GetDisplayOptions();
 
 	const ImVec2 oSize16(16.f, 16.f);
-	const ImVec2 oImageUv0 = ImGui::GetCurrentContext()->FontTexUvWhitePixel;
-	const ImVec2 oImageUv1 = ImGui::GetCurrentContext()->FontTexUvWhitePixel;
+	const ImVec2 oImageUv0 = ImGui::GetFontTexUvWhitePixel();
+	const ImVec2 oImageUv1 = ImGui::GetFontTexUvWhitePixel();
 	const ImVec4 oImageBgColor(0.f, 0.f, 0.f, 0.f);
 
 	const ImVec4 oImageColor[4] = {

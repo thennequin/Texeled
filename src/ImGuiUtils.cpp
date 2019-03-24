@@ -155,10 +155,10 @@ namespace ImGuiUtils
 
 		const ImRect bb( pos, pos + size );
 		ImGui::ItemSize( bb, style.FramePadding.y );
-		if( !ImGui::ItemAdd( bb, &id ) )
+		if( !ImGui::ItemAdd( bb, id ) )
 			return false;
 
-		if( window->DC.ButtonRepeat ) flags |= ImGuiButtonFlags_Repeat;
+		if (window->DC.ItemFlags & ImGuiItemFlags_ButtonRepeat) flags |= ImGuiButtonFlags_Repeat;
 		bool hovered, held;
 		bool pressed = ImGui::ButtonBehavior( bb, id, &hovered, &held, flags );
 
@@ -168,11 +168,11 @@ namespace ImGuiUtils
 		int iRoundingFlag = 0;
 		if( ePart == GroupedPart::LEFT )
 		{
-			iRoundingFlag = ImGuiCorner_TopLeft | ImGuiCorner_BottomLeft;
+			iRoundingFlag = ImDrawCornerFlags_Left;
 		}
 		else if( ePart == GroupedPartEnum::RIGHT )
 		{
-			iRoundingFlag = ImGuiCorner_TopRight | ImGuiCorner_BottomRight;
+			iRoundingFlag = ImDrawCornerFlags_Right;
 		}
 
 		window->DrawList->AddRectFilled( bb.Min, bb.Max, col, style.FrameRounding, iRoundingFlag );

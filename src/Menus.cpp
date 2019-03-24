@@ -37,7 +37,7 @@ bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, I
 	}
 
 	if (selected)
-		ImGui::RenderCheckMark(pos + ImVec2(window->MenuColumns.Pos[2] + extra_w + g.FontSize * 0.20f, 0.0f), ImGui::GetColorU32(enabled ? ImGuiCol_Text : ImGuiCol_TextDisabled));
+		ImGui::RenderCheckMark(pos + ImVec2(window->MenuColumns.Pos[2] + extra_w + g.FontSize * 0.20f, 0.0f), ImGui::GetColorU32(enabled ? ImGuiCol_Text : ImGuiCol_TextDisabled), g.FontSize);
 
 	return pressed;
 }
