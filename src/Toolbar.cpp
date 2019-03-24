@@ -108,4 +108,9 @@ void Toolbar::OnToolBar()
 	ImGui::SameLine();
 	ImGui::SliderInt("##Face", &oDisplay.iFace, 0, Math::Max(0, oTexture.GetFaceCount() - 1), "Face/Slice:%.0f");
 	ImGui::PopItemWidth();
+
+	ImGui::Checkbox("Show pixel grid", &oDisplay.bShowPixelGrid);
+
+	ImGui::SameLine(0.f, 10.f);
+	ImGui::Checkbox("Tiling", &oDisplay.bTiling);
 }

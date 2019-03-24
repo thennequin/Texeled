@@ -198,18 +198,11 @@ namespace Windows
 
 		ImGuiIO& oIO = ImGui::GetIO();
 
-		ImGui::SameLine(0.f, 10.f);
-		ImGui::Checkbox("Show pixel grid", &oDisplayOptions.bShowPixelGrid);
-
-		ImGui::SameLine(0.f, 10.f);
-		ImGui::Checkbox("Tiling", &oDisplayOptions.bTiling);
-
 		const int iCurrentMip = oDisplayOptions.iMip;
 
 		Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
 		GraphicResources::Texture2D* pTexture2DRes = Program::GetInstance()->GetTexture2DRes();
 
-		ImGui::Separator();
 		if (oTexture.IsValid() && pTexture2DRes != NULL)
 		{
 			ImVec2 oTextureSize((float)oTexture.GetWidth(), (float)oTexture.GetHeight());
