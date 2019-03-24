@@ -18,6 +18,7 @@
 
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
+#include "Graphics/TextureLoaders/TextureLoaderEXR.h"
 
 #include "Graphics/TextureWriters/TextureWriterDDS.h"
 
@@ -47,6 +48,7 @@ Program::Program(int iArgCount, char** pArgs)
 
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
+	Graphics::TextureLoader::RegisterLoaderEXR();
 
 	Graphics::TextureWriter::RegisterWriterDDS();
 
