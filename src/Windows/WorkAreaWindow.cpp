@@ -99,6 +99,7 @@ namespace Windows
 	{
 		SetTitle("WorkArea");
 		SetAlone(true);
+		SetFillingSpace(true);
 
 		m_fZoom = 1.0;
 		m_oOffset = ImVec2(0.f, 0.f);
@@ -122,7 +123,7 @@ namespace Windows
 				unsigned char* pData = (unsigned char*)oFaceData.pData + iY * oCheckerboardDesc.iWidth * Graphics::PixelFormat::BitPerPixel(oCheckerboardDesc.ePixelFormat) / 8;
 				for (int iX = 0; iX < oCheckerboardDesc.iWidth; ++iX)
 				{
-					int iColor = ((iX < iHalfWidth && iY < iHalfHeight) || (iX >= iHalfWidth && iY >= iHalfHeight)) ? 191 : 255;
+					unsigned char iColor = ((iX < iHalfWidth && iY < iHalfHeight) || (iX >= iHalfWidth && iY >= iHalfHeight)) ? 191 : 255;
 					pData[4 * iX + 0] = iColor;
 					pData[4 * iX + 1] = iColor;
 					pData[4 * iX + 2] = iColor;
@@ -209,49 +210,39 @@ namespace Windows
 			ImVec2 oTextureMipSize((float)(oTexture.GetWidth() >> iCurrentMip), (float)(oTexture.GetHeight() >> iCurrentMip));
 			double fTextureRatio = oTextureSize.x / oTextureSize.y;
 
-			ImGui::BeginChild("##PreviewImageChild", ImVec2(0, 0), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
-
 			ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
 			ImDrawList* pDrawList = ImGui::GetWindowDrawList();
 
-			ImVec2 oAreaMin = ImGui::GetItemRectMin();
-			ImVec2 oAreaMax = ImGui::GetItemRectMax();
-			ImVec2 oAreaSize = ImGui::GetItemRectSize();
-			float fAreaRatio = oAreaSize.x / oAreaSize.y;
-
 			bool bIsActive = false;
-			if (!pWindow->SkipItems)
+			const ImGuiID id = pWindow->GetID("##ImageArea");
+			const ImRect oBB(pWindow->DC.CursorPos, pWindow->DC.CursorPos + ImGui::GetContentRegionAvail());
+			const ImVec2 oBBSize = oBB.GetSize();
+			float fAreaRatio = oBBSize.x / oBBSize.y;
+			ImGui::ItemSize(oBB);
+			if (ImGui::ItemAdd(oBB, id))
 			{
-				const ImGuiID id = pWindow->GetID("##ImageArea");
-				ImVec2 size = ImGui::CalcItemSize(ImGui::GetWindowSize(), 0.0f, 0.0f);
-				const ImRect bb(pWindow->DC.CursorPos, pWindow->DC.CursorPos + size);
-				ImGui::ItemSize(bb);
-				if (ImGui::ItemAdd(bb, &id))
+				const bool hovered = ImGui::IsItemHovered();
+				bIsActive = ImGui::IsItemActive();
+				if (hovered)
 				{
-					const bool hovered = ImGui::IsItemHovered();
-					bIsActive = ImGui::IsItemActive();
-					if (hovered)
-					{
-						ImGui::SetHoveredID(id);
+					ImGui::SetHoveredID(id);
 
-						if (oIO.MouseClicked[0] || oIO.MouseClicked[1] || oIO.MouseClicked[2])
-						{
-							ImGui::SetActiveID(id, pWindow);
-						}
-					}
-
-					if (ImGui::GetCurrentContext()->ActiveId == id
-						&& oIO.MouseDown[0] == false
-						&& oIO.MouseDown[1] == false
-						&& oIO.MouseDown[2] == false)
+					if (oIO.MouseClicked[0] || oIO.MouseClicked[1] || oIO.MouseClicked[2])
 					{
-						ImGui::SetActiveID(0, pWindow);
+						ImGui::SetActiveID(id, pWindow);
 					}
-					ImRect oArea(oAreaMin, oAreaMax);
+				}
+
+				if (ImGui::GetCurrentContext()->ActiveId == id
+					&& oIO.MouseDown[0] == false
+					&& oIO.MouseDown[1] == false
+					&& oIO.MouseDown[2] == false)
+				{
+					ImGui::SetActiveID(0, pWindow);
 				}
 			}
 
-			ImVec2 oSafeAreaSize(oAreaSize.x * 0.8f, oAreaSize.y * 0.8f);
+			ImVec2 oSafeAreaSize(oBBSize.x * 0.8f, oBBSize.y * 0.8f);
 			double fPixelRatio;
 			double fMipPixelRatio;
 			if (fAreaRatio < fTextureRatio)
@@ -265,23 +256,23 @@ namespace Windows
 				fMipPixelRatio = oSafeAreaSize.y / (double)oTextureMipSize.y;
 			}
 
-			ImVec2 oDiff(oAreaSize.x - oTextureSize.x * fPixelRatio, oAreaSize.y - oTextureSize.y * fPixelRatio);
+			ImVec2 oDiff((float)(oBBSize.x - oTextureSize.x * fPixelRatio), (float)(oBBSize.y - oTextureSize.y * fPixelRatio));
 
 			ImVec2 oCursorRealPos = ImGui::GetMousePos();
-			ImVec2 oCursorPos = oCursorRealPos - oAreaMin - oDiff / 2.f;
-			ImVec2 oCursorCoord = (oCursorPos - m_oOffset) / m_fZoom / fPixelRatio;
+			ImVec2 oCursorPos = oCursorRealPos - oBB.Min - oDiff / 2.f;
+			ImVec2 oCursorCoord = (oCursorPos - m_oOffset) / (float)(m_fZoom * fPixelRatio);
 
 			ImVec2 oOffset = m_oOffset;
-			ImVec2 oTextureMin = (ImVec2(0.f, 0.f) - m_oOffset - oDiff / 2.f) / fPixelRatio / m_fZoom;
-			ImVec2 oTextureMax = (oAreaSize - m_oOffset - oDiff / 2.f) / fPixelRatio / m_fZoom;
+			ImVec2 oTextureMin = (ImVec2(0.f, 0.f) - m_oOffset - oDiff / 2.f) / (float)(fPixelRatio * m_fZoom);
+			ImVec2 oTextureMax = (oBBSize - m_oOffset - oDiff / 2.f) / (float)(fPixelRatio * m_fZoom);
 
-			ImVec2 oImageStart = oAreaMin;
-			ImVec2 oImageEnd = oAreaMax;
+			ImVec2 oImageStart = oBB.Min;
+			ImVec2 oImageEnd = oBB.Max;
 			ImVec2 oUv0 = ImVec2(oTextureMin.x / oTextureSize.x, oTextureMin.y / oTextureSize.y);
 			ImVec2 oUv1 = ImVec2(oTextureMax.x / oTextureSize.x, oTextureMax.y / oTextureSize.y);
 			ImVec2 oUvRange = oUv1 - oUv0;
-			ImVec2 oTextureStart = oAreaMin - oAreaSize * ((oUv0) / oUvRange);
-			ImVec2 oTextureEnd = oAreaMin + oAreaSize * ((oUvRange - (oUv1 - ImVec2(1.f, 1.f))) / oUvRange);
+			ImVec2 oTextureStart = oBB.Min - oBBSize * ((oUv0) / oUvRange);
+			ImVec2 oTextureEnd = oBB.Min + oBBSize * ((oUvRange - (oUv1 - ImVec2(1.f, 1.f))) / oUvRange);
 			if (!oDisplayOptions.bTiling)
 			{
 				if (oUv0.x < 0.f)
@@ -340,27 +331,27 @@ namespace Windows
 					double fStart;
 
 					fStart = oImageStart.x - oUv0.x * fStep * oTextureMipSize.x;
-					while (fStart < oAreaMin.x)
+					while (fStart < oBB.Min.x)
 						fStart += fStep;
 
 					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStep)
 						fStart -= fStep;
 
-					for (; fStart <= oImageEnd.x && fStart <= oAreaMax.x; fStart += fStep)
+					for (; fStart <= oImageEnd.x && fStart <= oBB.Max.x; fStart += fStep)
 					{
-						pDrawList->AddLine(ImVec2(fStart, oImageStart.y), ImVec2(fStart, oImageEnd.y), iColor);
+						pDrawList->AddLine(ImVec2((float)fStart, oImageStart.y), ImVec2((float)fStart, oImageEnd.y), iColor);
 					}
 
 					fStart = oImageStart.y - oUv0.y * fStep * oTextureMipSize.y;
-					while (fStart < oAreaMin.y)
+					while (fStart < oBB.Min.y)
 						fStart += fStep;
 
 					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStep)
 						fStart -= fStep;
 
-					for (; fStart <= oImageEnd.y && fStart <= oAreaMax.y; fStart += fStep)
+					for (; fStart <= oImageEnd.y && fStart <= oBB.Max.y; fStart += fStep)
 					{
-						pDrawList->AddLine(ImVec2(oImageStart.x, fStart), ImVec2(oImageEnd.x, fStart), iColor);
+						pDrawList->AddLine(ImVec2(oImageStart.x, (float)fStart), ImVec2(oImageEnd.x, (float)fStart), iColor);
 					}
 				}
 			}
@@ -370,7 +361,7 @@ namespace Windows
 				float fWheel = oIO.MouseWheel;
 				if (!oIO.KeyCtrl)
 				{
-					ImVec2 oNew = (oCursorPos - m_oOffset) / m_fZoom;
+					ImVec2 oNew = (oCursorPos - m_oOffset) / (float)m_fZoom;
 
 					if (fWheel < 0.f)
 					{
@@ -392,7 +383,7 @@ namespace Windows
 						m_fZoom = 0.0001 / fPixelRatio;
 					}
 
-					m_oOffset = oCursorPos - oNew * m_fZoom;
+					m_oOffset = oCursorPos - oNew * (float)m_fZoom;
 				}
 			}
 
@@ -418,15 +409,15 @@ namespace Windows
 
 			m_fCurrentZoom = m_fZoom;
 			m_oCurrentOffset = m_oOffset;
-
-			ImGui::EndChild();
 		}
 	}
 
-	void WorkAreaWindow::OnDropFiles(int iCount, char** pFiles, const ImVec2& oPos)
+	void WorkAreaWindow::OnDropFiles(int iCount, char** pFiles, const ImVec2& /*oPos*/)
 	{
-		Program::GetInstance()->LoadFile(pFiles[0]);
-		//LoadFile(pFiles[0]);
+		if (iCount == 1)
+		{
+			Program::GetInstance()->LoadFile(pFiles[0]);
+		}
 	}
 }
 //namespace Windows
