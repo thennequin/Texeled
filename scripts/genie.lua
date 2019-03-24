@@ -38,6 +38,7 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui/stb_textedit.h",
 							"../Externals/ImWindow/Externals/imgui/stb_truetype.h",
 							"../Externals/stb/*",
+							"../Externals/tinyexr/*",
 
 							"../src/**",
 							"../src/**.ico",
@@ -53,7 +54,8 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui",
 							"../Externals/ImWindow/Externals/EasyWindow",
 
-							"../Externals/stb"
+							"../Externals/stb",
+							"../Externals/tinyexr"
 		}
 		
 		flags				"ExtraWarnings"
