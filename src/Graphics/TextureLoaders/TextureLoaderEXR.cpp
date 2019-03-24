@@ -48,7 +48,7 @@ namespace Graphics
 			Core::Array<unsigned char> oStreamContent;
 			pStream->Seek(0, Core::Stream::SeekModeEnum::END);
 
-			if (oStreamContent.resize(pStream->Tell()) == false)
+			if (oStreamContent.resize(pStream->Tell(), false) == false)
 			{
 				return ErrorCode(1, "Not enought free memory");
 			}
