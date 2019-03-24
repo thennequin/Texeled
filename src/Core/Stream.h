@@ -26,6 +26,7 @@ namespace Core
 		virtual bool			IsWritable() const = 0;
 
 		virtual bool			Seek(size_t iPos, SeekModeEnum eSeekMode) = 0;
+		virtual size_t			Tell() = 0;
 		virtual size_t			Read(void* pBuffer, size_t iSize) = 0;
 		virtual size_t			Write(void* pBuffer, size_t iSize) = 0;
 

@@ -187,6 +187,15 @@ namespace Core
 		return false;
 	}
 
+	size_t FileStream::Tell()
+	{
+		if (m_pFile != NULL)
+		{
+			return _ftelli64((FILE*)m_pFile);
+		}
+		return 0;
+	}
+
 	size_t FileStream::Read(void* pBuffer, size_t iSize)
 	{
 		if (m_pFile != NULL)

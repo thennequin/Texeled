@@ -81,6 +81,11 @@ namespace Core
 		return false;
 	}
 
+	size_t MemoryStream::Tell()
+	{
+		return m_iCursor;
+	}
+
 	size_t MemoryStream::Read(void* pBuffer, size_t iSize)
 	{
 		size_t iReadSize = iSize;
