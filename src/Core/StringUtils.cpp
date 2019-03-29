@@ -3,6 +3,7 @@
 #include <string.h> // strlen
 #include <ctype.h> // toupper
 #include <stdlib.h> // malloc
+#include <stdio.h> // sprintf
 
 namespace Core
 {
@@ -104,6 +105,22 @@ namespace Core
 
 			return true;
 		}
+
+		void GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize)
+		{
+			static const char* const pSizes[] = { "bytes", "Kb", "Mb", "Gb" };
+			int iDiv = 0;
+			int iRem = 0;
+
+			while (iSize >= 1024 && iDiv < (sizeof pSizes / sizeof *pSizes)) {
+				iRem = (iSize % 1024);
+				iDiv++;
+				iSize /= 1024;
+			}
+
+			snprintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (float)iSize + (float)iRem / 1024.0, pSizes[iDiv]);
+		}
+
 	}
 	//namespace StringUtils
 }

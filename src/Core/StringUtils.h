@@ -8,6 +8,8 @@ namespace Core
 		char* StrDup(const char* pString);
 		bool EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive = true);
 		bool Wildcard(const char* pPattern, const char* pString);
+
+		void GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize);
 	}
 	//namespace StringUtils
 }
