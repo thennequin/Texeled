@@ -2,6 +2,8 @@
 
 #include "Program.h"
 
+#include "Core/StringUtils.h"
+
 StatusBars::StatusBars()
 {
 
@@ -87,6 +89,19 @@ void StatusBars::OnStatusBar()
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
 		ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponents);
+		ImGui::PopFont();
+
+		//Memory size
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::SameLine();
+		ImGui::TextUnformatted("Memory:");
+		ImGui::PopFont();
+
+		char pBuffer[128];
+		Core::StringUtils::GetReadableSize(oTexture.GetData().GetDataSize(), pBuffer, sizeof(pBuffer));
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::SameLine(0, 0);
+		ImGui::TextUnformatted(pBuffer);
 		ImGui::PopFont();
 	}
 }
