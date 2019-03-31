@@ -84,14 +84,14 @@ void Menus::OnMenu()
 			}
 
 			int iTextureWidth = oTexture.GetWidth();
-			int iTextureHeight = oTexture.GetWidth();
+			int iTextureHeight = oTexture.GetHeight();
 			for (int iIndex = 0; iIndex < s_iAvailableConvertionFormatCount; ++iIndex)
 			{
 				Graphics::PixelFormatEnum ePixelFormat = s_oAvailableConvertionFormats[iIndex].eFormat;
 				const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[ePixelFormat];
 
 				bool bGoodWidth = ((iTextureWidth / oPixelFormatInfos.iBlockWidth) * oPixelFormatInfos.iBlockWidth == iTextureWidth);
-				bool bGoodHeight = ((iTextureHeight / oPixelFormatInfos.iBlockWidth) * oPixelFormatInfos.iBlockHeight == iTextureHeight);
+				bool bGoodHeight = ((iTextureHeight / oPixelFormatInfos.iBlockHeight) * oPixelFormatInfos.iBlockHeight == iTextureHeight);
 				bool bAvailable = bGoodWidth && bGoodHeight;
 
 				if (ImGui::MenuItem(oPixelFormatInfos.pName, NULL, false, bAvailable))
