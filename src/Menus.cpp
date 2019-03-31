@@ -83,16 +83,33 @@ void Menus::OnMenu()
 				s_iAvailableConvertionFormatCount = Graphics::PixelFormat::GetAvailableConvertion(oTexture.GetPixelFormat(), true, &s_oAvailableConvertionFormats);
 			}
 
+			int iTextureWidth = oTexture.GetWidth();
+			int iTextureHeight = oTexture.GetWidth();
 			for (int iIndex = 0; iIndex < s_iAvailableConvertionFormatCount; ++iIndex)
 			{
 				Graphics::PixelFormatEnum ePixelFormat = s_oAvailableConvertionFormats[iIndex].eFormat;
-				const char* pPixelFormatName = Graphics::PixelFormatEnumInfos[ePixelFormat].pName;
-				if (ImGui::MenuItem(pPixelFormatName))
+				const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[ePixelFormat];
+
+				bool bGoodWidth = ((iTextureWidth / oPixelFormatInfos.iBlockWidth) * oPixelFormatInfos.iBlockWidth == iTextureWidth);
+				bool bGoodHeight = ((iTextureHeight / oPixelFormatInfos.iBlockWidth) * oPixelFormatInfos.iBlockHeight == iTextureHeight);
+				bool bAvailable = bGoodWidth && bGoodHeight;
+
+				if (ImGui::MenuItem(oPixelFormatInfos.pName, NULL, false, bAvailable))
 				{
 					if (Graphics::ConvertPixelFormat(&oTexture, &oTexture, ePixelFormat) == ErrorCode::Ok)
 					{
 						Program::GetInstance()->UpdateTexture2DRes();
 					}
+				}
+				if (bAvailable == false && ImGui::IsItemHovered())
+				{
+					ImGui::BeginTooltip();
+					ImGui::TextUnformatted("Pixel format not available");
+					if (bGoodWidth == false)
+						ImGui::Text("Texture width multiplier should be %d", oPixelFormatInfos.iBlockWidth);
+					if (bGoodHeight == false)
+						ImGui::Text("Texture height multiplier should be %d", oPixelFormatInfos.iBlockWidth);
+					ImGui::EndTooltip();
 				}
 			}
 
