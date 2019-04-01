@@ -21,6 +21,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderEXR.h"
 
 #include "Graphics/TextureWriters/TextureWriterDDS.h"
+#include "Graphics/TextureWriters/TextureWriterPNG.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
 #include "Resources/Fonts/Consolas_Bold_ttf.h"
@@ -51,6 +52,7 @@ Program::Program(int iArgCount, char** pArgs)
 	Graphics::TextureLoader::RegisterLoaderEXR();
 
 	Graphics::TextureWriter::RegisterWriterDDS();
+	Graphics::TextureWriter::RegisterWriterPNG();
 
 	ImFontConfig oConfig;
 	oConfig.MergeMode = false;
