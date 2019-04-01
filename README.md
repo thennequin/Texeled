@@ -14,41 +14,41 @@ Support:
   - Conversion beetween pixel formats
   - Create simple mip maps
     
- - Loading:
-   - DDS
-   - PNG (via **stb_image**)
-   - JPG (via **stb_image**)
-   - TGA (via **stb_image**)
-   - BMP (via **stb_image**)
+- Loading:
+  - DDS
+  - PNG (via **stb_image**)
+  - JPG (via **stb_image**)
+  - TGA (via **stb_image**)
+  - BMP (via **stb_image**)
     
- - Writing:
-   - DDS
+- Writing:
+  - DDS
     
- - Pixel formats:
-   - R8 UNorm
-   - RG8 UNorm
+- Pixel formats:
+  - R8 UNorm
+  - RG8 UNorm
 
-   - RGB8 UNorm
-   - BGR8 UNorm
+  - RGB8 UNorm
+  - BGR8 UNorm
 
-   - RGBA8 UNorm
-   - BGRA8 UNorm
+  - RGBA8 UNorm
+  - BGRA8 UNorm
 
-   - R5G6B5 UNorm
-   - B5G6R5 UNorm
+  - R5G6B5 UNorm
+  - B5G6R5 UNorm
 
-   - RGB16 SHalf
+  - RGB16 SHalf
 
-   - RGBA16 UNorm
-   - RGBA16 Half
+  - RGBA16 UNorm
+  - RGBA16 Half
 
-   - RGB32 Float
-   - RGBA32 Float
+  - RGB32 Float
+  - RGBA32 Float
 
-   - R10G10B10A2 UNorm
+  - R10G10B10A2 UNorm
 
-   - R9G9B9E5 Float (shared exp)
+  - R9G9B9E5 Float (shared exp)
 
-   - BC1 (DXT1)
-   - BC2 (DXT2/3)
-   - BC3 (DXT4/5)
+  - BC1 (DXT1)
+  - BC2 (DXT2/3)
+  - BC3 (DXT4/5)
