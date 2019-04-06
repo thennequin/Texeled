@@ -42,6 +42,15 @@ bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, I
 	return pressed;
 }
 
+Menus::Menus()
+	: ImWindow::ImwMenu()
+	, m_bResizeKeepRatio(false)
+	, m_iResizeNewWidth(0)
+	, m_iResizeNewHeight(0)
+	, m_fResizeRatio(0.f)
+{
+}
+
 void Menus::OnMenu()
 {
 	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
