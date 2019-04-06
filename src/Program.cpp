@@ -195,11 +195,14 @@ void Program::UpdateTexture2DRes()
 
 bool Program::LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
 {
-	if (Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader) == ErrorCode::Ok)
+	ErrorCode oErr = Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader);
+	if (oErr == ErrorCode::Ok)
 	{
 		UpdateTexture2DRes();
 		return true;
 	}
+	const char* pMsg = (oErr == ErrorCode::Fail) ? "Not supported or corrupted file" : oErr.ToString();
+	PlatformUtils::MsgBox(PlatformUtils::MessageBoxStyleEnum::CRITICAL, PlatformUtils::MessageBoxTypeEnum::OK, "Can't load file", pMsg);
 	return false;
 }
 
