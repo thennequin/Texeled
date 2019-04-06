@@ -2,10 +2,11 @@
 
 #include "Core/Assert.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include "Core/StringUtils.h"
+
+#include <stdlib.h> // malloc / free
+#include <string.h> // memcpy
+#include <stdarg.h> // va_list / va_start / va_end
 
 bool ErrorCode::s_bStaticTime = true;
 
@@ -32,11 +33,12 @@ ErrorCode::ErrorCode(int iCode, const char* pMessage, ...)
 	char pBuffer[1024];
 	va_list oArgs;
 	va_start(oArgs, pMessage);
-	vsnprintf(pBuffer, sizeof(pBuffer), pMessage, oArgs);
+	Core::StringUtils::VSNPrintf(pBuffer, sizeof(pBuffer), pMessage, oArgs);
 	va_end(oArgs);
 
-	size_t iLen = strlen(pBuffer) + 1;
+	size_t iLen = Core::StringUtils::StrLen(pBuffer, sizeof(pBuffer)) + 1;
 	m_pMessage = (char*)malloc(iLen);
+	CORE_ASSERT(m_pMessage != NULL);
 	memcpy(m_pMessage, pBuffer, iLen);
 }
 
@@ -76,6 +78,7 @@ void ErrorCode::operator=(const ErrorCode& oRight)
 
 	size_t iLen = strlen(oRight.m_pMessage) + 1;
 	m_pMessage = (char*)malloc(iLen);
+	CORE_ASSERT(m_pMessage != NULL);
 	memcpy(m_pMessage, oRight.m_pMessage, iLen);
 
 	oRight.m_bChecked = true;
