@@ -1,6 +1,8 @@
 #include "PlatformUtils.h"
 
+#include "Core/Assert.h"
 #include "Core/StringBuilder.h"
+#include "Core/StringUtils.h"
 
 #include <Windows.h>
 
@@ -60,6 +62,72 @@ namespace PlatformUtils
 			*pInOutSelectedExt = of.nFilterIndex - 1;
 
 		return true;
+	}
+
+	MessageBoxReturnEnum MsgBox(MessageBoxStyleEnum eStyle, MessageBoxTypeEnum eType, const char* pTitle, const char* pMessage)
+	{
+		UINT iType = 0;
+		switch (eStyle)
+		{
+		case MessageBoxStyleEnum::DEFAULT:
+			//No icon
+			break;
+		case MessageBoxStyleEnum::INFORMATION:
+			iType |= MB_ICONASTERISK;
+			break;
+		case MessageBoxStyleEnum::QUESTION:
+			iType |= MB_ICONQUESTION;
+			break;
+		case MessageBoxStyleEnum::WARNING:
+			iType |= MB_ICONEXCLAMATION;
+			break;
+		case MessageBoxStyleEnum::CRITICAL:
+			iType |= MB_ICONHAND;
+			break;
+		}
+
+		switch (eType)
+		{
+		case MessageBoxTypeEnum::OK:
+			iType |= MB_OK;
+			break;
+		case MessageBoxTypeEnum::OK_CANCEL:
+			iType |= MB_OKCANCEL;
+			break;
+		case MessageBoxTypeEnum::YES_NO:
+			iType |= MB_YESNO;
+			break;
+		case MessageBoxTypeEnum::YES_NO_CANCEL:
+			iType |= MB_YESNOCANCEL;
+			break;
+		}
+
+		int iRet = MessageBoxA(NULL, pMessage, pTitle, iType);
+		switch (iRet)
+		{
+		case IDOK:
+			return MessageBoxReturnEnum::OK;
+		case IDCANCEL:
+			return MessageBoxReturnEnum::CANCEL;
+		case IDYES:
+			return MessageBoxReturnEnum::YES;
+		case IDNO:
+			return MessageBoxReturnEnum::NO;
+		default:
+			CORE_ASSERT(false, "MessageBox : Unknown return value '%d'", iRet);
+			return MessageBoxReturnEnum::OK;
+		}
+	}
+
+	MessageBoxReturnEnum MsgBoxFormat(MessageBoxStyleEnum eStyle, MessageBoxTypeEnum eType, const char* pTitle, const char* pMessageFormat, ...)
+	{
+		char pBuffer[4096];
+		va_list oArgs;
+		va_start(oArgs, pMessageFormat);
+		Core::StringUtils::VSNPrintf(pBuffer, sizeof(pBuffer), pMessageFormat, oArgs);
+		va_end(oArgs);
+
+		return MsgBox(eStyle, eType, pTitle, pBuffer);
 	}
 }
 //namespace PlatformUtils
