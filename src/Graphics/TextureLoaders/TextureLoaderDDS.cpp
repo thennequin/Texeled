@@ -27,7 +27,8 @@ namespace Graphics
 
 			if (pStream->Read(&iDDSMagic) == false || iDDSMagic != DDS_MAGIC)
 			{
-				return ErrorCode(1, "Not a DDS");
+				return ErrorCode::Fail;
+				//return ErrorCode(1, "Not a DDS");
 			}
 
 			if (pStream->Read(&oDDSHeader) == false

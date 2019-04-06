@@ -27,7 +27,8 @@ namespace Graphics
 			if (pStream->Read(pBufferVersion, 8) != 8
 				|| ParseEXRVersionFromMemory(&oExrVersion, pBufferVersion, 8) != 0)
 			{
-				return ErrorCode(1, "Invalid EXR file");
+				return ErrorCode::Fail;
+				//return ErrorCode(1, "Invalid EXR file");
 			}
 
 			if (oExrVersion.multipart)

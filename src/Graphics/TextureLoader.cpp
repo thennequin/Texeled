@@ -38,10 +38,15 @@ namespace Graphics
 				for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
 				{
 					pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
-					if (it->pLoader(pStream, &oTemp) == ErrorCode::Ok)
+					ErrorCode oErr = it->pLoader(pStream, &oTemp);
+					if (oErr == ErrorCode::Ok)
 					{
 						pTexture->Swap(oTemp);
 						return ErrorCode::Ok;
+					}
+					else if (oErr != ErrorCode::Fail)
+					{
+						return ErrorCode(oErr);
 					}
 				}
 			}
