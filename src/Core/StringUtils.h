@@ -1,15 +1,21 @@
 #ifndef __CORE_STRING_UTILS_H__
 #define __CORE_STRING_UTILS_H__
 
+#include <stdarg.h>
+
 namespace Core
 {
 	namespace StringUtils
 	{
-		char* StrDup(const char* pString);
-		bool EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive = true);
-		bool Wildcard(const char* pPattern, const char* pString);
+		size_t					StrLen(const char* pString, size_t iBufferSize);
+		char*					StrDup(const char* pString);
+		int						SNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, ...);
+		int						VSNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, va_list oArgs);
 
-		void GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize);
+		bool					EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive = true);
+		bool					Wildcard(const char* pPattern, const char* pString);
+
+		void					GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize);
 	}
 	//namespace StringUtils
 }

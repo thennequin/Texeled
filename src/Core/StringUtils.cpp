@@ -3,12 +3,25 @@
 #include <string.h> // strlen
 #include <ctype.h> // toupper
 #include <stdlib.h> // malloc
-#include <stdio.h> // sprintf
+#include <stdio.h> // vsnprintf
 
 namespace Core
 {
 	namespace StringUtils
 	{
+		size_t StrLen(const char* pString, size_t iBufferSize)
+		{
+			if (pString == 0)
+				return 0;
+			size_t iSize = 0;
+			while (*pString != 0 && iSize < iBufferSize)
+			{
+				iSize++;
+				pString++;
+			}
+			return iSize;
+		}
+
 		char* StrDup(const char* pString)
 		{
 			char* pDup = (char*)malloc(strlen(pString) + 1);
@@ -17,6 +30,20 @@ namespace Core
 				strcpy(pDup, pString);
 			}
 			return pDup;
+		}
+
+		int SNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, ...)
+		{
+			va_list oArgs;
+			va_start(oArgs, pFormat);
+			int iLen = vsnprintf(pBuffer, iBufferSize, pFormat, oArgs);
+			va_end(oArgs);
+			return iLen;
+		}
+
+		int	VSNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, va_list oArgs)
+		{
+			return vsnprintf(pBuffer, iBufferSize, pFormat, oArgs);
 		}
 
 		bool EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive)
@@ -118,7 +145,7 @@ namespace Core
 				iSize /= 1024;
 			}
 
-			snprintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (float)iSize + (float)iRem / 1024.0, pSizes[iDiv]);
+			SNPrintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (float)iSize + (float)iRem / 1024.0, pSizes[iDiv]);
 		}
 
 	}
