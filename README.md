@@ -50,5 +50,7 @@ Support:
   - R9G9B9E5 Float (shared exp)
 
   - BC1 (DXT1)
-  - BC2 (DXT2/3)
-  - BC3 (DXT4/5)
+  - BC2 (DXT2/3) *
+  - BC3 (DXT4/5) *
+  
+  \* Display only, no conversion
