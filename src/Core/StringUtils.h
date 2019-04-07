@@ -18,7 +18,7 @@ namespace Core
 		bool					EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive = true);
 		bool					Wildcard(const char* pPattern, const char* pString);
 
-		void					GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize);
+		void					GetReadableSize(size_t iSize, char* pOutBuffer, size_t iOutBufferSize);
 	}
 	//namespace StringUtils
 }

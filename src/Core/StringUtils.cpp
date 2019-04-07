@@ -207,11 +207,11 @@ namespace Core
 			return true;
 		}
 
-		void GetReadableSize(int iSize, char* pOutBuffer, size_t iOutBufferSize)
+		void GetReadableSize(size_t iSize, char* pOutBuffer, size_t iOutBufferSize)
 		{
 			static const char* const pSizes[] = { "bytes", "Kb", "Mb", "Gb" };
-			int iDiv = 0;
-			int iRem = 0;
+			size_t iDiv = 0;
+			size_t iRem = 0;
 
 			while (iSize >= 1024 && iDiv < (sizeof pSizes / sizeof *pSizes)) {
 				iRem = (iSize % 1024);
@@ -219,7 +219,7 @@ namespace Core
 				iSize /= 1024;
 			}
 
-			SNPrintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (float)iSize + (float)iRem / 1024.0, pSizes[iDiv]);
+			SNPrintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (double)iSize + (double)iRem / 1024.0, pSizes[iDiv]);
 		}
 
 	}
