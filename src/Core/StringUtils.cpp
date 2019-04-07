@@ -32,6 +32,80 @@ namespace Core
 			return pDup;
 		}
 
+		int FindFirst(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize)
+		{
+			if (pSource == NULL || iSourceSize == 0 || pSearch == NULL || iSearchSize == 0)
+				return -1;
+
+			const size_t iSourceLen = StrLen(pSource, iSourceSize);
+			const size_t iSearchLen = StrLen(pSearch, iSearchSize);
+
+			if (iSourceLen < iSearchLen)
+				return -1;
+
+			const size_t iMaxPos = iSourceLen - iSearchLen;
+			size_t iPos = 0;
+			while (iPos <= iMaxPos)
+			{
+				if (pSource[iPos] == 0)
+					return -1;
+
+				if (pSource[iPos] == pSearch[0])
+				{
+					size_t iSearchPos = 0;
+					while (iSearchPos <= iSearchLen)
+					{
+						if (pSearch[iSearchPos] == 0)
+							return iPos;
+						else if (pSource[iPos + iSearchPos] != pSearch[iSearchPos])
+							break;
+
+						++iSearchPos;
+					}
+				}
+
+				++iPos;
+			}
+			return -1;
+		}
+
+		int FindLast(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize)
+		{
+			if (pSource == NULL || iSourceSize == 0 || pSearch == NULL || iSearchSize == 0)
+				return -1;
+
+			const size_t iSourceLen = StrLen(pSource, iSourceSize);
+			const size_t iSearchLen = StrLen(pSearch, iSearchSize);
+
+			if (iSourceLen < iSearchLen)
+				return -1;
+
+			const size_t iMaxPos = iSourceLen - iSearchLen;
+			size_t iPos = iMaxPos;
+			while (iPos >= 0)
+			{
+				if (pSource[iPos] == 0)
+					return -1;
+
+				if (pSource[iPos] == pSearch[0])
+				{
+					size_t iSearchPos = 0;
+					while (iSearchPos <= iSearchLen)
+					{
+						if (pSearch[iSearchPos] == 0)
+							return iPos;
+						else if (pSource[iPos + iSearchPos] != pSearch[iSearchPos])
+							break;
+
+						++iSearchPos;
+					}
+				}
+
+				--iPos;
+			}
+			return -1;
+		}
+
 		int SNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, ...)
 		{
 			va_list oArgs;
