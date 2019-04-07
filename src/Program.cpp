@@ -98,10 +98,10 @@ Program::Program(int iArgCount, char** pArgs)
 	style.Colors[ImGuiCol_HeaderActive]          = ImVec4(0.25f, 0.25f, 0.25f, 0.50f);
 
 	m_pShortKeyManager = new ShortKeyManager();
-	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", "ALT+F4", new EasyWindow::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
-	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", "CTRL+O", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
-	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", "CTRL+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
-	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", "CTRL+SHIFT+S", new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
+	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", EasyWindow::KEY_ALT, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_F4, new EasyWindow::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
+	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_O, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
+	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
+	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
 
 	m_pMenus = new Menus();
 	new StatusBars();

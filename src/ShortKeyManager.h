@@ -61,8 +61,8 @@ public:
 	~ShortKeyManager();
 	bool								Manage(bool bCaptureKeyboard);
 
-	const ShortKey*						RegisterShortKey(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, bool bSave = true, bool bDeleteCallbacks = true);
-	const ShortKey*						RegisterShortKeyUp(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave = true, bool bDeleteCallbacks = true);
+	const ShortKey*						RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, bool bSave = true, bool bDeleteCallbacks = true);
+	const ShortKey*						RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave = true, bool bDeleteCallbacks = true);
 	bool								UnregisterShortKey(const ShortKey* pShortkey);
 	bool								UnregisterShortKey(const char* pName);
 

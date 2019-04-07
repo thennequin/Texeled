@@ -209,30 +209,27 @@ bool ShortKeyManager::Manage(bool bCaptureKeyboard)
 	return true;
 }
 
-const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKey(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, bool bSave, bool bDeleteCallbacks)
+const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, bool bSave, bool bDeleteCallbacks)
 {
-	return RegisterShortKeyUp(pName, pDefaultShortKey, pCallback, NULL, bSave, bDeleteCallbacks);
+	return RegisterShortKeyUp(pName, eModifier1, eModifier2, eModifier3, ePrimary, pCallback, NULL, bSave, bDeleteCallbacks);
 }
 
-const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char* pName, const char* pDefaultShortKey, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave, bool bDeleteCallbacks)
+const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave, bool bDeleteCallbacks)
 {
-	IM_ASSERT(IsValidShortKey(pDefaultShortKey));
+	IM_ASSERT(eModifier1 == EasyWindow::KEY_NONE || EasyWindow::IsModifierKey(eModifier1));
+	IM_ASSERT(eModifier2 == EasyWindow::KEY_NONE || EasyWindow::IsModifierKey(eModifier2));
+	IM_ASSERT(eModifier3 == EasyWindow::KEY_NONE || EasyWindow::IsModifierKey(eModifier3));
+	IM_ASSERT(ePrimary != EasyWindow::KEY_NONE && EasyWindow::IsModifierKey(ePrimary) == false);
 	IM_ASSERT(pName != NULL);
 	if (pName != NULL)
 	{
 		IM_ASSERT(m_mShortKeys.find(pName) == m_mShortKeys.end()); //ShortKey name already used
 		if (m_mShortKeys.find(pName) == m_mShortKeys.end())
 		{
-			EasyWindow::EKey eDefaultPrimary;
-			EasyWindow::EKey eDefaultModifier[3];
-			ExtractShortKey(pDefaultShortKey, eDefaultPrimary, eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[2]);
-
-			EasyWindow::EKey ePrimary = eDefaultPrimary;
-			EasyWindow::EKey eModifier[3] = { eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[2] };
 			//TODO: save
 			ShortKey* pShortkey = new ShortKey(
-				eDefaultPrimary, eDefaultModifier[0], eDefaultModifier[1], eDefaultModifier[2],
-				ePrimary, eModifier[0], eModifier[1], eModifier[2],
+				ePrimary, eModifier1, eModifier2, eModifier3,
+				ePrimary, eModifier1, eModifier2, eModifier3,
 				pCallback, pCallbackUp, bSave, bDeleteCallbacks);
 			 m_mShortKeys[pName] = pShortkey;
 			return pShortkey;
