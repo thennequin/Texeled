@@ -1,5 +1,7 @@
 #include "Core/StringUtils.h"
 
+#include "Core/Assert.h"
+
 #include <string.h> // strlen
 #include <ctype.h> // toupper
 #include <stdlib.h> // malloc
