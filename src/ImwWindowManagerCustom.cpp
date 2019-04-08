@@ -2,7 +2,6 @@
 #include "ImwWindowManagerCustom.h"
 using namespace ImWindow;
 
-
 #include "Core/MemoryStream.h"
 
 #include "Graphics/TextureLoader.h"
@@ -85,6 +84,17 @@ void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, b
 	ImGui::PushFont(oFonts.pFontConsolasBold);
 	ImGui::TextUnformatted(GetMainTitle());
 	ImGui::PopFont();
+
+	const char* pPath = Program::GetInstance()->GetTextureFilePath();
+	if (pPath != NULL)
+	{
+		ImGui::PushFont(oFonts.pFontConsolas);
+		ImGui::SameLine();
+		ImGui::TextUnformatted("-");
+		ImGui::SameLine();
+		ImGui::TextUnformatted(pPath);
+		ImGui::PopFont();
+	}
 
 	ImwWindowManager::PaintTitleBar(pPlatformWindow, false);
 }
