@@ -10,6 +10,8 @@ using namespace ImWindow;
 
 #include "Resources/Icons/Default_24_png.h"
 
+#include "Program.h"
+
 ImwWindowManagerCustom::ImwWindowManagerCustom(bool bCustomFrame)
 	: ImwWindowManagerDX11(bCustomFrame)
 	, m_pIcon(NULL)
@@ -57,7 +59,7 @@ float ImwWindowManagerCustom::GetTitleBarHeight() const
 	return pContext->Style.WindowPadding.y + fContentSize;
 }
 
-void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow)
+void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, bool bDrawTitle)
 {
 	//Draw simple icon in title bar
 	/*ImGui::Dummy(ImVec2(c_fIconSize, c_fIconSize));
@@ -78,7 +80,13 @@ void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow)
 		ImGui::SameLine();
 	}
 
-	ImwWindowManager::PaintTitleBar(pPlatformWindow);
+	const Fonts& oFonts = Program::GetInstance()->GetFonts();
+
+	ImGui::PushFont(oFonts.pFontConsolasBold);
+	ImGui::TextUnformatted(GetMainTitle());
+	ImGui::PopFont();
+
+	ImwWindowManager::PaintTitleBar(pPlatformWindow, false);
 }
 
 void ImwWindowManagerCustom::ClosePlatformWindow(ImwPlatformWindow* pPlatformWindow)

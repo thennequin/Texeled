@@ -22,7 +22,7 @@ namespace ImWindow
 		virtual void					InternalDestroy();
 
 		virtual float					GetTitleBarHeight() const;
-		virtual void					PaintTitleBar(ImwPlatformWindow* pPlatformWindow);
+		virtual void					PaintTitleBar(ImwPlatformWindow* pPlatformWindow, bool bDrawTitle);
 
 		void							ClosePlatformWindow(ImwPlatformWindow* pPlatformWindow);
 	protected:
