@@ -32,6 +32,34 @@ namespace Core
 			return pDup;
 		}
 
+		void SubString(const char* pSource, size_t iSourceSize, char* pDest, size_t iDestSize, int iStart, int iLength)
+		{
+			size_t iSourceLen = StrLen(pSource, iSourceSize);
+			if (iStart < 0)
+			{
+				iStart = iSourceLen + iStart + 1;
+			}
+
+			if (iLength < 0)
+			{
+				iLength = iSourceLen - iStart + iLength + 1;
+			}
+
+			CORE_ASSERT((size_t)(iStart + iLength) <= iSourceLen);
+			CORE_ASSERT((size_t)(iLength) < iDestSize);
+
+			const char* pStart = pSource + iStart;
+			const char* pEnd = pSource + iStart + iLength;
+
+			while (pStart != pEnd)
+			{
+				*pDest = *pStart;
+				++pDest;
+				++pStart;
+			}
+			*pDest = 0;
+		}
+
 		int FindFirst(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize)
 		{
 			if (pSource == NULL || iSourceSize == 0 || pSearch == NULL || iSearchSize == 0)
