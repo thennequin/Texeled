@@ -44,6 +44,7 @@ Program::Program(int iArgCount, char** pArgs)
 	, m_eMode(ProgramModeEnum::VIEWER)
 	, m_oImWindowMgr(true)
 	, m_pTexture2D(NULL)
+	, m_pTexturePath(NULL)
 {
 	s_pInstance = this;
 
@@ -119,6 +120,7 @@ Program::~Program()
 {
 	ImwSafeDelete(m_pTexture2D);
 	ImwSafeDelete(m_pShortKeyManager);
+	ImwSafeFree(m_pTexturePath);
 }
 
 Program* Program::CreateInstance(int iArgCount, char** pArgs)
@@ -195,15 +197,27 @@ void Program::UpdateTexture2DRes()
 
 bool Program::LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
 {
-	ErrorCode oErr = Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader);
+	ErrorCode oErr = LoadFileInternal(pFile, pUseLoader);
 	if (oErr == ErrorCode::Ok)
 	{
-		UpdateTexture2DRes();
 		return true;
 	}
 	const char* pMsg = (oErr == ErrorCode::Fail) ? "Not supported or corrupted file" : oErr.ToString();
 	PlatformUtils::MsgBox(PlatformUtils::MessageBoxStyleEnum::CRITICAL, PlatformUtils::MessageBoxTypeEnum::OK, "Can't load file", pMsg);
 	return false;
+}
+
+ErrorCode Program::LoadFileInternal(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
+{
+	ErrorCode oErr = Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader);
+	if (oErr == ErrorCode::Ok)
+	{
+		if (m_pTexturePath != NULL)
+			free(m_pTexturePath);
+		m_pTexturePath = Core::StringUtils::StrDup(pFile);
+		UpdateTexture2DRes();
+	}
+	return oErr;
 }
 
 void Program::Open()

@@ -107,8 +107,10 @@ public:
 	ID3D11DeviceContext*					GetDX11DeviceContext() const;
 
 	bool									LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode								LoadFileInternal(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader = NULL);
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
+	const char*								GetTextureFilePath() const { return m_pTexturePath; }
 	void									UpdateTexture2DRes();
 
 	void									Open();
@@ -142,6 +144,7 @@ protected:
 
 	Graphics::Texture						m_oTexture;
 	GraphicResources::Texture2D*			m_pTexture2D;
+	char*									m_pTexturePath;
 };
 
 #endif // __PROGRAM_H__
