@@ -63,7 +63,7 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oFonts.pFontConsolas = ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Resources::Fonts::Consolas_ttf::Data, Resources::Fonts::Consolas_ttf::Size, 16.f, &oConfig, NULL);
 	oConfig.MergeMode = true;
 
-	m_oDisplayOptions.bShowPixelGrid = true;
+	m_oDisplayOptions.bShowPixelGrid = false;
 	m_oDisplayOptions.bTiling = false;
 	m_oDisplayOptions.eShowChannels = ChannelFlag::RED | ChannelFlag::GREEN | ChannelFlag::BLUE | ChannelFlag::ALPHA;
 	m_oDisplayOptions.iMip = 0;
