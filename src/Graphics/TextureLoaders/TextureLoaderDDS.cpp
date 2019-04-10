@@ -101,6 +101,26 @@ namespace Graphics
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
 				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R32_FLOAT )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::R32_FLOAT;
+				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R32G32_FLOAT )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::RG32_FLOAT;
+				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R32G32B32_FLOAT )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::RGB32_FLOAT;
+				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R32G32B32A32_FLOAT )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
+				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R16G16B16A16_FLOAT )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
+				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R9G9B9E5_SHAREDEXP)
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::R9G9B9E5_SHAREDEXP;
@@ -167,6 +187,14 @@ namespace Graphics
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R16G16B16A16_FLOAT.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
+			}
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R32_FLOAT.iFourCC)
+			{
+				oDesc.ePixelFormat = PixelFormatEnum::R32_FLOAT;
+			}
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R32G32_FLOAT.iFourCC)
+			{
+				oDesc.ePixelFormat = PixelFormatEnum::RG32_FLOAT;
 			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R32G32B32A32_FLOAT.iFourCC)
 			{

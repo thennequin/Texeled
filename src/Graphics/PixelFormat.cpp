@@ -56,8 +56,9 @@ namespace Graphics
 		{  64,   1,   1,   6,   4,   ComponentEncodingEnum::UNORM,  "RGBA16 UNorm"                 }, // RGBA16_UNORM
 		{  64,   1,   1,   8,   4,   ComponentEncodingEnum::FLOAT,  "RGBA16 Float"                 }, // RGBA16_FLOAT
 
+		{  32,   1,   1,   4,   1,   ComponentEncodingEnum::FLOAT,  "R32 Float"                    }, // R32_FLOAT
+		{  64,   1,   1,   8,   2,   ComponentEncodingEnum::FLOAT,  "RG32 Float"                   }, // RG32_FLOAT
 		{  96,   1,   1,  12,   3,   ComponentEncodingEnum::FLOAT,  "RGB32 Float"                  }, // RGB32_FLOAT
-
 		{ 128,   1,   1,  16,   4,   ComponentEncodingEnum::FLOAT,  "RGBA32 Float"                 }, // RGBA32_FLOAT
 
 		{  32,   1,   1,   4,   4,   ComponentEncodingEnum::UNORM,  "R10G10B10A2 UNorm"            }, // R10G10B10A2_UNORM
@@ -352,6 +353,38 @@ namespace Graphics
 			pOut565->v.r = (pIn888->r >> 3) & 0x1F;
 			pOut565->v.g = (pIn888->g >> 2) & 0x3F;
 			pOut565->v.b = (pIn888->b >> 3) & 0x1F;
+		}
+
+		void Convert_R32F_To_RG32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+		{
+			float* pInR = (float*)pIn;
+			RG32F* pOutRGB = (RG32F*)pOut;
+			pOutRGB->r = *pInR;
+			pOutRGB->g = 0.f;
+		}
+
+		void Convert_RG32F_To_R32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+		{
+			RG32F* pInRG = (RG32F*)pIn;
+			float* pOutR = (float*)pOut;
+			*pOutR = pInRG->r;
+		}
+
+		void Convert_RG32F_To_RGB32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+		{
+			RG32F* pInRG = (RG32F*)pIn;
+			RGB32F* pOutRGB = (RGB32F*)pOut;
+			pOutRGB->r = pInRG->r;
+			pOutRGB->g = pInRG->g;
+			pOutRGB->b = 0.f;
+		}
+
+		void Convert_RGB32F_To_RG32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+		{
+			RGB32F* pInRGB = (RGB32F*)pIn;
+			RG32F* pOutRG = (RG32F*)pOut;
+			pOutRG->r = pInRGB->r;
+			pOutRG->g = pInRGB->g;
 		}
 
 		void Convert_RGB32F_To_RGBA32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
@@ -926,6 +959,14 @@ namespace Graphics
 			// RGBA16F <=> RGBA32F
 			s_pConvertionMatrix[PixelFormatEnum::RGBA16_FLOAT][PixelFormatEnum::RGBA32_FLOAT] = { Convert_RGBA16F_To_RGBA32F, 64 };
 			s_pConvertionMatrix[PixelFormatEnum::RGBA32_FLOAT][PixelFormatEnum::RGBA16_FLOAT] = { Convert_RGBA32F_To_RGBA16F, -64 };
+
+			// R32F <=> RG32F
+			s_pConvertionMatrix[PixelFormatEnum::R32_FLOAT][PixelFormatEnum::RG32_FLOAT] = { Convert_R32F_To_RG32F, 32 };
+			s_pConvertionMatrix[PixelFormatEnum::RG32_FLOAT][PixelFormatEnum::R32_FLOAT] = { Convert_RG32F_To_R32F, -32 };
+
+			// RG32F <=> RGB32F
+			s_pConvertionMatrix[PixelFormatEnum::RG32_FLOAT][PixelFormatEnum::RGB32_FLOAT] = { Convert_RG32F_To_RGB32F, 32 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RG32_FLOAT] = { Convert_RGB32F_To_RG32F, -32 };
 
 			// RGB32F <=> RGBA32F
 			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RGBA32_FLOAT] = { Convert_RGB32F_To_RGBA32F, 32 };

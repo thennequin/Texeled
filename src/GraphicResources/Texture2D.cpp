@@ -276,6 +276,14 @@ namespace GraphicResources
 			case Graphics::PixelFormatEnum::RGBA16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
+	
+			case Graphics::PixelFormatEnum::R32_FLOAT:
+				eDXGIOutput = DXGI_FORMAT_R32_FLOAT;
+				break;
+
+			case Graphics::PixelFormatEnum::RG32_FLOAT:
+				eDXGIOutput = DXGI_FORMAT_R32G32_FLOAT;
+				break;
 
 			case Graphics::PixelFormatEnum::RGB32_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R32G32B32A32_FLOAT;

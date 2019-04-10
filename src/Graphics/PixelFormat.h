@@ -48,6 +48,8 @@ namespace Graphics
 			RGBA16_UNORM,
 			RGBA16_FLOAT,
 
+			R32_FLOAT,
+			RG32_FLOAT,
 			RGB32_FLOAT,
 			RGBA32_FLOAT,
 
@@ -123,6 +125,13 @@ namespace Graphics
 			} v;
 			uint16_t u;
 		} half;
+
+		template<typename T>
+		struct RG
+		{
+			T r;
+			T g;
+		};
 
 		template<typename T>
 		struct RGB
@@ -228,6 +237,7 @@ namespace Graphics
 		typedef RGB<half> RGB16F;
 		typedef RGBA<half> RGBA16F;
 
+		typedef RG<float> RG32F;
 		typedef RGB<float> RGB32F;
 		typedef RGBA<float> RGBA32F;
 
@@ -269,6 +279,7 @@ namespace Graphics
 		static_assert(sizeof(R5G6B5) == 2, "Size of RGB565 is not correct");
 		static_assert(sizeof(B5G6R5) == 2, "Size of BGR565 is not correct");
 
+		static_assert(sizeof(RG32F) == 8, "Size of RG32F is not correct");
 		static_assert(sizeof(RGB32F) == 12, "Size of RGB32F is not correct");
 		static_assert(sizeof(RGBA32F) == 16, "Size of RGBA32F is not correct");
 		static_assert(sizeof(RGB16F) == 6, "Size of RGB16F is not correct");
