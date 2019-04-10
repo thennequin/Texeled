@@ -42,6 +42,8 @@ Support:
   - RGBA16 UNorm
   - RGBA16 Half
 
+  - R32 Float
+  - RG32 Float
   - RGB32 Float
   - RGBA32 Float
 
