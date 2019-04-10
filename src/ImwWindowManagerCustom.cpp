@@ -60,42 +60,39 @@ float ImwWindowManagerCustom::GetTitleBarHeight() const
 
 void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, bool bDrawTitle)
 {
-	//Draw simple icon in title bar
-	/*ImGui::Dummy(ImVec2(c_fIconSize, c_fIconSize));
-	ImRect oRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
-	const ImVec2 oCenter = oRect.GetCenter();
-	const ImVec2 oSize = oRect.GetSize();
-	const ImVec2 c_oSpace = ImVec2(1.f, 1.f);
+	ImGuiStyle& oStyle = ImGui::GetStyle();
+	ImVec4 oBackupChildWindowBg = oStyle.Colors[ImGuiCol_ChildWindowBg];
+	oStyle.Colors[ImGuiCol_ChildWindowBg].w = 0.f;
 
-	ImU32 iColor = ImGui::GetColorU32(ImGuiCol_Text);
-	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
-	pDrawList->AddRectFilled(oRect.Min, oCenter - c_oSpace, iColor);
-	pDrawList->AddRectFilled(oCenter + c_oSpace, oRect.Max, iColor);
-	pDrawList->AddLine(oRect.GetBL(), oRect.GetTR(), iColor);*/
-
-	if (m_pIcon)
+	if (ImGui::BeginChild("TitleBar", ImVec2(ImGui::GetContentRegionAvailWidth() - 3.f * 24.f, GetTitleBarHeight()), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoInputs))
 	{
-		ImGui::Image((ImTextureID)m_pIcon->GetTextureView(), ImVec2(c_fIconSize, c_fIconSize));
-		ImGui::SameLine();
-	}
+		if (m_pIcon)
+		{
+			ImGui::Image((ImTextureID)m_pIcon->GetTextureView(), ImVec2(c_fIconSize, c_fIconSize));
+			ImGui::SameLine();
+		}
 
-	const Fonts& oFonts = Program::GetInstance()->GetFonts();
+		const Fonts& oFonts = Program::GetInstance()->GetFonts();
 
-	ImGui::PushFont(oFonts.pFontConsolasBold);
-	ImGui::TextUnformatted(GetMainTitle());
-	ImGui::PopFont();
-	ImGui::SameLine();
-
-	const char* pPath = Program::GetInstance()->GetTextureFilePath();
-	if (pPath != NULL)
-	{
-		ImGui::PushFont(oFonts.pFontConsolas);
-		ImGui::TextUnformatted("-");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(pPath);
+		ImGui::GetCurrentWindow()->DC.CurrentLineTextBaseOffset = (c_fIconSize - ImGui::GetFontSize()) / 2.f;
+		ImGui::PushFont(oFonts.pFontConsolasBold);
+		ImGui::TextUnformatted(GetMainTitle());
 		ImGui::PopFont();
 		ImGui::SameLine();
+
+		const char* pPath = Program::GetInstance()->GetTextureFilePath();
+		if (pPath != NULL)
+		{
+			ImGui::PushFont(oFonts.pFontConsolas);
+			ImGui::TextUnformatted("-");
+			ImGui::SameLine();
+			ImGui::TextUnformatted(pPath);
+			ImGui::PopFont();
+		}
 	}
+	ImGui::EndChild();
+	ImGui::SameLine();
+	oStyle.Colors[ImGuiCol_ChildWindowBg] = oBackupChildWindowBg;
 
 	ImwWindowManager::PaintTitleBar(pPlatformWindow, false);
 }
