@@ -89,6 +89,22 @@ namespace Graphics
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
+			case PixelFormatEnum::R32_FLOAT:
+				bHasDX10Header = true;
+				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32_FLOAT;
+				break;
+			case PixelFormatEnum::RG32_FLOAT:
+				bHasDX10Header = true;
+				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
+				break;
+			case PixelFormatEnum::RGB32_FLOAT:
+				bHasDX10Header = true;
+				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+				break;
+			case PixelFormatEnum::RGBA32_FLOAT:
+				bHasDX10Header = true;
+				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				break;
 			case PixelFormatEnum::R10G10B10A2_UNORM:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R10G10B10A2_UNORM;
