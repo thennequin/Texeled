@@ -120,7 +120,7 @@ namespace Core
 			fclose((FILE*)m_pSourceFile);
 			m_pSourceFile = NULL;
 
-			unlink(m_pSourceFileName);
+			unlink(m_pFileName);
 
 			free(m_pFileName);
 			free(m_pSourceFileName);
