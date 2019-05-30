@@ -276,7 +276,7 @@ namespace Graphics
 #pragma pack(pop)
 
 		static_assert(sizeof(RGB8) == 3, "Size of RGB888 is not correct");
-		static_assert(sizeof(RGBA8) == 4, "Size of BGR565 is not correct");
+		static_assert(sizeof(RGBA8) == 4, "Size of RGBA8 is not correct");
 		static_assert(sizeof(R5G6B5) == 2, "Size of RGB565 is not correct");
 		static_assert(sizeof(B5G6R5) == 2, "Size of BGR565 is not correct");
 
