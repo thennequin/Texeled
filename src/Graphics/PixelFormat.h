@@ -79,6 +79,7 @@ namespace Graphics
 		int iBlockSize;
 		int iComponents;
 		ComponentEncodingEnum eEncoding;
+		const char* const pShortName;
 		const char* const pName;
 	} PixelFormatInfos;
 
