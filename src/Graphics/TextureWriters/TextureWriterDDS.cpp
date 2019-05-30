@@ -15,7 +15,7 @@ namespace Graphics
 
 		void RegisterWriterDDS()
 		{
-			RegisterTextureWriter("DDS", "*.dds\0", TextureWriterDDS, TextureWriterSupportedDDS);
+			RegisterTextureWriter("DirectDraw Surface", "*.dds\0", TextureWriterDDS, TextureWriterSupportedDDS);
 		}
 
 

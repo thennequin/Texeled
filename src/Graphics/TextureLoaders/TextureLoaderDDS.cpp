@@ -14,7 +14,7 @@ namespace Graphics
 
 		void RegisterLoaderDDS()
 		{
-			Graphics::RegisterTextureLoader("DDS", "*.DDS\0", Graphics::TextureLoader::TextureLoaderDDS);
+			Graphics::RegisterTextureLoader("DirectDraw Surface", "*.dds\0", Graphics::TextureLoader::TextureLoaderDDS);
 		}
 
 
