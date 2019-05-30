@@ -13,7 +13,7 @@ namespace Graphics
 		ErrorCode TextureLoaderEXR(Core::Stream* pStream, Texture* pTexture);
 		void RegisterLoaderEXR()
 		{
-			Graphics::RegisterTextureLoader("OpenEXR", ".exr\0", Graphics::TextureLoader::TextureLoaderEXR);
+			Graphics::RegisterTextureLoader("OpenEXR", "*.exr\0", Graphics::TextureLoader::TextureLoaderEXR);
 		}
 
 		ErrorCode TextureLoaderEXR(Core::Stream* pStream, Texture* pTexture)
