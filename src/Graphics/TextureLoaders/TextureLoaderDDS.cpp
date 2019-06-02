@@ -166,17 +166,17 @@ namespace Graphics
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::R5G6B5_UNORM;
 			}
-			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT)) == 0)
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT1.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::BC1;
 			}
-			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT2, sizeof(DDS_PIXELFORMAT)) == 0
-				  || memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT3, sizeof(DDS_PIXELFORMAT)) == 0)
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT2.iFourCC
+				  || oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT3.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::BC2;
 			}
-			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT4, sizeof(DDS_PIXELFORMAT)) == 0
-				|| memcmp(&oDDSHeader.oPixelFormat, &DDSPF_DXT5, sizeof(DDS_PIXELFORMAT)) == 0)
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT4.iFourCC
+				  || oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT5.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::BC3;
 			}
