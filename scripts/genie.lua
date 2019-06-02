@@ -42,7 +42,9 @@ solution "Texeled"
 
 							"../src/**",
 							"../src/**.ico",
-							"../src/Default.rc"
+							"../src/Default.rc",
+
+							"../scripts/Texeled.natvis"
 		}
 		
 		includedirs {

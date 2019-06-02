@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<Type Name="Core::Array&lt;*&gt;">
+  <DisplayString>Size: {m_iSize} Capacity: {m_iCapacity}</DisplayString>
+  <Expand>
+    <Item Name="[size]">m_iSize</Item>
+    <Item Name="[capacity]">m_iCapacity</Item>
+    <ArrayItems>
+      <Size>m_iSize</Size>
+      <ValuePointer>m_pData</ValuePointer>
+    </ArrayItems>
+  </Expand>
+</Type>
+</AutoVisualizer>
