@@ -20,10 +20,12 @@ Support:
   - JPG (via **stb_image**)
   - TGA (via **stb_image**)
   - BMP (via **stb_image**)
+  - EXT (via **tinyexr**)
     
 - Writing:
   - DDS
-    
+  - PNG
+  
 - Pixel formats:
   - R8 UNorm
   - RG8 UNorm
