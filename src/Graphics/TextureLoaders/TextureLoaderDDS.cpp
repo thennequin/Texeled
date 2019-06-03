@@ -125,6 +125,24 @@ namespace Graphics
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::R9G9B9E5_SHAREDEXP;
 				}
+				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_TYPELESS
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_UNORM
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_UNORM_SRGB)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::BC1;
+				}
+				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC2_TYPELESS
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC2_UNORM
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC2_UNORM_SRGB)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::BC2;
+				}
+				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC3_TYPELESS
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC3_UNORM
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC3_UNORM_SRGB)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::BC3;
+				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_TYPELESS
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_UNORM
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC4_SNORM)
