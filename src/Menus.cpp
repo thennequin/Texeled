@@ -7,6 +7,8 @@
 #include "Graphics/Texture.h"
 #include "Graphics/TextureUtils.h"
 
+#include "Windows/AboutWindow.h"
+
 bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, ImFont* pShortkeyFont, bool selected, bool enabled)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -213,4 +215,20 @@ void Menus::OnMenu()
 		ImGui::EndPopup();
 	}
 
+	if (ImGui::BeginMenu("Help"))
+	{
+		if (ImGui::MenuItem("About"))
+		{
+			const ImVec2 c_vAboutBoxSize = ImVec2(530.f, 160.f);
+
+			// Centering floating window
+			ImWindow::ImwWindowManager* pWindowManager = Program::GetInstance()->GetWindowManager();
+			ImVec2 vMainPos = pWindowManager->GetMainPlatformWindow()->GetPosition();
+			ImVec2 vMainSize = pWindowManager->GetMainPlatformWindow()->GetSize();
+			ImVec2 vCenter = vMainPos + vMainSize / 2.f - c_vAboutBoxSize / 2.f;
+			
+			pWindowManager->Float(new Windows::AboutWindow(), vCenter, c_vAboutBoxSize);
+		}
+		ImGui::EndMenu();
+	}
 }
