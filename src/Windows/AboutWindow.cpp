@@ -48,15 +48,15 @@ namespace Windows
 		if (m_pIcon != NULL)
 		{
 			ImGui::Image((ImTextureID)m_pIcon->GetTextureView(), ImVec2(128.f, 128.f));
-		
+
 			ImGui::SameLine();
 		}
-		
+
 		ImGui::BeginGroup();
 		{
 			ImGui::TextUnformatted("Texeled");
 			ImGui::Separator();
-		
+
 			ImGui::PushFont(oFonts.pFontConsolas);
 			ImGui::TextUnformatted("Version:");
 			ImGui::PopFont();
