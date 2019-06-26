@@ -17,6 +17,12 @@ install:
   - EmbedResources.bat
   - build.bat vs2017
 
+before_build: 
+  - "echo #define TEXELED_VERSION %APPVEYOR_BUILD_VERSION% > src\version.h"
+  - "echo #define TEXELED_BUILD %APPVEYOR_BUILD_NUMBER% >> src\version.h"
+  - "echo #define TEXELED_BRANCH %APPVEYOR_REPO_BRANCH% >> src\version.h"
+  - "echo #define TEXELED_REVISION %APPVEYOR_REPO_COMMIT% >> src\version.h"
+
 build:
   project: .projects/vs2017/Texeled.sln
 
