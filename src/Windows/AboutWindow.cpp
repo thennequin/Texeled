@@ -55,20 +55,32 @@ namespace Windows
 			ImGui::Separator();
 		
 			ImGui::PushFont(oFonts.pFontConsolas);
-			ImGui::TextUnformatted("Version: ");
+			ImGui::TextUnformatted("Version:");
 			ImGui::PopFont();
+			ImGui::SameLine();
 			ImGui::Text("%d.%d", TEXELED_VERSION_MAJOR, TEXELED_VERSION_MINOR);
 
 			ImGui::PushFont(oFonts.pFontConsolas);
-			ImGui::TextUnformatted("Build: ");
+			ImGui::TextUnformatted("Build:");
 			ImGui::PopFont();
+			ImGui::SameLine();
 			ImGui::Text("%d", TEXELED_BUILD);
+
+			if (TEXELED_BRANCH != NULL)
+			{
+				ImGui::PushFont(oFonts.pFontConsolas);
+				ImGui::TextUnformatted("Branch:");
+				ImGui::PopFont();
+				ImGui::SameLine();
+				ImGui::TextUnformatted(TEXELED_BRANCH);
+			}
 
 			if (TEXELED_REVISION != NULL)
 			{
 				ImGui::PushFont(oFonts.pFontConsolas);
-				ImGui::TextUnformatted("Revision: ");
+				ImGui::TextUnformatted("Revision:");
 				ImGui::PopFont();
+				ImGui::SameLine();
 				ImGui::TextUnformatted(TEXELED_REVISION);
 			}
 		}
