@@ -12,6 +12,9 @@ namespace Core
 	class Array
 	{
 	public:
+		static const size_t		InvalidIndex = (size_t)-1;
+	public:
+
 		typedef T*				iterator;
 		typedef const T*		const_iterator;
 
@@ -30,6 +33,8 @@ namespace Core
 		const_iterator			begin() const					{ return m_pData; }
 		iterator				end()							{ return m_pData + m_iSize;}
 		const_iterator			end() const						{ return m_pData + m_iSize; }
+
+		size_t					find(const T& oRight) const;
 
 		bool					push_back(const T& oValue);
 		void					pop_back();
@@ -147,6 +152,17 @@ namespace Core
 		{
 			--m_iSize;
 		}
+	}
+
+	template <typename T>
+	size_t Array<T>::find(const T& oRight) const
+	{
+		for (size_t iIndex = 0; iIndex < m_iSize; ++iIndex)
+		{
+			if (m_pData[iIndex] == oRight)
+				return iIndex;
+		}
+		return InvalidIndex;
 	}
 
 	template <typename T>
