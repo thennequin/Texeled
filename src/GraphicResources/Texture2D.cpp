@@ -302,6 +302,10 @@ namespace GraphicResources
 				eDXGIOutput =  DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
 				break;
 
+			case Graphics::PixelFormatEnum::D16_UNORM:
+				eDXGIOutput = DXGI_FORMAT_R16_UNORM;
+				break;
+
 			case Graphics::PixelFormatEnum::BC1: // DXT1
 				eDXGIOutput =  DXGI_FORMAT_BC1_UNORM;
 				break;

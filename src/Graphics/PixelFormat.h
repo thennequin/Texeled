@@ -57,6 +57,8 @@ namespace Graphics
 
 			R9G9B9E5_SHAREDEXP,
 
+			D16_UNORM,
+
 			BC1, // DXT1
 			BC2, // DXT2 / DXT3
 			BC3, // DXT4 / DXT5

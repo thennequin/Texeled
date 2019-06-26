@@ -67,6 +67,8 @@ namespace Graphics
 
 		{  32,   1,   1,   4,   3,   ComponentEncodingEnum::FLOAT,  "R9G9B9E5F",     "R9G9B9E5 Float (shared exp)"   }, // R9G9B9E5_SHAREDEXP
 
+		{  16,   1,   1,   2,   1,   ComponentEncodingEnum::UNORM,  "D16",           "D16 UNorm"                     }, //D16_UNORM
+
 		{   4,   4,   4,   8,   4,   ComponentEncodingEnum::UNORM,  "BC1",           "BC1 (DXT1)"                    }, // BC1
 		{   8,   4,   4,  16,   4,   ComponentEncodingEnum::UNORM,  "BC2",           "BC2 (DXT2/3)"                  }, // BC2
 		{   8,   4,   4,  16,   4,   ComponentEncodingEnum::UNORM,  "BC3",           "BC3 (DXT4/5)"                  }, // BC3

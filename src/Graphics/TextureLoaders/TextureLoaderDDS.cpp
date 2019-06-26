@@ -125,6 +125,10 @@ namespace Graphics
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::R9G9B9E5_SHAREDEXP;
 				}
+				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_D16_UNORM )
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::D16_UNORM;
+				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_TYPELESS
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_UNORM
 					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_BC1_UNORM_SRGB)
