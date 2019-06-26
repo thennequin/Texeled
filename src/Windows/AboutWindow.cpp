@@ -38,6 +38,9 @@ namespace Windows
 		}
 	}
 
+	#define _STRINGIFY(x) #x
+	#define STRINGIFY(x) _STRINGIFY(x)
+
 	void AboutWindow::OnGui()
 	{
 		const Fonts& oFonts = Program::GetInstance()->GetFonts();
@@ -58,31 +61,29 @@ namespace Windows
 			ImGui::TextUnformatted("Version:");
 			ImGui::PopFont();
 			ImGui::SameLine();
-			ImGui::Text("%d.%d", TEXELED_VERSION_MAJOR, TEXELED_VERSION_MINOR);
+			ImGui::TextUnformatted(STRINGIFY(TEXELED_VERSION));
 
 			ImGui::PushFont(oFonts.pFontConsolas);
 			ImGui::TextUnformatted("Build:");
 			ImGui::PopFont();
 			ImGui::SameLine();
-			ImGui::Text("%d", TEXELED_BUILD);
+			ImGui::TextUnformatted(STRINGIFY(TEXELED_BUILD));
 
-			if (TEXELED_BRANCH != NULL)
-			{
-				ImGui::PushFont(oFonts.pFontConsolas);
-				ImGui::TextUnformatted("Branch:");
-				ImGui::PopFont();
-				ImGui::SameLine();
-				ImGui::TextUnformatted(TEXELED_BRANCH);
-			}
+#ifdef TEXELED_BRANCH
+			ImGui::PushFont(oFonts.pFontConsolas);
+			ImGui::TextUnformatted("Branch:");
+			ImGui::PopFont();
+			ImGui::SameLine();
+			ImGui::TextUnformatted(STRINGIFY(TEXELED_BRANCH));
+#endif //TEXELED_BRANCH
 
-			if (TEXELED_REVISION != NULL)
-			{
-				ImGui::PushFont(oFonts.pFontConsolas);
-				ImGui::TextUnformatted("Revision:");
-				ImGui::PopFont();
-				ImGui::SameLine();
-				ImGui::TextUnformatted(TEXELED_REVISION);
-			}
+#ifdef TEXELED_REVISION
+			ImGui::PushFont(oFonts.pFontConsolas);
+			ImGui::TextUnformatted("Revision:");
+			ImGui::PopFont();
+			ImGui::SameLine();
+			ImGui::TextUnformatted(STRINGIFY(TEXELED_REVISION));
+#endif //TEXELED_REVISION
 		}
 		ImGui::EndGroup();
 	}
