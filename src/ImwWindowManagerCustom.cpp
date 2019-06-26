@@ -80,14 +80,17 @@ void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, b
 		ImGui::PopFont();
 		ImGui::SameLine();
 
-		const char* pPath = Program::GetInstance()->GetTextureFilePath();
-		if (pPath != NULL)
+		if (pPlatformWindow->IsMainWindow())
 		{
-			ImGui::PushFont(oFonts.pFontConsolas);
-			ImGui::TextUnformatted("-");
-			ImGui::SameLine();
-			ImGui::TextUnformatted(pPath);
-			ImGui::PopFont();
+			const char* pPath = Program::GetInstance()->GetTextureFilePath();
+			if (pPath != NULL)
+			{
+				ImGui::PushFont(oFonts.pFontConsolas);
+				ImGui::TextUnformatted("-");
+				ImGui::SameLine();
+				ImGui::TextUnformatted(pPath);
+				ImGui::PopFont();
+			}
 		}
 	}
 	ImGui::EndChild();
