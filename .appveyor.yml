@@ -15,13 +15,8 @@ install:
   - git submodule update --init --recursive
   - cd scripts
   - EmbedResources.bat
+  - UpdateVersion.bat
   - build.bat vs2017
-
-before_build: 
-  - echo ^#define TEXELED_VERSION %APPVEYOR_BUILD_VERSION% > src\\Version.h
-  - echo ^#define TEXELED_BUILD %APPVEYOR_BUILD_NUMBER% >> src\\Version.h
-  - echo ^#define TEXELED_BRANCH %APPVEYOR_REPO_BRANCH% >> src\\Version.h
-  - echo ^#define TEXELED_REVISION %APPVEYOR_REPO_COMMIT% >> src\\Version.h
 
 build:
   project: .projects/vs2017/Texeled.sln
