@@ -150,18 +150,20 @@ void Toolbar::OnToolBar()
 	ImGui::PushItemWidth(100.f);
 	if (ImGui::BeginCombo("Gamma", pFloatBuffer))
 	{
+		float fValue = m_fBackupGamma != -1.f ? m_fBackupGamma : oDisplay.fGamma;
+		float fHoverValue = ImGui::IsWindowHovered() ? (int)oDisplay.fGamma : -1.f;
+
 		ImGui::PushItemWidth(75.f);
-		if (ImGui::InputFloat("Custom", &oDisplay.fGamma,0.f, 0.f, 2))
+		if (ImGui::InputFloat("Custom", &oDisplay.fGamma, 0.f, 0.f, 2))
 		{
 			if (oDisplay.fGamma <= 0.f)
 			{
 				oDisplay.fGamma = 0.001f;
 			}
+			fValue = oDisplay.fGamma;
+			m_fBackupGamma = oDisplay.fGamma;
 		}
 		ImGui::PopItemWidth();
-
-		float fValue = m_fBackupGamma != -1.f ? m_fBackupGamma : oDisplay.fGamma;
-		float fHoverValue = ImGui::IsWindowHovered() ? (int)oDisplay.fGamma : -1.f;
 
 		const float c_fGammas[] = { 1.f, 1.4f, 1.8f, 2.2f, 2.6f };
 		for (int iGamma = 0; iGamma < (sizeof(c_fGammas) / sizeof(*c_fGammas)); ++iGamma)
@@ -190,6 +192,7 @@ void Toolbar::OnToolBar()
 		else if (m_fBackupGamma != -1.f)
 		{
 			oDisplay.fGamma = m_fBackupGamma;
+			m_fBackupGamma = -1.f;
 		}
 
 		ImGui::EndCombo();
