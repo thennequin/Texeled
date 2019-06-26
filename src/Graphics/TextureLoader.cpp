@@ -27,11 +27,13 @@ namespace Graphics
 			Texture oTemp;
 			if (pUseLoader != NULL)
 			{
-				if (pUseLoader->pLoader(pStream, &oTemp) == ErrorCode::Ok)
+				ErrorCode oErr = pUseLoader->pLoader(pStream, &oTemp);
+				if (oErr == ErrorCode::Ok)
 				{
 					pTexture->Swap(oTemp);
 					return ErrorCode::Ok;
 				}
+				return ErrorCode(oErr);
 			}
 			else
 			{
@@ -66,6 +68,7 @@ namespace Graphics
 				oFileStream.Close();
 				return oErr;
 			}
+			return ErrorCode(1, "Can't open file");
 		}
 
 		return ErrorCode::Fail;
