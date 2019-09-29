@@ -19,6 +19,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 #include "Graphics/TextureLoaders/TextureLoaderEXR.h"
+#include "Graphics/TextureLoaders/TextureLoaderKTX.h"
 
 #include "Graphics/TextureWriters/TextureWriterDDS.h"
 #include "Graphics/TextureWriters/TextureWriterPNG.h"
@@ -51,6 +52,7 @@ Program::Program(int iArgCount, char** pArgs)
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
 	Graphics::TextureLoader::RegisterLoaderEXR();
+	Graphics::TextureLoader::RegisterLoaderKTX();
 
 	Graphics::TextureWriter::RegisterWriterDDS();
 	Graphics::TextureWriter::RegisterWriterPNG();
