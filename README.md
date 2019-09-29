@@ -58,8 +58,3 @@ Support:
   - BC3 (DXT4/5) *
   
   \* Display only, no conversion
-  
-  ## TODO
-  - Improving BC1 compression
-  - Adding BC2/3 compression
-  - Adding support of BC4/5/6H/7
