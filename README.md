@@ -16,6 +16,7 @@ Support:
     
 - Loading:
   - DDS
+  - KTX (Work In Progress)
   - PNG (via **stb_image**)
   - JPG (via **stb_image**)
   - TGA (via **stb_image**)
