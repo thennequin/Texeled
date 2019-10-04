@@ -52,6 +52,8 @@ namespace Graphics
 				return ErrorCode::Fail;
 			}
 
+			pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+
 			if (stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
 				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
