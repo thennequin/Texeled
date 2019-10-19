@@ -72,7 +72,7 @@ namespace Graphics
 					oDesc.pData[0][0] = pImage;
 				}
 			}
-			else if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
+			/*else if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
 				&& stbi_is_16_bit_from_callbacks(&oCallbacks, pStream))
 			{
 				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
@@ -90,7 +90,7 @@ namespace Graphics
 					}
 					oDesc.pData[0][0] = pImage;
 				}
-			}
+			}*/
 			else
 			{
 				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
