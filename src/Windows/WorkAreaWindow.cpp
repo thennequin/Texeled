@@ -351,7 +351,7 @@ namespace Windows
 					while (fStart < oBB.Min.x)
 						fStart += fStep;
 
-					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStep)
+					while (oDisplayOptions.bTiling && fStart > oImageStart.x - fStep)
 						fStart -= fStep;
 
 					for (; fStart <= oImageEnd.x && fStart <= oBB.Max.x; fStart += fStep)
