@@ -373,34 +373,116 @@ namespace Windows
 				}
 			}
 
-			if (ImGui::IsItemHovered() && oIO.MouseWheel != 0.f)
+			if (ImGui::IsItemHovered())
 			{
-				float fWheel = oIO.MouseWheel;
-				if (!oIO.KeyCtrl)
+				if (oIO.MouseWheel != 0.f)
 				{
-					ImVec2 oNew = (oCursorPos - m_oOffset) / (float)m_fZoom;
+					float fWheel = oIO.MouseWheel;
+					if (!oIO.KeyCtrl)
+					{
+						ImVec2 oNew = (oCursorPos - m_oOffset) / (float)m_fZoom;
 
-					if (fWheel < 0.f)
-					{
-						m_fZoom *= pow(0.8f, -fWheel);
-						//m_fZoom *= 0.8f;
-					}
-					else
-					{
-						m_fZoom *= pow(1.2f, fWheel);
-						//m_fZoom *= 1.2f;
-					}
+						if (fWheel < 0.f)
+						{
+							m_fZoom *= pow(0.8f, -fWheel);
+							//m_fZoom *= 0.8f;
+						}
+						else
+						{
+							m_fZoom *= pow(1.2f, fWheel);
+							//m_fZoom *= 1.2f;
+						}
 
-					if (fPixelRatio * m_fZoom > 500)
-					{
-						m_fZoom = 500 / fPixelRatio;
-					}
-					else if (fPixelRatio * m_fZoom < 0.0001)
-					{
-						m_fZoom = 0.0001 / fPixelRatio;
-					}
+						if (fPixelRatio * m_fZoom > 500)
+						{
+							m_fZoom = 500 / fPixelRatio;
+						}
+						else if (fPixelRatio * m_fZoom < 0.0001)
+						{
+							m_fZoom = 0.0001 / fPixelRatio;
+						}
 
-					m_oOffset = oCursorPos - oNew * (float)m_fZoom;
+						m_oOffset = oCursorPos - oNew * (float)m_fZoom;
+					}
+				}
+
+				if (ImGui::GetIO().KeyShift)
+				{
+					const float c_fPixelSize = 20.f;
+					const int c_iPixelAroundCount = 4;
+
+					ImVec2 oHoveredPixel = oCursorCoord;
+
+					oHoveredPixel.x = roundf(oHoveredPixel.x + 0.5f);
+					oHoveredPixel.y = roundf(oHoveredPixel.y + 0.5f);
+
+					if (oDisplayOptions.bTiling || (oHoveredPixel.x >= 0.f && oHoveredPixel.x <= oTextureSize.x &&
+						oHoveredPixel.y >= 0.f && oHoveredPixel.y <= oTextureSize.y))
+					{
+						ImGui::BeginTooltip();
+
+						//Display hovered pixel
+						{
+							ImGui::Dummy(ImVec2(c_fPixelSize * (c_iPixelAroundCount * 2 + 1), c_fPixelSize * (c_iPixelAroundCount * 2 + 1)));
+							ImVec2 oPixelsMin = ImGui::GetItemRectMin();
+							ImVec2 oPixelsMax = ImGui::GetItemRectMax();
+							ImVec2 oPixelsSize = oPixelsMax - oPixelsMin;
+
+							ImDrawList* pTooltipDrawList = ImGui::GetWindowDrawList();
+							pTooltipDrawList->AddImage((ImTextureID)m_pCheckboardTexture2DRes->GetTextureView(),
+								oPixelsMin, oPixelsMax,
+								ImVec2(0.f, 0.f), ImVec2((c_iPixelAroundCount * 2 + 1) * 2.f, (c_iPixelAroundCount * 2 + 1) * 2.f)
+							);
+
+							ImVec2 oUvMin = (oHoveredPixel - ImVec2((float)c_iPixelAroundCount + 1, (float)c_iPixelAroundCount + 1)) / oTextureSize;
+							ImVec2 oUvMax = (oHoveredPixel + ImVec2((float)c_iPixelAroundCount, (float)c_iPixelAroundCount)) / oTextureSize;
+
+							ImGuiUtils::PushPixelShader(m_pPixelShaderFace);
+							ImGuiUtils::PushSampler((oDisplayOptions.bTiling ? m_pSamplerStatePointRepeat : m_pSamplerStatePointClamp));
+							ImGuiUtils::PushPixelShaderConstantBuffer(m_pGlobalConstantBuffer);
+
+							pTooltipDrawList->AddImage((ImTextureID)pTexture2DRes->GetTextureView(),
+								oPixelsMin, oPixelsMax,
+								oUvMin, oUvMax
+							);
+
+							ImGuiUtils::PopPixelShaderConstantBuffer();
+							ImGuiUtils::PopSampler();
+							ImGuiUtils::PopPixelShader();
+
+							ImVec2 oPixelMin = oPixelsMin + oPixelsSize / (c_iPixelAroundCount * 2 + 1) * c_iPixelAroundCount;
+							ImVec2 oPixelMax = oPixelsMax - oPixelsSize / (c_iPixelAroundCount * 2 + 1) * c_iPixelAroundCount;
+							pTooltipDrawList->AddRect(oPixelMin, oPixelMax, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, 1.f)), 0.f, 15, 2.f);
+						}
+
+						const Fonts& oFonts = Program::GetInstance()->GetFonts();
+
+						//Display Pixel position
+						{
+							int iX = ((int)oHoveredPixel.x) % (oTexture.GetWidth() + 1);
+							int iY = ((int)oHoveredPixel.y) % (oTexture.GetHeight() + 1);
+							while (iX < 1) iX += oTexture.GetWidth();
+							while (iY < 1) iY += oTexture.GetHeight();
+
+							ImGui::PushFont(oFonts.pFontConsolasBold);
+							ImGui::TextUnformatted("X:");
+							ImGui::PopFont();
+							ImGui::SameLine();
+							ImGui::PushFont(oFonts.pFontConsolas);
+							ImGui::Text("%d", iX);
+							ImGui::PopFont();
+							ImGui::SameLine(0.f, 10.f);
+							ImGui::PushFont(oFonts.pFontConsolasBold);
+							ImGui::TextUnformatted(" Y:");
+							ImGui::PopFont();
+							ImGui::SameLine();
+							ImGui::PushFont(oFonts.pFontConsolas);
+							ImGui::Text("%d", iY);
+							ImGui::PopFont();
+						}
+
+						ImGui::EndTooltip();
+					}
 				}
 			}
 
