@@ -52,9 +52,8 @@ namespace Graphics
 				return ErrorCode::Fail;
 			}
 
-			pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
-
-			if (stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
+			if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
+				&& stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
 				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 
@@ -73,7 +72,8 @@ namespace Graphics
 					oDesc.pData[0][0] = pImage;
 				}
 			}
-			else if (stbi_is_16_bit_from_callbacks(&oCallbacks, pStream))
+			else if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
+				&& stbi_is_16_bit_from_callbacks(&oCallbacks, pStream))
 			{
 				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
 				stbi_us* pImage = stbi_load_16_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
@@ -82,10 +82,10 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						//oDesc.ePixelFormat = Texture::PixelFormatEnum::RGB16_UINT;
+						oDesc.ePixelFormat = PixelFormatEnum::RGB16_UNORM;
 						break;
 					case 4:
-						//oDesc.ePixelFormat = Texture::PixelFormatEnum::RGBA16_UINT;
+						oDesc.ePixelFormat = PixelFormatEnum::RGBA16_UNORM;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
