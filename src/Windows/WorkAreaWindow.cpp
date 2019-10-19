@@ -437,7 +437,7 @@ namespace Windows
 							ImVec2 oUvMin = (oHoveredPixel - ImVec2((float)c_iPixelAroundCount + 1, (float)c_iPixelAroundCount + 1)) / oTextureSize;
 							ImVec2 oUvMax = (oHoveredPixel + ImVec2((float)c_iPixelAroundCount, (float)c_iPixelAroundCount)) / oTextureSize;
 
-							ImGuiUtils::PushPixelShader(m_pPixelShaderFace);
+							ImGuiUtils::PushPixelShader(m_pPixelShader);
 							ImGuiUtils::PushSampler((oDisplayOptions.bTiling ? m_pSamplerStatePointRepeat : m_pSamplerStatePointClamp));
 							ImGuiUtils::PushPixelShaderConstantBuffer(m_pGlobalConstantBuffer);
 
