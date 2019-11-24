@@ -9,7 +9,7 @@
 #ifndef _DDS_H_
 #define _DDS_H_
 
-#include <stdint.h>
+#include <stdint.h> //uint32_t
 
 #pragma pack(push,1)
 
@@ -242,7 +242,8 @@ const DDS_PIXELFORMAT DDSPF_A4R4G4B4                  = { sizeof(DDS_PIXELFORMAT
 const DDS_PIXELFORMAT DDSPF_R8G8B8                    = { sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 24, 0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000 };
 const DDS_PIXELFORMAT DDSPF_R8G8B8A8                  = { sizeof(DDS_PIXELFORMAT), DDS_RGBA, 0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000 };
 const DDS_PIXELFORMAT DDSPF_B8G8R8                    = { sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000 };
-const DDS_PIXELFORMAT DDSPF_R5G6B5                    = { sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000 };
+const DDS_PIXELFORMAT DDSPF_R5G6B5                    = { sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 16, 0x0000001f, 0x000007e0, 0x0000f800, 0x00000000 };
+const DDS_PIXELFORMAT DDSPF_B5G6R5                    = { sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000 };
 // This indicates the DDS_HEADER_DXT10 extension is present (the format is in dxgiFormat)
 const DDS_PIXELFORMAT DDSPF_DX10                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('D','X','1','0'), 0, 0, 0, 0, 0 };
 const DDS_PIXELFORMAT DDSPF_R16G16B16A16_UNORM        = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, 36, 0, 0, 0, 0, 0 };

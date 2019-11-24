@@ -188,6 +188,10 @@ namespace Graphics
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::R5G6B5_UNORM;
 			}
+			else if (memcmp(&oDDSHeader.oPixelFormat, &DDSPF_B5G6R5, sizeof(DDS_PIXELFORMAT)) == 0)
+			{
+				oDesc.ePixelFormat = PixelFormatEnum::B5G6BR_UNORM;
+			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_DXT1.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::BC1;
