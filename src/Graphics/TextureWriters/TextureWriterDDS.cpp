@@ -70,9 +70,9 @@ namespace Graphics
 			case PixelFormatEnum::RGBA8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8A8, sizeof(DDS_PIXELFORMAT));
 				break;
-			//case PixelFormatEnum::B5G6BR_UNORM:
-				//memcpy(&oDDSHeader.oPixelFormat, &DDSPF_);
-				//break;
+			case PixelFormatEnum::BGR8_UNORM:
+				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_B8G8R8, sizeof(DDS_PIXELFORMAT));
+				break;
 			case PixelFormatEnum::R5G6B5_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R5G6B5, sizeof(DDS_PIXELFORMAT));
 				break;
