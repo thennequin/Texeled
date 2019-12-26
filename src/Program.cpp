@@ -50,6 +50,12 @@ Program::Program(int iArgCount, char** pArgs)
 {
 	s_pInstance = this;
 
+	// Checking PixelFormats
+	for (int i = 0; i < Graphics::PixelFormatEnum::_COUNT; ++i)
+	{
+		CORE_ASSERT(Graphics::PixelFormatEnumInfos[i].eFormat == i);
+	}
+
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
 	Graphics::TextureLoader::RegisterLoaderEXR();

@@ -75,14 +75,15 @@ namespace Graphics
 
 	typedef struct
 	{
-		int iBitsPerPixel;
-		int iBlockWidth;
-		int iBlockHeight;
-		int iBlockSize;
-		int iComponents;
-		ComponentEncodingEnum eEncoding;
-		const char* const pShortName;
-		const char* const pName;
+		PixelFormatEnum			eFormat;
+		int						iBitsPerPixel;
+		int						iBlockWidth;
+		int						iBlockHeight;
+		int						iBlockSize;
+		int						iComponents;
+		ComponentEncodingEnum	eEncoding;
+		const char* const		pShortName;
+		const char* const		pName;
 	} PixelFormatInfos;
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];
