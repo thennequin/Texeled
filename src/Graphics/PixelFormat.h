@@ -43,6 +43,7 @@ namespace Graphics
 			R5G6B5_UNORM,
 			B5G6BR_UNORM,
 
+			RGB16_UNORM,
 			RGB16_FLOAT,
 
 			RGBA16_UNORM,
