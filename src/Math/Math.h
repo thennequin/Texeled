@@ -4,6 +4,9 @@
 namespace Math
 {
 	template<typename T>
+	inline T Abs(const T a) { return a < 0 ? -a : a; }
+
+	template<typename T>
 	inline T Min(const T a, const T b) { return a < b ? a : b; }
 
 	template<typename T>
