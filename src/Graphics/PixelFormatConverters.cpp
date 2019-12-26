@@ -3,7 +3,6 @@
 #include "Math/Math.h"
 
 #include <string.h> //memset
-#include <math.h> //abs
 
 namespace Graphics
 {

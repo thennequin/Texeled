@@ -3,9 +3,9 @@
 #include "Graphics/PixelFormatConverters.h"
 
 #include "Core/Assert.h"
+#include "Math/Math.h"
 
 #include <string.h> //memset
-#include <math.h> //abs
 
 namespace Graphics
 {
@@ -138,7 +138,7 @@ namespace Graphics
 					iHighestColor.b = (iHighestColor.b >= iMid.b) ? iHighestColor.b - iMid.b : 0;
 				}
 
-				if (abs(iLowestColor.r - iHighestColor.r) <= 8 && abs(iLowestColor.g - iHighestColor.g) <= 4 && abs(iLowestColor.b - iHighestColor.b) <= 8)
+				if (Math::Abs(iLowestColor.r - iHighestColor.r) <= 8 && Math::Abs(iLowestColor.g - iHighestColor.g) <= 4 && Math::Abs(iLowestColor.b - iHighestColor.b) <= 8)
 				{
 					if (iLowestColor.r >= (255 - 8))
 						iLowestColor.r -= 8;
@@ -216,9 +216,9 @@ namespace Graphics
 							continue;
 						}
 
-						int d0 = abs(iColors[0].r - oPixel.r) + abs(iColors[0].g - oPixel.g) + abs(iColors[0].b - oPixel.b);
-						int d1 = abs(iColors[1].r - oPixel.r) + abs(iColors[1].g - oPixel.g) + abs(iColors[1].b - oPixel.b);
-						int d2 = abs(iColors[2].r - oPixel.r) + abs(iColors[2].g - oPixel.g) + abs(iColors[2].b - oPixel.b);
+						int d0 = Math::Abs(iColors[0].r - oPixel.r) + Math::Abs(iColors[0].g - oPixel.g) + Math::Abs(iColors[0].b - oPixel.b);
+						int d1 = Math::Abs(iColors[1].r - oPixel.r) + Math::Abs(iColors[1].g - oPixel.g) + Math::Abs(iColors[1].b - oPixel.b);
+						int d2 = Math::Abs(iColors[2].r - oPixel.r) + Math::Abs(iColors[2].g - oPixel.g) + Math::Abs(iColors[2].b - oPixel.b);
 
 						int b0 = d0 < d2;
 						int b1 = d0 < d1;
@@ -240,10 +240,10 @@ namespace Graphics
 
 						RGBA8& oPixel = pIn4x4RGBA[iY * iPitchIn + iX];
 
-						int d0 = abs(iColors[0].r - oPixel.r) + abs(iColors[0].g - oPixel.g) + abs(iColors[0].b - oPixel.b);
-						int d1 = abs(iColors[1].r - oPixel.r) + abs(iColors[1].g - oPixel.g) + abs(iColors[1].b - oPixel.b);
-						int d2 = abs(iColors[2].r - oPixel.r) + abs(iColors[2].g - oPixel.g) + abs(iColors[2].b - oPixel.b);
-						int d3 = abs(iColors[3].r - oPixel.r) + abs(iColors[3].g - oPixel.g) + abs(iColors[3].b - oPixel.b);
+						int d0 = Math::Abs(iColors[0].r - oPixel.r) + Math::Abs(iColors[0].g - oPixel.g) + Math::Abs(iColors[0].b - oPixel.b);
+						int d1 = Math::Abs(iColors[1].r - oPixel.r) + Math::Abs(iColors[1].g - oPixel.g) + Math::Abs(iColors[1].b - oPixel.b);
+						int d2 = Math::Abs(iColors[2].r - oPixel.r) + Math::Abs(iColors[2].g - oPixel.g) + Math::Abs(iColors[2].b - oPixel.b);
+						int d3 = Math::Abs(iColors[3].r - oPixel.r) + Math::Abs(iColors[3].g - oPixel.g) + Math::Abs(iColors[3].b - oPixel.b);
 
 						int b0 = d0 > d3;
 						int b1 = d1 > d2;
