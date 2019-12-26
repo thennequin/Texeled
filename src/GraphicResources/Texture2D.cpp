@@ -328,15 +328,15 @@ namespace GraphicResources
 				break;
 
 			case Graphics::PixelFormatEnum::BC5:
-				*pOutDXGIFormat =  DXGI_FORMAT_BC5_UNORM;
+				eDXGIOutput =  DXGI_FORMAT_BC5_UNORM;
 				break;
 
 			case Graphics::PixelFormatEnum::BC6H:
-				*pOutDXGIFormat =  DXGI_FORMAT_BC6H_SF16;
+				eDXGIOutput =  DXGI_FORMAT_BC6H_SF16;
 				break;
 
 			case Graphics::PixelFormatEnum::BC7:
-				*pOutDXGIFormat =  DXGI_FORMAT_BC7_UNORM;
+				eDXGIOutput =  DXGI_FORMAT_BC7_UNORM;
 				break;
 
 			default:
