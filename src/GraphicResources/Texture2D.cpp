@@ -264,6 +264,11 @@ namespace GraphicResources
 				eDXGIOutput = DXGI_FORMAT_B5G6R5_UNORM;
 				break;
 
+			case Graphics::PixelFormatEnum::RGB16_UNORM:
+				eDXGIOutput = DXGI_FORMAT_R16G16B16A16_UNORM;
+				eConvertionFormat = Graphics::PixelFormatEnum::RGBA16_UNORM;
+				break;
+
 			case Graphics::PixelFormatEnum::RGB16_FLOAT:
 				eDXGIOutput =  DXGI_FORMAT_R16G16B16A16_FLOAT;
 				eConvertionFormat = Graphics::PixelFormatEnum::RGBA16_FLOAT;
