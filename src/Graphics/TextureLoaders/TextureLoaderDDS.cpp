@@ -279,7 +279,7 @@ namespace Graphics
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 16
 				&& oDDSHeader.oPixelFormat.iRBitMask == 0xffff
 				&& oDDSHeader.oPixelFormat.iGBitMask == 0
-				&& oDDSHeader.oPixelFormat.iABitMask == 0
+				&& oDDSHeader.oPixelFormat.iBBitMask == 0
 				&& oDDSHeader.oPixelFormat.iABitMask == 0) // Declaration seems weird
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::RG8_UNORM;
