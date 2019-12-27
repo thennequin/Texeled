@@ -91,9 +91,25 @@ namespace Graphics
 					return ErrorCode(1, "Invalid DDS DX10 header");
 				}
 
-				if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_TYPELESS
-				|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UNORM
-				|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UINT)
+				if (   oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8_TYPELESS
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8_UNORM
+					|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8_UINT)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::R8_UNORM;
+				}
+				else if (  oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8G8B8A8_TYPELESS
+						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8G8B8A8_UNORM
+						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R8G8B8A8_UINT)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
+				}
+				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_B5G6R5_UNORM)
+				{
+					oDesc.ePixelFormat = PixelFormatEnum::B5G6BR_UNORM;
+				}
+				else if (  oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_TYPELESS
+						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UNORM
+						|| oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R10G10B10A2_UINT)
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::R10G10B10A2_UNORM;
 				}
