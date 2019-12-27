@@ -332,7 +332,7 @@ namespace GraphicResources
 				break;
 
 			case Graphics::PixelFormatEnum::BC6H:
-				eDXGIOutput =  DXGI_FORMAT_BC6H_SF16;
+				eDXGIOutput =  DXGI_FORMAT_BC6H_UF16;
 				break;
 
 			case Graphics::PixelFormatEnum::BC7:
