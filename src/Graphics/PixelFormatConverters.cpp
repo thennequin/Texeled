@@ -139,8 +139,8 @@ namespace Graphics
 
 			void Convert_RGB8_To_RG8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 			{
-				RGB8* pIn888 = (RGB8*)pOut;
-				uint8_t* pOut88 = (uint8_t*)pIn;
+				RGB8* pIn888 = (RGB8*)pIn;
+				uint8_t* pOut88 = (uint8_t*)pOut;
 				pOut88[0] = pIn888->r;
 				pOut88[1] = pIn888->g;
 			}
