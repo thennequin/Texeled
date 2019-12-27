@@ -40,7 +40,8 @@ Support:
   - R5G6B5 UNorm
   - B5G6R5 UNorm
 
-  - RGB16 SHalf
+  - RGB16 UNorm
+  - RGB16 Half
 
   - RGBA16 UNorm
   - RGBA16 Half
@@ -54,8 +55,14 @@ Support:
 
   - R9G9B9E5 Float (shared exp)
 
-  - BC1 (DXT1)
+  - D16 UNorm
+
+  - BC1 (DXT1) *
   - BC2 (DXT2/3) *
   - BC3 (DXT4/5) *
+  - BC4 *
+  - BC5 *
+  - BC6H * 
+  - BC7 *
   
-  \* Display only, no conversion
+  \* BCX compression/uncompression use Compressonator with default settings

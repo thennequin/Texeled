@@ -228,15 +228,33 @@ namespace Graphics
 			// R9G9B9E5 => RGB32F
 			s_pConvertionMatrix[PixelFormatEnum::R9G9B9E5_SHAREDEXP][PixelFormatEnum::RGB32_FLOAT] = { Converters::Convert_R9G9B9E5_To_RGB32F, 64 };
 
-			// BC1 => RGBA
+			// BC1 <=> RGBA8
 			s_pConvertionMatrix[PixelFormatEnum::BC1][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC1_To_RGBA8, 28 };
 			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BC1] = { Converters::Convert_RGBA8_To_BC1, -28 };
 
-			// BC2 => RGBA
-			s_pConvertionMatrix[PixelFormatEnum::BC2][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC2_To_RGBA8, 24 };
+			// BC2 <=> RGBA8
+			s_pConvertionMatrix[PixelFormatEnum::BC2][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC2_To_RGBA8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BC2] = { Converters::Convert_RGBA8_To_BC2, -28 };
 
-			// BC3 => RGBA
-			s_pConvertionMatrix[PixelFormatEnum::BC3][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC3_To_RGBA8, 24 };
+			// BC3 <=> RGBA8
+			s_pConvertionMatrix[PixelFormatEnum::BC3][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC3_To_RGBA8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BC3] = { Converters::Convert_RGBA8_To_BC3, -28 };
+
+			// BC4 <=> R8
+			s_pConvertionMatrix[PixelFormatEnum::BC4][PixelFormatEnum::R8_UNORM] = { Converters::Convert_BC4_To_R8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::R8_UNORM][PixelFormatEnum::BC4] = { Converters::Convert_R8_To_BC4, -28 };
+
+			// BC5 <=> RG8
+			s_pConvertionMatrix[PixelFormatEnum::BC5][PixelFormatEnum::RG8_UNORM] = { Converters::Convert_BC5_To_RG8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RG8_UNORM][PixelFormatEnum::BC5] = { Converters::Convert_RG8_To_BC5, -28 };
+
+			// BC6H <=> RGB16F
+			s_pConvertionMatrix[PixelFormatEnum::BC6H][PixelFormatEnum::RGB16_FLOAT] = { Converters::Convert_BC6H_To_RGB16F, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RGB16_FLOAT][PixelFormatEnum::BC6H] = { Converters::Convert_RGB16F_To_BC6H, -28 };
+
+			// BC7 <=> RGBA8
+			s_pConvertionMatrix[PixelFormatEnum::BC7][PixelFormatEnum::RGBA8_UNORM] = { Converters::Convert_BC7_To_RGBA8, 28 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::BC7] = { Converters::Convert_RGBA8_To_BC7, -28 };
 		}
 
 		bool GetConvertionChain(PixelFormatEnum eSourcePixelFormat, PixelFormatEnum eDestPixelFormat, ConvertionFuncChain* pOutChain, int* pOutChainLength, int* pOutAdditionalBits)

@@ -39,6 +39,7 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/imgui/stb_truetype.h",
 							"../Externals/stb/*",
 							"../Externals/tinyexr/*",
+							"../Externals/Compressonator/CMP_Core/*",
 
 							"../src/**",
 							"../src/**.ico",
@@ -57,7 +58,8 @@ solution "Texeled"
 							"../Externals/ImWindow/Externals/EasyWindow",
 
 							"../Externals/stb",
-							"../Externals/tinyexr"
+							"../Externals/tinyexr",
+							"../Externals/Compressonator/CMP_Core"
 		}
 		
 		flags				"ExtraWarnings"
