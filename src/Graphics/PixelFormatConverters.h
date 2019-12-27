@@ -34,6 +34,8 @@ namespace Graphics
 			void Convert_RGB8_To_BGR565(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut);
 			void Convert_RGBA8_To_RGBA16(RGBA8* pIn, RGBA16* pOut, size_t iPitchIn, size_t iPitchOut);
 			void Convert_RGBA16_To_RGBA8(RGBA16* pIn, RGBA8* pOut, size_t iPitchIn, size_t iPitchOut);
+			void Convert_RGB16_To_RGBA16(RGB16* pIn, RGBA16* pOut, size_t iPitchIn, size_t iPitchOut);
+			void Convert_RGBA16_To_RGB16(RGBA16* pIn, RGB16* pOut, size_t iPitchIn, size_t iPitchOut);
 			void Convert_R32F_To_RG32F(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut);
 			void Convert_RG32F_To_R32F(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut);
 			void Convert_RG32F_To_RGB32F(void* pIn, void* pOut, size_t iPitchIn, size_t iPitchOut);

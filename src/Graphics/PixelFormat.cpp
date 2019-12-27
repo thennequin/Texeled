@@ -182,6 +182,10 @@ namespace Graphics
 			s_pConvertionMatrix[PixelFormatEnum::RGBA8_UNORM][PixelFormatEnum::RGBA16_UNORM] = { (ConvertionFunc)Converters::Convert_RGBA8_To_RGBA16, 64 };
 			s_pConvertionMatrix[PixelFormatEnum::RGBA16_UNORM][PixelFormatEnum::RGBA8_UNORM] = { (ConvertionFunc)Converters::Convert_RGBA16_To_RGBA8, -64 };
 
+			// RGB16 <=> RGBA16
+			s_pConvertionMatrix[PixelFormatEnum::RGB16_UNORM][PixelFormatEnum::RGBA16_UNORM] = { (ConvertionFunc)Converters::Convert_RGB16_To_RGBA16, 16 };
+			s_pConvertionMatrix[PixelFormatEnum::RGBA16_UNORM][PixelFormatEnum::RGB16_UNORM] = { (ConvertionFunc)Converters::Convert_RGBA16_To_RGB16, -16 };
+
 			// RGB16F <=> RGB32F
 			s_pConvertionMatrix[PixelFormatEnum::RGB16_FLOAT][PixelFormatEnum::RGB32_FLOAT] = { Converters::Convert_RGB16F_To_RGB32F, 48 };
 			s_pConvertionMatrix[PixelFormatEnum::RGB32_FLOAT][PixelFormatEnum::RGB16_FLOAT] = { Converters::Convert_RGB32F_To_RGB16F, -48 };

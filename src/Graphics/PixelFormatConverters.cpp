@@ -254,6 +254,21 @@ namespace Graphics
 				pOut->a = Math::Min(pIn->a / 256, 255);
 			}
 
+			void Convert_RGB16_To_RGBA16(RGB16* pIn, RGBA16* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+			{
+				pOut->r = pIn->r;
+				pOut->g = pIn->g;
+				pOut->b = pIn->b;
+				pOut->a = 65535;
+			}
+
+			void Convert_RGBA16_To_RGB16(RGBA16* pIn, RGB16* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
+			{
+				pOut->r = pIn->r;
+				pOut->g = pIn->g;
+				pOut->b = pIn->b;
+			}
+
 			void Convert_R32F_To_RG32F(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 			{
 				float* pInR = (float*)pIn;
