@@ -236,6 +236,7 @@ const DDS_PIXELFORMAT DDSPF_DXT2                      = { sizeof(DDS_PIXELFORMAT
 const DDS_PIXELFORMAT DDSPF_DXT3                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('D','X','T','3'), 0, 0, 0, 0, 0 }; // BC2
 const DDS_PIXELFORMAT DDSPF_DXT4                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('D','X','T','4'), 0, 0, 0, 0, 0 }; // BC3
 const DDS_PIXELFORMAT DDSPF_DXT5                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('D','X','T','5'), 0, 0, 0, 0, 0 }; // BC3
+const DDS_PIXELFORMAT DDSPF_BC5U                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('B','C','5','U'), 0, 0, 0, 0, 0 }; // BC5
 const DDS_PIXELFORMAT DDSPF_ATI2                      = { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('A','T','I','2'), 0, 0, 0, 0, 0 }; // BC5
 const DDS_PIXELFORMAT DDSPF_A8R8G8B8                  = { sizeof(DDS_PIXELFORMAT), DDS_RGBA, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 };
 const DDS_PIXELFORMAT DDSPF_A1R5G5B5                  = { sizeof(DDS_PIXELFORMAT), DDS_RGBA, 0, 16, 0x00007c00, 0x000003e0, 0x0000001f, 0x00008000 };
