@@ -206,6 +206,10 @@ namespace Graphics
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::BC3;
 			}
+			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_ATI2.iFourCC)
+			{
+				oDesc.ePixelFormat = PixelFormatEnum::BC5;
+			}
 			else if (oDDSHeader.oPixelFormat.iFourCC == DDSPF_R16G16B16A16_UNORM.iFourCC)
 			{
 				oDesc.ePixelFormat = PixelFormatEnum::RGBA16_UNORM;
