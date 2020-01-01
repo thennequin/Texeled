@@ -168,7 +168,7 @@ namespace GraphicResources
 				const Graphics::Texture::TextureFaceData& oFaceData = pInputTexture->GetData().GetFaceData(iMip, iFace);
 				int iIndex = iMip * iFaceCount + iFace;
 				iIndex = iMip + iFace * iMipCount;
-				oInitData[iIndex].pSysMem = oFaceData.pData;
+				oInitData[iIndex].pSysMem = (void*)oFaceData.pData;
 				oInitData[iIndex].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
 				oInitData[iIndex].SysMemSlicePitch = (UINT)oFaceData.iSize;
 			}

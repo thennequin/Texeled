@@ -27,7 +27,7 @@ const char* const Texture::EFace_string[_E_FACE_COUNT] = {
 
 Texture::TextureFaceData::TextureFaceData()
 {
-	pData = NULL;
+	pData = CORE_PTR_NULL;
 	iSize = 0;
 	iPitch = 0;
 	iWidth = 0;
@@ -53,7 +53,7 @@ Texture::TextureData::Desc::Desc()
 
 Texture::TextureData::TextureData()
 {
-	m_pData = NULL;
+	m_pData = CORE_PTR_NULL;
 	m_iSize = 0;
 }
 
@@ -69,6 +69,7 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
 
 	size_t iOffset = 0;
+	size_t iOffsets[_E_FACE_COUNT][c_iMaxMip];
 	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
 	{
 		uint32_t iMipWidth = oDesc.iWidth >> iMipIndex;
@@ -81,19 +82,19 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 
 		for (int iFaceIndex = 0; iFaceIndex < oDesc.iFaceCount; ++iFaceIndex)
 		{
-			size_t iSize = iBlockCountX * iBlockCountY * oInfos.iBlockSize;
+			size_t iSize = (size_t)iBlockCountX * iBlockCountY * oInfos.iBlockSize;
 
 			m_oFaceData[iFaceIndex][iMipIndex].iWidth = (int)iMipWidth;
 			m_oFaceData[iFaceIndex][iMipIndex].iHeight = (int)iMipHeight;
 			m_oFaceData[iFaceIndex][iMipIndex].iSize = iSize;
-			m_oFaceData[iFaceIndex][iMipIndex].iPitch = iBlockCountX * oInfos.iBlockSize;
-			m_oFaceData[iFaceIndex][iMipIndex].pData = (void*)iOffset;
+			m_oFaceData[iFaceIndex][iMipIndex].iPitch = (size_t)iBlockCountX * oInfos.iBlockSize;
+			iOffsets[iFaceIndex][iMipIndex] = iOffset;
 			iOffset += iSize;
 		}
 	}
 	m_iSize = iOffset;
 
-	if (iOffset == 0 || (m_pData = malloc(iOffset)) == NULL)
+	if (iOffset == 0 || (m_pData = Core::Malloc(iOffset)) == NULL)
 	{
 		Destroy();
 		return ErrorCode::Fail;
@@ -103,7 +104,8 @@ ErrorCode Texture::TextureData::Create(Desc& oDesc)
 	{
 		for (int iFaceIndex = 0; iFaceIndex < oDesc.iFaceCount; ++iFaceIndex)
 		{
-			m_oFaceData[iFaceIndex][iMipIndex].pData = (void*)((size_t)m_pData + (size_t)m_oFaceData[iFaceIndex][iMipIndex].pData);
+			CORE_PTR(char) pDataChar = (CORE_PTR(char))m_pData;
+			m_oFaceData[iFaceIndex][iMipIndex].pData = (pDataChar + iOffsets[iFaceIndex][iMipIndex]);
 		}
 	}
 
@@ -114,8 +116,8 @@ void Texture::TextureData::Destroy()
 {
 	if (m_pData != NULL)
 	{
-		free(m_pData);
-		m_pData = NULL;
+		Core::Free(m_pData);
+		m_pData = CORE_PTR_NULL;
 		m_iSize = 0;
 		for (int iFaceIndex = 0; iFaceIndex < _E_FACE_COUNT; ++iFaceIndex)
 		{
@@ -210,13 +212,13 @@ ErrorCode Texture::Create(Desc& oDesc)
 			for (int iFace = 0; iFace < _E_FACE_COUNT; ++iFace)
 			{
 				const TextureFaceData& oFaceData = m_oData.GetFaceData(iMip, iFace);
-				memcpy(oFaceData.pData, oDesc.pData[iMip][iFace], oFaceData.iSize);
+				memcpy((void*)oFaceData.pData, oDesc.pData[iMip][iFace], oFaceData.iSize);
 			}
 		}
 	}
 	else
 	{
-		memset(m_oData.GetData(), 0, m_oData.GetDataSize());
+		memset((void*)m_oData.GetData(), 0, m_oData.GetDataSize());
 	}
 
 	return ErrorCode::Ok;

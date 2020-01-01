@@ -584,7 +584,7 @@ namespace Graphics
 				if (iMip == 0 || (bOnlyMissingMips && iMip < pTexture->GetMipCount()))
 				{
 					const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
-					memcpy(oDstFaceData.pData, oSrcFaceData.pData, oSrcFaceData.iSize);
+					Core::MemCpy(oDstFaceData.pData, oSrcFaceData.pData, oSrcFaceData.iSize);
 				}
 				else
 				{

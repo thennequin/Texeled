@@ -93,7 +93,7 @@ namespace Graphics
 			}
 
 			const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(0, 0);
-			if (stbi_write_png_to_func(WriteToStream, pStream, pTexture->GetWidth(), pTexture->GetHeight(), iComp, oFaceData.pData, 0) == 1)
+			if (stbi_write_png_to_func(WriteToStream, pStream, pTexture->GetWidth(), pTexture->GetHeight(), iComp, (void*)oFaceData.pData, 0) == 1)
 			{
 				return true;
 			}

@@ -4,6 +4,7 @@
 #include "Core/ErrorCode.h"
 #include "Core/Stream.h"
 #include "Core/Array.h"
+#include "Core/Memory.h"
 
 #include "Graphics/PixelFormat.h"
 
@@ -33,7 +34,7 @@ namespace Graphics
 		struct TextureFaceData
 		{
 			TextureFaceData();
-			void*						pData;
+			CORE_PTR_VOID				pData;
 			size_t						iSize;
 			size_t						iPitch;
 			int							iWidth;
@@ -61,7 +62,7 @@ namespace Graphics
 			bool						IsValid() const;
 
 			const TextureFaceData&		GetFaceData(int iMip, int iFace) const { return m_oFaceData[iFace][iMip]; }
-			void*						GetData() const { return m_pData; }
+			CORE_PTR_VOID				GetData() const { return m_pData; }
 			size_t						GetDataSize() const { return m_iSize; }
 		protected:
 			/* Data layout
@@ -70,7 +71,7 @@ namespace Graphics
 					for each line (y)
 						for each column (x)
 			*/
-			void*						m_pData;
+			CORE_PTR_VOID				m_pData;
 			size_t						m_iSize;
 
 			TextureFaceData				m_oFaceData[_E_FACE_COUNT][c_iMaxMip];

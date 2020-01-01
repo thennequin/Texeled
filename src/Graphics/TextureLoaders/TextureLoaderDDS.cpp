@@ -347,7 +347,7 @@ namespace Graphics
 
 					size_t iBlocksSize = iBlockCount * oInfos.iBlockSize;
 
-					void* pBlocks = oFaceData.pData;
+					void* pBlocks = (void*)oFaceData.pData;
 
 					if (oFaceData.iSize != iBlocksSize)
 						return ErrorCode(2, "Internal : Invalid block size");
