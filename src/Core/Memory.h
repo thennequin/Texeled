@@ -37,8 +37,9 @@ namespace Core
 		operator PointerVoid() const;
 
 		template<typename T>
-		explicit operator T*() const
+		operator T*() const
 		{
+			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
 			return (T*)((char*)m_iMemory + m_iPos);
 		}
 

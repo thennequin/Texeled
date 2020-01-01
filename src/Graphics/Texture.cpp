@@ -212,13 +212,13 @@ ErrorCode Texture::Create(Desc& oDesc)
 			for (int iFace = 0; iFace < _E_FACE_COUNT; ++iFace)
 			{
 				const TextureFaceData& oFaceData = m_oData.GetFaceData(iMip, iFace);
-				memcpy((void*)oFaceData.pData, oDesc.pData[iMip][iFace], oFaceData.iSize);
+				memcpy(oFaceData.pData, oDesc.pData[iMip][iFace], oFaceData.iSize);
 			}
 		}
 	}
 	else
 	{
-		memset((void*)m_oData.GetData(), 0, m_oData.GetDataSize());
+		memset(m_oData.GetData(), 0, m_oData.GetDataSize());
 	}
 
 	return ErrorCode::Ok;

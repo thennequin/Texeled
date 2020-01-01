@@ -180,7 +180,7 @@ namespace Graphics
 					uint32_t iPadMipWidth = oFaceData.iWidth;
 					uint32_t iPadMipHeight = oFaceData.iHeight;
 
-					if (pStream->Write((void*)oFaceData.pData, oFaceData.iSize) != oFaceData.iSize)
+					if (pStream->Write(oFaceData.pData, oFaceData.iSize) != oFaceData.iSize)
 						return false;
 				}
 			}
