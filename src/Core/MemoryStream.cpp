@@ -62,7 +62,7 @@ namespace Core
 				return true;
 			}
 		}
-		else if (eSeekMode == SeekModeEnum::BEGIN)
+		else if (eSeekMode == SeekModeEnum::OFFSET)
 		{
 			if ((m_iCursor + iPos) < m_iSize)
 			{
@@ -74,7 +74,7 @@ namespace Core
 		{
 			if (((m_iSize - 1) - iPos) >= 0)
 			{
-				m_iCursor = (m_iSize -1) - iPos;
+				m_iCursor = (m_iSize - 1) - iPos;
 				return true;
 			}
 		}
