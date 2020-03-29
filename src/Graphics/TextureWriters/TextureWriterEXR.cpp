@@ -29,7 +29,7 @@ namespace Graphics
 
 			if( ePixelFormat != PixelFormatEnum::RGB16_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT
+				&& ePixelFormat != PixelFormatEnum::RGB32_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT )
 			{
 				if (iComp == 3)
@@ -67,7 +67,7 @@ namespace Graphics
 
 			if (ePixelFormat != PixelFormatEnum::RGB16_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT
+				&& ePixelFormat != PixelFormatEnum::RGB32_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT )
 			{
 				if (iComp == 3)
