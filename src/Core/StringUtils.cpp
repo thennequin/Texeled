@@ -239,17 +239,22 @@ namespace Core
 
 		void GetReadableSize(size_t iSize, char* pOutBuffer, size_t iOutBufferSize)
 		{
-			static const char* const pSizes[] = { "bytes", "Kb", "Mb", "Gb" };
+			static const char* const pSizes[] = { "byte", "bytes", "KiB", "MiB", "GiB" };
+			const size_t iSizesCount = sizeof(pSizes) / sizeof(*pSizes);
 			size_t iDiv = 0;
 			size_t iRem = 0;
+			if (iSize > 1)
+				iDiv++;
 
-			while (iSize >= 1024 && iDiv < (sizeof pSizes / sizeof *pSizes)) {
+			while (iSize >= 1024 && iDiv < (iSizesCount - 1)) {
 				iRem = (iSize % 1024);
 				iDiv++;
 				iSize /= 1024;
 			}
-
-			SNPrintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (double)iSize + (double)iRem / 1024.0, pSizes[iDiv]);
+			if (iDiv > 1)
+				SNPrintf(pOutBuffer, iOutBufferSize, "%.1f %s\n", (double)iSize + (double)iRem / 1024.0, pSizes[iDiv]);
+			else
+				SNPrintf(pOutBuffer, iOutBufferSize, "%d %s\n", (int)iSize, pSizes[iDiv]);
 		}
 
 	}
