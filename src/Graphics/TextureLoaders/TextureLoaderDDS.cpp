@@ -133,10 +133,6 @@ namespace Graphics
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
 				}
-				else if( oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R16G16B16A16_FLOAT )
-				{
-					oDesc.ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
-				}
 				else if (oDDSHeaderDX10.oDxgiFormat == DXGI_FORMAT_R9G9B9E5_SHAREDEXP)
 				{
 					oDesc.ePixelFormat = PixelFormatEnum::R9G9B9E5_SHAREDEXP;

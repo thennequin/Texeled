@@ -171,7 +171,6 @@ namespace Graphics
 					return false;
 			}
 
-			uint32_t iBPP = PixelFormat::BitPerPixel(pTexture->GetPixelFormat());
 			for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
 			{
 				for (int iMip = 0; iMip < pTexture->GetMipCount(); ++iMip)
