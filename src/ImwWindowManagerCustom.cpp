@@ -4,7 +4,7 @@ using namespace ImWindow;
 
 #include "Core/MemoryStream.h"
 
-#include "Math/Math.h"
+#include "Math/Arithmetic.h"
 
 #include "Graphics/TextureLoader.h"
 #include "GraphicResources/Texture2D.h"

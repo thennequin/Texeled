@@ -4,7 +4,7 @@
 
 #include "Graphics/DDS.h"
 
-#include "Math/Math.h"
+#include "Math/Arithmetic.h"
 
 namespace Graphics
 {

@@ -2,7 +2,7 @@
 
 #include "Program.h"
 
-#include "Math/Math.h"
+#include "Math/Arithmetic.h"
 
 #include "ImGuiUtils.h"
 
