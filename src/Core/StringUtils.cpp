@@ -112,7 +112,7 @@ namespace Core
 
 			const size_t iMaxPos = iSourceLen - iSearchLen;
 			size_t iPos = iMaxPos;
-			while (iPos >= 0)
+			do
 			{
 				if (pSource[iPos] == 0)
 					return -1;
@@ -132,7 +132,7 @@ namespace Core
 				}
 
 				--iPos;
-			}
+			} while (iPos > 0);
 			return -1;
 		}
 
