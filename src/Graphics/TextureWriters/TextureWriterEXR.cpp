@@ -99,10 +99,10 @@ namespace Graphics
 			header.num_channels = iComp;
 
 			EXRChannelInfo oChannelsInfos[4];
-			strncpy(oChannelsInfos[0].name, "B", 255); oChannelsInfos[0].name[strlen("B")] = '\0';
-			strncpy(oChannelsInfos[1].name, "G", 255); oChannelsInfos[1].name[strlen("G")] = '\0';
-			strncpy(oChannelsInfos[2].name, "R", 255); oChannelsInfos[2].name[strlen("R")] = '\0';
-			strncpy(oChannelsInfos[3].name, "A", 255); oChannelsInfos[3].name[strlen("A")] = '\0';
+			oChannelsInfos[0].name[0] = 'B'; oChannelsInfos[0].name[1] = '\0';
+			oChannelsInfos[1].name[0] = 'G'; oChannelsInfos[1].name[1] = '\0';
+			oChannelsInfos[2].name[0] = 'R'; oChannelsInfos[2].name[1] = '\0';
+			oChannelsInfos[3].name[0] = 'A'; oChannelsInfos[3].name[1] = '\0';
 			header.channels = oChannelsInfos;
 
 			int iPixelTypesFloat[4] = { TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT, TINYEXR_PIXELTYPE_FLOAT };
