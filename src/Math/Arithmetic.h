@@ -1,5 +1,5 @@
-#ifndef __MATH_H__
-#define __MATH_H__
+#ifndef __MATH_ARITHMETIC_H__
+#define __MATH_ARITHMETIC_H__
 
 namespace Math
 {
@@ -19,4 +19,4 @@ namespace Math
 	}
 }
 
-#endif //__MATH_H__
+#endif //__MATH_ARITHMETIC_H__
