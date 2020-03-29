@@ -9,60 +9,60 @@ Simple texture viewer and editor
 
 Support:
 - Features:
-  - Fast launch
-  - Small (less than 1 MB)
-  - Conversion beetween pixel formats
-  - Create simple mip maps
+    - [x] Fast launch
+    - [x] Small (less than 1 MB)
+    - [x] Conversion beetween pixel formats
+    - [x] Create simple mip maps
     
 - Loading:
-  - DDS
-  - KTX (Work In Progress)
-  - PNG (via **stb_image**)
-  - JPG (via **stb_image**)
-  - TGA (via **stb_image**)
-  - BMP (via **stb_image**)
-  - EXT (via **tinyexr**)
+    - [x] DDS
+    - [x] KTX (Work In Progress)
+    - [x] PNG (via **stb_image**)
+    - [x] JPG (via **stb_image**)
+    - [x] TGA (via **stb_image**)
+    - [x] BMP (via **stb_image**)
+    - [x] EXT (via **tinyexr**)
     
 - Writing:
-  - DDS
-  - PNG
+    - [x] DDS
+    - [x] PNG
   
 - Pixel formats:
-  - R8 UNorm
-  - RG8 UNorm
+    - [x] R8 UNorm
+    - [x] RG8 UNorm
 
-  - RGB8 UNorm
-  - BGR8 UNorm
+    - [x] RGB8 UNorm
+    - [x] BGR8 UNorm
 
-  - RGBA8 UNorm
-  - BGRA8 UNorm
+    - [x] RGBA8 UNorm
+    - [x] BGRA8 UNorm
 
-  - R5G6B5 UNorm
-  - B5G6R5 UNorm
+    - [x] R5G6B5 UNorm
+    - [x] B5G6R5 UNorm
 
-  - RGB16 UNorm
-  - RGB16 Half
+    - [x] RGB16 UNorm
+    - [x] RGB16 Half
 
-  - RGBA16 UNorm
-  - RGBA16 Half
+    - [x] RGBA16 UNorm
+    - [x] RGBA16 Half
 
-  - R32 Float
-  - RG32 Float
-  - RGB32 Float
-  - RGBA32 Float
+    - [x] R32 Float
+    - [x] RG32 Float
+    - [x] RGB32 Float
+    - [x] RGBA32 Float
 
-  - R10G10B10A2 UNorm
+    - [x] R10G10B10A2 UNorm
 
-  - R9G9B9E5 Float (shared exp)
+    - [x] R9G9B9E5 Float (shared exp)
 
-  - D16 UNorm
+    - [x] D16 UNorm
 
-  - BC1 (DXT1) *
-  - BC2 (DXT2/3) *
-  - BC3 (DXT4/5) *
-  - BC4 *
-  - BC5 *
-  - BC6H * 
-  - BC7 *
-  
+    - [x] BC1 (DXT1) *
+    - [x] BC2 (DXT2/3) *
+    - [x] BC3 (DXT4/5) *
+    - [x] BC4 *
+    - [x] BC5 *
+    - [x] BC6H * 
+    - [x] BC7 *
+ 
   \* BCX compression/uncompression use Compressonator with default settings
