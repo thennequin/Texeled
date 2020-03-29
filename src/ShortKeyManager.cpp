@@ -379,7 +379,6 @@ bool ShortKeyManager::ExtractShortKey(const std::string& sShortKey,
 
 		EasyWindow::EKey iKey1 = EasyWindow::StringToKey(sKey.c_str());
 
-		iKey1 = EasyWindow::StringToKey(sKey.c_str());
 		if (iKey1 == EasyWindow::KEY_NONE)
 		{
 			return false;
