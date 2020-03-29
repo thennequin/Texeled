@@ -56,7 +56,7 @@ namespace Graphics
 			if (pOutFaceSize) *pOutFaceSize = iHeight / 2;
 			return true;
 		}
-		else if (fRatio == (1.f / 1.f))
+		else if (fRatio == 1.f)
 		{
 			// Spherical map
 			// Not supported
@@ -299,9 +299,9 @@ namespace Graphics
 
 							//Bilinear
 							int iX0 = (int)floor(fSrcX);
-							int iX1 = fmin(iX0 + 1, iCubeMapSourceWidthMinusOne);
+							int iX1 = Math::Min(iX0 + 1, iCubeMapSourceWidthMinusOne);
 							int iY0 = (int)floor(fSrcY);
-							int iY1 = fmin(iY0 + 1, iCubeMapSourceHeighthMinusOne);
+							int iY1 = Math::Min(iY0 + 1, iCubeMapSourceHeighthMinusOne);
 
 							/*char* pSource = (char*)oDesc.pData[iMip][0] (iX + iY * iSourceWidth) * iBits / 8;
 
@@ -572,8 +572,6 @@ namespace Graphics
 			return oErr;
 
 		const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
-
-		int iStartMip = bOnlyMissingMips;
 
 		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
 		{
