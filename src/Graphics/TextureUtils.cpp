@@ -4,7 +4,8 @@
 #include "Core/FileStream.h"
 #include "Core/StringUtils.h"
 
-#include "Math/Math.h"
+#include "Math/Arithmetic.h"
+#include "Math/Constants.h"
 
 #include <string.h> //memcpy/memset
 #include <emmintrin.h> //SIMD
@@ -213,10 +214,6 @@ namespace Graphics
 				}
 				else
 				{
-					const float c_fPi = 3.14159265358979323846f;
-					const float c_fInvPi = 0.31830988618379067153f;
-					const float c_f2Pi = 6.28318530717958647692f;
-
 					const float c_fFaceUvVectors[6][3][4] = // Last value is useless but necessary for sse loading
 					{
 						{ // +x
@@ -291,8 +288,8 @@ namespace Graphics
 							const float fTheta = acosf(fVec[1]);
 
 							float fUV[2];
-							fUV[0] = ((c_fPi + fPhi) / c_fPi) * 0.5f;
-							fUV[1] = fTheta * c_fInvPi;
+							fUV[0] = ((Math::c_fPi + fPhi) / Math::c_fPi) * 0.5f;
+							fUV[1] = fTheta * Math::c_fInvPi;
 
 							float fSrcX = fUV[0] * iCubeMapSourceWidthMinusOne;
 							float fSrcY = fUV[1] * iCubeMapSourceHeighthMinusOne;

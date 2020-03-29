@@ -1,6 +1,6 @@
 #include "Graphics/PixelFormatConverters.h"
 
-#include "Math/Math.h"
+#include "Math/Arithmetic.h"
 
 #include <string.h> //memset
 
