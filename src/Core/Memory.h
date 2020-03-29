@@ -73,6 +73,7 @@ namespace Core
 		Pointer(T* pMemory, size_t iSize, size_t iPos)
 			: PointerVoid(pMemory, iSize, iPos)
 		{
+			CORE_ASSERT(iPos <= iSize - sizeof(T));
 		}
 
 		Pointer<T>& operator =(Pointer<T> oRight)
