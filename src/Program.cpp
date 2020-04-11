@@ -17,6 +17,7 @@
 #include "Graphics/TextureWriter.h"
 
 #include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
+#include "Graphics/TextureLoaders/TextureLoaderPNG.h"
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 #include "Graphics/TextureLoaders/TextureLoaderEXR.h"
 #include "Graphics/TextureLoaders/TextureLoaderKTX.h"
@@ -56,6 +57,7 @@ Program::Program(int iArgCount, char** pArgs)
 		CORE_ASSERT(Graphics::PixelFormatEnumInfos[i].eFormat == i);
 	}
 
+	Graphics::TextureLoader::RegisterLoaderPNG();
 	Graphics::TextureLoader::RegisterLoaderSTBI();
 	Graphics::TextureLoader::RegisterLoaderDDS();
 	Graphics::TextureLoader::RegisterLoaderEXR();

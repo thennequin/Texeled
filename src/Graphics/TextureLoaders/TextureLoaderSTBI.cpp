@@ -12,7 +12,6 @@ namespace Graphics
 
 		void RegisterLoaderSTBI()
 		{
-			RegisterTextureLoader("Portable Network Graphics", "*.png\0", Graphics::TextureLoader::TextureLoaderSTBI);
 			RegisterTextureLoader("Joint Photographic Experts Group", "*.jpg\0*.jpeg\0", Graphics::TextureLoader::TextureLoaderSTBI);
 			RegisterTextureLoader("Truevision Targa", "*.tga\0", Graphics::TextureLoader::TextureLoaderSTBI);
 			RegisterTextureLoader("Bitmap", "*.bmp\0", Graphics::TextureLoader::TextureLoaderSTBI);
