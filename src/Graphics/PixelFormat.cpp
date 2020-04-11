@@ -41,7 +41,7 @@ namespace Graphics
 
 		{  PixelFormatEnum::R8_UNORM,              8,   1,   1,   1,   1,   ComponentEncodingEnum::UNORM,  "R8",            "R8 UNorm"                      },
 
-		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentEncodingEnum::UNORM,  "RGB8",          "RG8 UNorm"                     },
+		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentEncodingEnum::UNORM,  "RG8",           "RG8 UNorm"                     },
 
 		{  PixelFormatEnum::RGB8_UNORM,           24,   1,   1,   3,   3,   ComponentEncodingEnum::UNORM,  "RGB8",          "RGB8 UNorm"                    },
 		{  PixelFormatEnum::BGR8_UNORM,           24,   1,   1,   3,   3,   ComponentEncodingEnum::UNORM,  "BGR8",          "BGR8 UNorm"                    },
