@@ -40,6 +40,8 @@ solution "Texeled"
 							"../Externals/stb/*",
 							"../Externals/tinyexr/*",
 							"../Externals/Compressonator/CMP_Core/*",
+							"../Externals/libpng-1.6.37/*",
+							"../Externals/zlib-1.2.11/*",
 
 							"../src/**",
 							"../src/**.ico",
@@ -59,7 +61,9 @@ solution "Texeled"
 
 							"../Externals/stb",
 							"../Externals/tinyexr",
-							"../Externals/Compressonator/CMP_Core"
+							"../Externals/Compressonator/CMP_Core",
+							"../Externals/libpng-1.6.37",
+							"../Externals/zlib-1.2.11"
 		}
 		
 		flags				"ExtraWarnings"
