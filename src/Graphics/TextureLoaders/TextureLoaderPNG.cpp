@@ -80,6 +80,7 @@ namespace Graphics
 			png_uint_32 iHeight = png_get_image_height(pPNG, pPNGInfo);
 			png_byte iColorType = png_get_color_type(pPNG, pPNGInfo);
 			png_byte iBitDepth = png_get_bit_depth(pPNG, pPNGInfo);
+			png_byte iPassCount = png_set_interlace_handling(pPNG);
 
 			if (iBitDepth == 16)
 				png_set_strip_16(pPNG);
@@ -109,13 +110,16 @@ namespace Graphics
 				png_destroy_read_struct(&pPNG, &pPNGInfo, NULL);
 				Core::Free(pImage);
 
-				return ErrorCode(1, "Error during png_read %d", 0);
+				return ErrorCode(1, "Error during png_read");
 			}
 
-			for (png_uint_32 iY = 0; iY < iHeight; iY++)
+			for (int iPass = 0; iPass < iPassCount; ++iPass)
 			{
-				CORE_PTR(png_byte) pRow = CORE_PTR_CAST(png_byte, pImage) + iPNGRowSize * iY;
-				png_read_row(pPNG, pRow, NULL);
+				for (png_uint_32 iY = 0; iY < iHeight; iY++)
+				{
+					CORE_PTR(png_byte) pRow = CORE_PTR_CAST(png_byte, pImage) + iPNGRowSize * iY;
+					png_read_row(pPNG, pRow, NULL);
+				}
 			}
 
 			Texture::Desc oDesc;
