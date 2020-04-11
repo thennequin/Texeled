@@ -10,15 +10,20 @@ namespace Graphics
 	{
 		namespace Converters
 		{
+			void CopyPixels(unsigned char* pColors, void* pOut, size_t iPitchOut, int iBlockSize)
+			{
+				for (int iY = 0; iY < 4; ++iY)
+				{
+					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * iBlockSize, pColors + iY * 4 * iBlockSize, 4 * iBlockSize);
+				}
+			}
+
 			// BC1
 			void Convert_BC1_To_RGBA8(void* pIn, void* pOut, size_t /*iPitchIn*/, size_t iPitchOut)
 			{
 				unsigned char oColors[64];
 				DecompressBlockBC1((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * 4, oColors + iY * 16, 16);
-				}
+				CopyPixels(oColors, pOut, iPitchOut, 4);
 			}
 
 			void Convert_RGBA8_To_BC1(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
@@ -31,10 +36,7 @@ namespace Graphics
 			{
 				unsigned char oColors[64];
 				DecompressBlockBC2((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * 4, oColors + iY * 16, 16);
-				}
+				CopyPixels(oColors, pOut, iPitchOut, 4);
 			}
 
 			void Convert_RGBA8_To_BC2(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
@@ -47,10 +49,7 @@ namespace Graphics
 			{
 				unsigned char oColors[64];
 				DecompressBlockBC3((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * 4, oColors + iY * 16, 16);
-				}
+				CopyPixels(oColors, pOut, iPitchOut, 4);
 			}
 
 			void Convert_RGBA8_To_BC3(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
@@ -63,10 +62,7 @@ namespace Graphics
 			{
 				unsigned char oColors[16];
 				DecompressBlockBC4((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut, oColors + iY * 4, 4);
-				}
+				CopyPixels(oColors, pOut, iPitchOut, 1);
 			}
 
 			void Convert_R8_To_BC4(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
@@ -111,10 +107,7 @@ namespace Graphics
 			{
 				unsigned short oColors[48];
 				DecompressBlockBC6((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * 3 * 2, oColors + iY * 4 * 3, 4 * 3 * 2);
-				}
+				CopyPixels((unsigned char*)oColors, pOut, iPitchOut, 3 * 2);
 			}
 
 			void Convert_RGB16F_To_BC6H(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
@@ -127,10 +120,7 @@ namespace Graphics
 			{
 				unsigned char oColors[64];
 				DecompressBlockBC7((unsigned char*)pIn, oColors, NULL);
-				for (int iY = 0; iY < 4; ++iY)
-				{
-					memcpy((unsigned char*)pOut + iY * (unsigned int)iPitchOut * 4, oColors + iY * 16, 16);
-				}
+				CopyPixels(oColors, pOut, iPitchOut, 4);
 			}
 
 			void Convert_RGBA8_To_BC7(void* pIn, void* pOut, size_t iPitchIn, size_t /*iPitchOut*/)
