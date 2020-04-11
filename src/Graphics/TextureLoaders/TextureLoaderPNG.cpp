@@ -24,12 +24,12 @@ namespace Graphics
 
 		void user_error_fn(png_structp /*pPng*/, png_const_charp pErrorMsg)
 		{
-			Core::LogError( "TextureLoaderPNG", "%s", pErrorMsg);
+			Core::LogError("TextureLoaderPNG", "%s", pErrorMsg);
 		}
 
 		void user_warning_fn(png_structp /*pPng*/, png_const_charp pWarningMsg)
 		{
-			Core::LogWarning( "TextureLoaderPNG", "%s\n", pWarningMsg);
+			Core::LogWarning("TextureLoaderPNG", "%s\n", pWarningMsg);
 		}
 
 		void TextureLoaderPNG_ReadCallback(png_structp pPng, png_bytep pOut, size_t iSize)
@@ -80,18 +80,22 @@ namespace Graphics
 			png_uint_32 iHeight = png_get_image_height(pPNG, pPNGInfo);
 			png_byte iColorType = png_get_color_type(pPNG, pPNGInfo);
 			png_byte iBitDepth = png_get_bit_depth(pPNG, pPNGInfo);
-			png_byte iPassCount = png_set_interlace_handling(pPNG);
+			int iPassCount = png_set_interlace_handling(pPNG);
 
-			if (iBitDepth == 16)
-				png_set_strip_16(pPNG);
+			if (iColorType == PNG_COLOR_TYPE_GRAY || iColorType == PNG_COLOR_TYPE_GRAY_ALPHA)
+			{
+				// Convert 16 bits PNG_COLOR_TYPE_GRAY or PNG_COLOR_TYPE_GRAY_ALPHA to PNG_COLOR_TYPE_RGB or PNG_COLOR_TYPE_RGBA
+				if (iBitDepth == 16)
+					png_set_gray_to_rgb(pPNG);
+
+				// PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
+				if (iBitDepth < 8)
+					png_set_expand_gray_1_2_4_to_8(pPNG);
+			}
 
 			// Convert palette color type to RGB
 			if (iColorType == PNG_COLOR_TYPE_PALETTE)
 				png_set_palette_to_rgb(pPNG);
-
-			// PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
-			if (iColorType == PNG_COLOR_TYPE_GRAY && iBitDepth < 8)
-				png_set_expand_gray_1_2_4_to_8(pPNG);
 
 			if (png_get_valid(pPNG, pPNGInfo, PNG_INFO_tRNS))
 				png_set_tRNS_to_alpha(pPNG);
@@ -137,7 +141,8 @@ namespace Graphics
 				}
 				else if (iNewBitDepth == 16)
 				{
-					//TODO;
+					// Converted to RGB
+					//TODO
 				}
 				break;
 			case PNG_COLOR_TYPE_GRAY_ALPHA:
@@ -148,7 +153,8 @@ namespace Graphics
 				}
 				else if (iNewBitDepth == 16)
 				{
-					//TODO;
+					// Converted to RGBA
+					//TODO
 				}
 				break;
 			case PNG_COLOR_TYPE_RGB:
