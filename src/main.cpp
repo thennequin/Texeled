@@ -11,6 +11,9 @@
 #include <Windows.h>
 #endif
 
+#include "Core/Logger.h"
+#include "Core/LoggerOutputerConsole.h"
+
 int main(int argc, char* argv[])
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -20,6 +23,8 @@ int main(int argc, char* argv[])
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
 	freopen("CON", "w", stdout);
+	Core::LoggerOutputerConsole oLoggerOutputerConsole;
+	Core::Logger::RegisterLoggerOutputer(&oLoggerOutputerConsole);
 #endif //_DEBUG
 
 	Program* pInstance = Program::CreateInstance(argc, argv);
