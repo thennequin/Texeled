@@ -17,7 +17,7 @@ Support:
 - Loading:
     - [x] DDS
     - [x] KTX (Work In Progress)
-    - [x] PNG (via **stb_image**)
+    - [x] PNG (via **libpng**)
     - [x] JPG (via **stb_image**)
     - [x] TGA (via **stb_image**)
     - [x] BMP (via **stb_image**)
@@ -25,7 +25,7 @@ Support:
     
 - Writing:
     - [x] DDS
-    - [x] PNG
+    - [x] PNG (via **stb_image_write**)
   
 - Pixel formats:
     - [x] R8 UNorm
