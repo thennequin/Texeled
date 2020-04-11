@@ -1,5 +1,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderPNG.h"
 
+#include "Core/Logger.h"
+
 #include "Graphics/TextureLoader.h"
 
 #include <png.h>
@@ -22,12 +24,12 @@ namespace Graphics
 
 		void user_error_fn(png_structp /*pPng*/, png_const_charp pErrorMsg)
 		{
-			printf("Error : %s\n", pErrorMsg);
+			Core::LogError( "TextureLoaderPNG", "%s", pErrorMsg);
 		}
 
 		void user_warning_fn(png_structp /*pPng*/, png_const_charp pWarningMsg)
 		{
-			printf("Warn : %s\n", pWarningMsg);
+			Core::LogWarning( "TextureLoaderPNG", "%s\n", pWarningMsg);
 		}
 
 		void TextureLoaderPNG_ReadCallback(png_structp pPng, png_bytep pOut, size_t iSize)

@@ -1,5 +1,7 @@
 #include "Graphics/TextureLoaders/TextureLoaderDDS.h"
 
+#include "Core/Logger.h"
+
 #include "Graphics/DDS.h"
 #include "Graphics/TextureLoader.h"
 
@@ -39,21 +41,21 @@ namespace Graphics
 			}
 
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_CAPS) != 0)
-				printf("DDS_HEADER_FLAGS_CAPS\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_CAPS");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_HEIGHT) != 0)
-				printf("DDS_HEADER_FLAGS_HEIGHT\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_HEIGHT");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_WIDTH) != 0)
-				printf("DDS_HEADER_FLAGS_WIDTH\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_WIDTH");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_PITCH) != 0)
-				printf("DDS_HEADER_FLAGS_PITCH\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_PITCH");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_PIXELFORMAT) != 0)
-				printf("DDS_HEADER_FLAGS_PIXELFORMAT\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_PIXELFORMAT");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_MIPMAPCOUNT) != 0)
-				printf("DDS_HEADER_FLAGS_MIPMAPCOUNT\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_MIPMAPCOUNT");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_LINEARSIZE) != 0)
-				printf("DDS_HEADER_FLAGS_LINEARSIZE\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_LINEARSIZE");
 			if ((oDDSHeader.iHeaderFlags & DDS_HEADER_FLAGS_DEPTH) != 0)
-				printf("DDS_HEADER_FLAGS_DEPTH\n");
+				Core::LogDebug("TextureLoaderDDS", "DDS_HEADER_FLAGS_DEPTH");
 
 			char pFourCC[5] = "0000";
 			pFourCC[0] = oDDSHeader.oPixelFormat.iFourCC & 0xff;
