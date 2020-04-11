@@ -13,10 +13,12 @@
 #	define CORE_PTR_VOID Core::PointerVoid
 #	define CORE_PTR(Type) Core::Pointer<Type>
 #	define CORE_PTR_NULL (Core::PointerVoid(NULL, 0))
+#	define CORE_PTR_CAST(Type,Data) ((Core::Pointer<Type>)Data)
 #else
 #	define CORE_PTR_VOID void*
 #	define CORE_PTR(Type) Type*
 #	define CORE_PTR_NULL (NULL)
+#	define CORE_PTR_CAST(Type,Data) ((Type*)Data)
 #endif
 
 namespace Core
@@ -107,6 +109,12 @@ namespace Core
 			CORE_ASSERT(m_iMemory != NULL);
 			CORE_ASSERT((m_iPos + iPos * sizeof(T)) < m_iSize);
 			return *((T*)*this + iPos);
+		}
+
+		operator T*() const
+		{
+			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			return (T*)((char*)m_iMemory + m_iPos);
 		}
 	};
 
