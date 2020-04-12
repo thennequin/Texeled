@@ -25,7 +25,7 @@ namespace Graphics
 			}
 
 			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponents;
+			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
 			if( ePixelFormat != PixelFormatEnum::RGB16_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT
@@ -63,7 +63,7 @@ namespace Graphics
 			Texture oNewTexture;
 
 			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			const int iComp = PixelFormatEnumInfos[ePixelFormat].iComponents;
+			const int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
 			if (ePixelFormat != PixelFormatEnum::RGB16_FLOAT
 				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT

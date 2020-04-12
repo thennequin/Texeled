@@ -29,7 +29,7 @@ namespace Graphics
 		// |                                       |    |    |
 		// |                                       |    |    |    .------------------------------------------------------------------------------------------- iBlockSize (bytes)
 		// |                                       |    |    |    |
-		// |                                       |    |    |    |    .-------------------------------------------------------------------------------------- iComponents
+		// |                                       |    |    |    |    .-------------------------------------------------------------------------------------- iComponentCount
 		// |                                       |    |    |    |    |
 		// |                                       |    |    |    |    |    .--------------------------------------------------------------------------------- eEncoding
 		// |                                       |    |    |    |    |    |
@@ -98,7 +98,7 @@ namespace Graphics
 
 		int ComponentCount(PixelFormatEnum ePixelFormat)
 		{
-			return PixelFormatEnumInfos[ePixelFormat].iComponents;
+			return PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 		}
 
 		void GetBlockCount(PixelFormatEnum ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY)

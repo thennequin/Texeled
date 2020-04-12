@@ -25,7 +25,7 @@ namespace Graphics
 			}
 
 			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponents;
+			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
 			if (ePixelFormat != PixelFormatEnum::RGB8_UNORM
 				&& ePixelFormat != PixelFormatEnum::RGBA8_UNORM)
@@ -67,7 +67,7 @@ namespace Graphics
 			Texture oNewTexture;
 
 			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponents;
+			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
 			if (ePixelFormat != PixelFormatEnum::RGB8_UNORM
 				&& ePixelFormat != PixelFormatEnum::RGBA8_UNORM)

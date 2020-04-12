@@ -81,7 +81,8 @@ namespace Graphics
 		int						iBlockWidth;
 		int						iBlockHeight;
 		int						iBlockSize;
-		int						iComponents;
+		int						iComponentCount;
+		ComponentFlags			iComponents;
 		ComponentEncodingEnum	eEncoding;
 		const char* const		pShortName;
 		const char* const		pName;

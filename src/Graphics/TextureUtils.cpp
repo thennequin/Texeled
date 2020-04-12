@@ -510,7 +510,7 @@ namespace Graphics
 				iRes = stbir_resize_uint8(
 					(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
 					(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
-					oFormatInfos.iComponents
+					oFormatInfos.iComponentCount
 				);
 			}
 			else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
@@ -518,7 +518,7 @@ namespace Graphics
 				iRes = stbir_resize_float(
 					(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
 					(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
-					oFormatInfos.iComponents
+					oFormatInfos.iComponentCount
 				);
 			}
 			else
@@ -592,7 +592,7 @@ namespace Graphics
 						iRes = stbir_resize_uint8(
 							(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
 							(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
-							oFormatInfos.iComponents
+							oFormatInfos.iComponentCount
 						);
 					}
 					else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
@@ -600,7 +600,7 @@ namespace Graphics
 						iRes = stbir_resize_float(
 							(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
 							(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
-							oFormatInfos.iComponents
+							oFormatInfos.iComponentCount
 						);
 					}
 					else

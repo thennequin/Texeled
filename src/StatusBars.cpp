@@ -88,7 +88,7 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponents);
+		ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponentCount);
 		ImGui::PopFont();
 
 		//Memory size
