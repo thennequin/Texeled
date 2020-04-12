@@ -56,3 +56,31 @@ Support:
   - [x] BC7 *
  
   \* BCX compression/uncompression use Compressonator with default settings
+
+---
+
+## How to build
+
+Requirement :
+  - ``Windows``
+  - ``Visual Studio 2017``
+  - ``git``
+  - ``Internet``
+
+Steps :
+  - Open ``cmd`` or ``powershell``
+  - Set terminal working dir\
+    ``cd <you working directory>``
+  - Clone Texeled \
+    ``git clone https://github.com/thennequin/Texeled.git``
+  - Set Texeled as current directory \
+    ``cd Texeled``
+  - Init submodules (ImWindow including ImGui and EasyWindow) \
+    ``git submodule update --init --recursive``
+  - Transform resources (png, ico, ...) into code (cpp, h) \
+     ``scripts\EmbedResources.bat``
+  - Generate a solution for Visual Studio 2017\
+    ``scripts\build.bat vs2017``
+  - Launch the solution \
+    ``.projects\vs2017\Texeled.sln``
+  - Build it, debug it, do what you want
