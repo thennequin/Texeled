@@ -90,6 +90,17 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oImWindowMgr.Init();
 	m_oImWindowMgr.SetMainTitle("Texeled");
 
+	ImWindow::ImwWindowManager::Config& oImwConfig = m_oImWindowMgr.GetConfig();
+	oImwConfig.m_bShowTabShadows = false;
+	oImwConfig.m_fTabOverlap = 3.f;
+	oImwConfig.m_fTabSlopWidth = 0.f;
+	oImwConfig.m_fTabSlopP1Ratio = 0.f;
+	oImwConfig.m_fTabSlopP2Ratio = 0.f;
+	oImwConfig.m_fTabSlopHRatio = 0.f;
+	oImwConfig.m_fTabShadowDropSize = 7.5f;
+	oImwConfig.m_fTabShadowSlopRatio = 1.f;
+	oImwConfig.m_fTabShadowAlpha = 1.f;
+
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text]                  = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled]          = ImVec4(0.70f, 0.70f, 0.70f, 1.00f);
