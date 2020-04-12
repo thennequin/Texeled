@@ -5,6 +5,28 @@
 
 namespace Graphics
 {
+	struct _Component
+	{
+		enum Flag
+		{
+			_NONE = 0,
+
+			RED = 1,
+			GREEN = 2,
+			BLUE = 4,
+			ALPHA = 8,
+
+			DEPTH = 16,
+
+
+			RG = RED | GREEN,
+			RGB = RED | GREEN | BLUE,
+			RGBA = RED | GREEN | BLUE | ALPHA,
+		};
+	};
+	typedef _Component::Flag ComponentFlag;
+	typedef uint8_t ComponentFlags;
+
 	struct _ComponentEncodingEnum
 	{
 		enum Enum

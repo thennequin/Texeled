@@ -19,63 +19,65 @@ namespace Graphics
 
 	const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT] =
 	{
-		// .-------------------------------------------------------------------------------------------------------------------------------------------------- eFormat
+		// .---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- eFormat
 		// |
-		// |                                       .---------------------------------------------------------------------------------------------------------- iBitsPerPixel
+		// |                                       .------------------------------------------------------------------------------------------------------------------------------------ iBitsPerPixel
 		// |                                       |
-		// |                                       |    .----------------------------------------------------------------------------------------------------- iBlockWidth
+		// |                                       |    .------------------------------------------------------------------------------------------------------------------------------- iBlockWidth
 		// |                                       |    |
-		// |                                       |    |    .------------------------------------------------------------------------------------------------ iBlockHeight
+		// |                                       |    |    .-------------------------------------------------------------------------------------------------------------------------- iBlockHeight
 		// |                                       |    |    |
-		// |                                       |    |    |    .------------------------------------------------------------------------------------------- iBlockSize (bytes)
+		// |                                       |    |    |    .--------------------------------------------------------------------------------------------------------------------- iBlockSize (bytes)
 		// |                                       |    |    |    |
-		// |                                       |    |    |    |    .-------------------------------------------------------------------------------------- iComponentCount
+		// |                                       |    |    |    |    .---------------------------------------------------------------------------------------------------------------- iComponentCount
 		// |                                       |    |    |    |    |
-		// |                                       |    |    |    |    |    .--------------------------------------------------------------------------------- eEncoding
+		// |                                       |    |    |    |    |    .----------------------------------------------------------------------------------------------------------- iComponents
 		// |                                       |    |    |    |    |    |
-		// |                                       |    |    |    |    |    |                              .-------------------------------------------------- pShortName
-		// |                                       |    |    |    |    |    |                              |
-		// |                                       |    |    |    |    |    |                              |                .--------------------------------- pName
-		// |                                       |    |    |    |    |    |                              |                |
-		{  PixelFormatEnum::_NONE,                 0,   0,   0,   0,   0,   ComponentEncodingEnum::_NONE,  "None",          "None"                          },
+		// |                                       |    |    |    |    |    |                       .----------------------------------------------------------------------------------- eEncoding
+		// |                                       |    |    |    |    |    |                       |
+		// |                                       |    |    |    |    |    |                       |                              .---------------------------------------------------- pShortName
+		// |                                       |    |    |    |    |    |                       |                              |
+		// |                                       |    |    |    |    |    |                       |                              |                .----------------------------------- pName
+		// |                                       |    |    |    |    |    |                       |                              |                |
+		{  PixelFormatEnum::_NONE,                 0,   0,   0,   0,   0,   ComponentFlag::_NONE,   ComponentEncodingEnum::_NONE,  "None",          "None"                          },
 
-		{  PixelFormatEnum::R8_UNORM,              8,   1,   1,   1,   1,   ComponentEncodingEnum::UNORM,  "R8",            "R8 UNorm"                      },
+		{  PixelFormatEnum::R8_UNORM,              8,   1,   1,   1,   1,   ComponentFlag::RED,     ComponentEncodingEnum::UNORM,  "R8",            "R8 UNorm"                      },
 
-		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentEncodingEnum::UNORM,  "RG8",           "RG8 UNorm"                     },
+		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "RG8",           "RG8 UNorm"                     },
 
-		{  PixelFormatEnum::RGB8_UNORM,           24,   1,   1,   3,   3,   ComponentEncodingEnum::UNORM,  "RGB8",          "RGB8 UNorm"                    },
-		{  PixelFormatEnum::BGR8_UNORM,           24,   1,   1,   3,   3,   ComponentEncodingEnum::UNORM,  "BGR8",          "BGR8 UNorm"                    },
+		{  PixelFormatEnum::RGB8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB8",          "RGB8 UNorm"                    },
+		{  PixelFormatEnum::BGR8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BGR8",          "BGR8 UNorm"                    },
 
-		{  PixelFormatEnum::RGBA8_UNORM,          32,   1,   1,   4,   4,   ComponentEncodingEnum::UNORM,  "RGBA8",         "RGBA8 UNorm"                   },
-		{  PixelFormatEnum::BGRA8_UNORM,          32,   1,   1,   4,   4,   ComponentEncodingEnum::UNORM,  "BGRA8",         "BGRA8 UNorm"                   },
+		{  PixelFormatEnum::RGBA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA8",         "RGBA8 UNorm"                   },
+		{  PixelFormatEnum::BGRA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BGRA8",         "BGRA8 UNorm"                   },
 
-		{  PixelFormatEnum::R5G6B5_UNORM,         16,   1,   1,   2,   3,   ComponentEncodingEnum::UNORM,  "R5G6B5",        "R5G6B5 UNorm"                  },
-		{  PixelFormatEnum::B5G6BR_UNORM,         16,   1,   1,   2,   3,   ComponentEncodingEnum::UNORM,  "B5G6R5",        "B5G6R5 UNorm"                  },
+		{  PixelFormatEnum::R5G6B5_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "R5G6B5",        "R5G6B5 UNorm"                  },
+		{  PixelFormatEnum::B5G6BR_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "B5G6R5",        "B5G6R5 UNorm"                  },
 
-		{  PixelFormatEnum::RGB16_UNORM,          48,   1,   1,   6,   3,   ComponentEncodingEnum::UNORM,  "RGB16",         "RGB16 UNorm"                   },
-		{  PixelFormatEnum::RGB16_FLOAT,          48,   1,   1,   6,   3,   ComponentEncodingEnum::FLOAT,  "RGB16",         "RGB16 Float"                   },
+		{  PixelFormatEnum::RGB16_UNORM,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB16",         "RGB16 UNorm"                   },
+		{  PixelFormatEnum::RGB16_FLOAT,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB16",         "RGB16 Float"                   },
 
-		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm"                  },
-		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float"                  },
+		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,     ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm"                  },
+		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,     ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float"                  },
 
-		{  PixelFormatEnum::R32_FLOAT,            32,   1,   1,   4,   1,   ComponentEncodingEnum::FLOAT,  "R32F",          "R32 Float"                     },
-		{  PixelFormatEnum::RG32_FLOAT,           64,   1,   1,   8,   2,   ComponentEncodingEnum::FLOAT,  "RG32F",         "RG32 Float"                    },
-		{  PixelFormatEnum::RGB32_FLOAT,          96,   1,   1,  12,   3,   ComponentEncodingEnum::FLOAT,  "RGB32F",        "RGB32 Float"                   },
-		{  PixelFormatEnum::RGBA32_FLOAT,        128,   1,   1,  16,   4,   ComponentEncodingEnum::FLOAT,  "RGBA32F",       "RGBA32 Float"                  },
+		{  PixelFormatEnum::R32_FLOAT,            32,   1,   1,   4,   1,   ComponentFlag::RED,     ComponentEncodingEnum::FLOAT,  "R32F",          "R32 Float"                     },
+		{  PixelFormatEnum::RG32_FLOAT,           64,   1,   1,   8,   2,   ComponentFlag::RG,      ComponentEncodingEnum::FLOAT,  "RG32F",         "RG32 Float"                    },
+		{  PixelFormatEnum::RGB32_FLOAT,          96,   1,   1,  12,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB32F",        "RGB32 Float"                   },
+		{  PixelFormatEnum::RGBA32_FLOAT,        128,   1,   1,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA32F",       "RGBA32 Float"                  },
 
-		{  PixelFormatEnum::R10G10B10A2_UNORM,    32,   1,   1,   4,   4,   ComponentEncodingEnum::UNORM,  "R10G10B10A2",   "R10G10B10A2 UNorm"             },
+		{  PixelFormatEnum::R10G10B10A2_UNORM,    32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "R10G10B10A2",   "R10G10B10A2 UNorm"             },
 
-		{  PixelFormatEnum::R9G9B9E5_SHAREDEXP,   32,   1,   1,   4,   3,   ComponentEncodingEnum::FLOAT,  "R9G9B9E5F",     "R9G9B9E5 Float (shared exp)"   },
+		{  PixelFormatEnum::R9G9B9E5_SHAREDEXP,   32,   1,   1,   4,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "R9G9B9E5F",     "R9G9B9E5 Float (shared exp)"   },
 
-		{  PixelFormatEnum::D16_UNORM,            16,   1,   1,   2,   1,   ComponentEncodingEnum::UNORM,  "D16",           "D16 UNorm"                     },
+		{  PixelFormatEnum::D16_UNORM,            16,   1,   1,   2,   1,   ComponentFlag::DEPTH,   ComponentEncodingEnum::UNORM,  "D16",           "D16 UNorm"                     },
 
-		{  PixelFormatEnum::BC1,                   4,   4,   4,   8,   4,   ComponentEncodingEnum::UNORM,  "BC1",           "BC1 (DXT1)"                    },
-		{  PixelFormatEnum::BC2,                   8,   4,   4,  16,   4,   ComponentEncodingEnum::UNORM,  "BC2",           "BC2 (DXT2/3)"                  },
-		{  PixelFormatEnum::BC3,                   8,   4,   4,  16,   4,   ComponentEncodingEnum::UNORM,  "BC3",           "BC3 (DXT4/5)"                  },
-		{  PixelFormatEnum::BC4,                   4,   4,   4,   8,   1,   ComponentEncodingEnum::UNORM,  "BC4",           "BC4"                           },
-		{  PixelFormatEnum::BC5,                   8,   4,   4,  16,   2,   ComponentEncodingEnum::UNORM,  "BC5",           "BC5"                           },
-		{  PixelFormatEnum::BC6H,                  8,   4,   4,  16,   3,   ComponentEncodingEnum::FLOAT,  "BC6H",          "BC6H"                          },
-		{  PixelFormatEnum::BC7,                   8,   4,   4,  16,   3,   ComponentEncodingEnum::UNORM,  "BC7",           "BC7"                           }
+		{  PixelFormatEnum::BC1,                   4,   4,   4,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC1",           "BC1 (DXT1)"                    },
+		{  PixelFormatEnum::BC2,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC2",           "BC2 (DXT2/3)"                  },
+		{  PixelFormatEnum::BC3,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC3",           "BC3 (DXT4/5)"                  },
+		{  PixelFormatEnum::BC4,                   4,   4,   4,   8,   1,   ComponentFlag::RED,     ComponentEncodingEnum::UNORM,  "BC4",           "BC4"                           },
+		{  PixelFormatEnum::BC5,                   8,   4,   4,  16,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "BC5",           "BC5"                           },
+		{  PixelFormatEnum::BC6H,                  8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "BC6H",          "BC6H"                          },
+		{  PixelFormatEnum::BC7,                   8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BC7",           "BC7"                           }
 	};
 
 	namespace PixelFormat
