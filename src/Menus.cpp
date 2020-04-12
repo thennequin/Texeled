@@ -8,6 +8,7 @@
 #include "Graphics/TextureUtils.h"
 
 #include "Windows/AboutWindow.h"
+#include "Windows/LoggerWindow.h"
 
 bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, ImFont* pShortkeyFont, bool selected, bool enabled)
 {
@@ -217,6 +218,14 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Help"))
 	{
+		if (ImGui::MenuItem("Logs"))
+		{
+			ImWindow::ImwWindowManager* pWindowManager = Program::GetInstance()->GetWindowManager();
+			pWindowManager->Dock(new Windows::LoggerWindow(), ImWindow::E_DOCK_ORIENTATION_BOTTOM, 0.3f);
+		}
+
+		ImGui::Separator();
+
 		if (ImGui::MenuItem("About"))
 		{
 			const ImVec2 c_vAboutBoxSize = ImVec2(600.f, 160.f);
