@@ -1,8 +1,9 @@
-
 #ifndef __PROGRAM_H__
 #define __PROGRAM_H__
 
 #include "ImwWindowManagerCustom.h"
+
+#include "Core/Logger.h"
 
 #include "Graphics/Texture.h"
 #include "Graphics/TextureLoader.h"
@@ -86,7 +87,16 @@ struct DisplayOptions
 	int iFace;
 };
 
-class Program
+struct Log
+{
+	Core::Logger::Category eCategory;
+	char* pName;
+	char* pMessage;
+	int iLines;
+};
+typedef Core::Array<Log> Logs;
+
+class Program : Core::Logger::LoggerOutputer
 {
 	Program(int iArgCount, char** pArgs);
 	~Program();
@@ -124,10 +134,17 @@ public:
 	void									SetMode(ProgramModeEnum eMode) { m_eMode = eMode; }
 
 	DisplayOptions&							GetDisplayOptions() { return m_oDisplayOptions; }
+
+	const Logs&								GetLogs() { return m_oLogs; }
+	void									ClearLogs();
 protected:
+	virtual void							Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage);
+
 	static Program*							s_pInstance;
 
 	bool									m_bRun;
+
+	Logs									m_oLogs;
 
 	ImWindow::ImwWindowManagerCustom		m_oImWindowMgr;
 

@@ -50,6 +50,7 @@ Program::Program(int iArgCount, char** pArgs)
 	, m_pTexturePath(NULL)
 {
 	s_pInstance = this;
+	Core::Logger::RegisterLoggerOutputer(this);
 
 	// Checking PixelFormats
 	for (int i = 0; i < Graphics::PixelFormatEnum::_COUNT; ++i)
@@ -134,6 +135,7 @@ Program::~Program()
 	ImwSafeDelete(m_pTexture2D);
 	ImwSafeDelete(m_pShortKeyManager);
 	ImwSafeFree(m_pTexturePath);
+	ClearLogs();
 }
 
 Program* Program::CreateInstance(int iArgCount, char** pArgs)
@@ -152,6 +154,34 @@ void Program::DestroyInstance()
 
 		ImGui::Shutdown();
 	}
+}
+
+void Program::Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage)
+{
+	::Log oLog;
+	oLog.eCategory = eCategory;
+	oLog.pName = Core::StringUtils::StrDup(pName);
+	oLog.pMessage = Core::StringUtils::StrDup(pFormattedMessage);
+
+	oLog.iLines = 1;
+	char* pCursor = oLog.pMessage;
+	while ((pCursor = strchr(pCursor, '\n')) != NULL)
+	{
+		pCursor++;
+		oLog.iLines++;
+	}
+	m_oLogs.push_back(oLog);
+}
+
+void Program::ClearLogs()
+{
+	for (size_t i = 0; i < m_oLogs.size(); ++i)
+	{
+		free(m_oLogs[i].pName);
+		free(m_oLogs[i].pMessage);
+	}
+
+	m_oLogs.clear();
 }
 
 IDXGIFactory* Program::GetDXGIFactory() const
