@@ -57,8 +57,8 @@ namespace Graphics
 		{  PixelFormatEnum::RGB16_UNORM,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB16",         "RGB16 UNorm"                   },
 		{  PixelFormatEnum::RGB16_FLOAT,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB16",         "RGB16 Float"                   },
 
-		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,     ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm"                  },
-		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,     ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float"                  },
+		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm"                  },
+		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float"                  },
 
 		{  PixelFormatEnum::R32_FLOAT,            32,   1,   1,   4,   1,   ComponentFlag::RED,     ComponentEncodingEnum::FLOAT,  "R32F",          "R32 Float"                     },
 		{  PixelFormatEnum::RG32_FLOAT,           64,   1,   1,   8,   2,   ComponentFlag::RG,      ComponentEncodingEnum::FLOAT,  "RG32F",         "RG32 Float"                    },
