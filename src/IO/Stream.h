@@ -37,6 +37,6 @@ namespace IO
 		}
 	};
 }
-//namespace Core
+//namespace IO
 
 #endif //__IO_STREAM_H__

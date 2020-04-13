@@ -29,6 +29,6 @@ namespace IO
 		bool					m_bWritable;
 	};
 }
-//namespace Core
+//namespace IO
 
 #endif //__IO_MEMORY_STREAM_H__

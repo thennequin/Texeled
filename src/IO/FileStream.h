@@ -45,6 +45,6 @@ namespace IO
 		char*					m_pSourceFileName;
 	};
 }
-//namespace Core
+//namespace IO
 
 #endif //__IO_FILE_STREAM_H__
