@@ -13,7 +13,7 @@ namespace Core
 	{
 		size_t StrLen(const char* pString, size_t iBufferSize)
 		{
-			if (pString == 0)
+			if (pString == NULL)
 				return 0;
 			size_t iSize = 0;
 			while (*pString != 0 && iSize < iBufferSize)
@@ -229,7 +229,7 @@ namespace Core
 			// loop 1 char at a time
 			while (1)
 			{
-				if (*pString == NULL)
+				if (*pString == 0)
 				{
 					if (*pPattern == NULL)
 						return true;
