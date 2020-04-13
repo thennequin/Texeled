@@ -56,28 +56,38 @@ Menus::Menus()
 
 void Menus::OnMenu()
 {
-	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
-	const Shortkeys& oShortkeys = Program::GetInstance()->GetShortkeys();
-	const Fonts& oFonts = Program::GetInstance()->GetFonts();
+	Program* pProgram = Program::GetInstance();
+	Graphics::Texture& oTexture = pProgram->GetTexture();
+	const Shortkeys& oShortkeys = pProgram->GetShortkeys();
+	const Fonts& oFonts = pProgram->GetFonts();
 
 	if (ImGui::BeginMenu("File"))
 	{
 		if (MenuItemPlus("Open", NULL, oShortkeys.pOpen->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true))
 		{
-			Program::GetInstance()->Open();
+			pProgram->Open();
 		}
 		if (MenuItemPlus("Save", NULL, oShortkeys.pSave->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
 		{
-			Program::GetInstance()->Save();
+			pProgram->Save();
 		}
 		if (MenuItemPlus("Save as", NULL, oShortkeys.pSaveAs->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
 		{
-			Program::GetInstance()->SaveAs();
+			pProgram->SaveAs();
+		}
+		ImGui::Separator();
+		if (MenuItemPlus("Open previous file", NULL, oShortkeys.pOpenPreviousFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
+		{
+			pProgram->OpenPreviousFile();
+		}
+		if (MenuItemPlus("Open next file", NULL, oShortkeys.pOpenNextFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
+		{
+			pProgram->OpenNextFile();
 		}
 		ImGui::Separator();
 		if (MenuItemPlus("Exit", NULL, NULL, oFonts.pFontConsolas, false, true))
 		{
-			Program::GetInstance()->AskExit();
+			pProgram->AskExit();
 		}
 		ImGui::EndMenu();
 	}
