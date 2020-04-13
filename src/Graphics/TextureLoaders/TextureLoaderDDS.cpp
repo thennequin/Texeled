@@ -12,7 +12,7 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderDDS(IO::Stream* pStream, Texture* pTexture);
 
 		void RegisterLoaderDDS()
 		{
@@ -20,7 +20,7 @@ namespace Graphics
 		}
 
 
-		ErrorCode TextureLoaderDDS(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderDDS(IO::Stream* pStream, Texture* pTexture)
 		{
 			Texture::Desc oDesc;
 			uint32_t iDDSMagic;
@@ -366,7 +366,7 @@ namespace Graphics
 						{
 							if (iRowSize > iRemainingPitch)
 							{
-								pStream->Seek(iRemainingPitch, Core::Stream::SeekModeEnum::OFFSET);
+								pStream->Seek(iRemainingPitch, IO::Stream::SeekModeEnum::OFFSET);
 								iRemainingPitch = iPitchSize;
 							}
 

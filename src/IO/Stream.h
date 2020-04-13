@@ -1,9 +1,9 @@
-#ifndef __CORE_STREAM_H__
-#define __CORE_STREAM_H__
+#ifndef __IO_STREAM_H__
+#define __IO_STREAM_H__
 
 #include <stddef.h>
 
-namespace Core
+namespace IO
 {
 	class Stream
 	{
@@ -39,4 +39,4 @@ namespace Core
 }
 //namespace Core
 
-#endif //__CORE_STREAM_H__
+#endif //__IO_STREAM_H__

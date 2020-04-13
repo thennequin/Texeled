@@ -11,7 +11,7 @@ namespace Graphics
 	namespace TextureWriter
 	{
 		ESupportedWriter TextureWriterSupportedDDS(Texture* pTexture);
-		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream);
+		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
 
 		void RegisterWriterDDS()
 		{
@@ -24,7 +24,7 @@ namespace Graphics
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream)
+		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream)
 		{
 			uint32_t iDDSMagic = DDS_MAGIC;
 			DDS_HEADER oDDSHeader;

@@ -15,7 +15,7 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderPNG(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderPNG(IO::Stream* pStream, Texture* pTexture);
 
 		void RegisterLoaderPNG()
 		{
@@ -34,7 +34,7 @@ namespace Graphics
 
 		void TextureLoaderPNG_ReadCallback(png_structp pPng, png_bytep pOut, size_t iSize)
 		{
-			Core::Stream* pStream = static_cast<Core::Stream*>(png_get_io_ptr(pPng));
+			IO::Stream* pStream = static_cast<IO::Stream*>(png_get_io_ptr(pPng));
 
 			if (pStream->Read(pOut, iSize) != iSize)
 			{
@@ -42,7 +42,7 @@ namespace Graphics
 			}
 		}
 
-		ErrorCode TextureLoaderPNG(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderPNG(IO::Stream* pStream, Texture* pTexture)
 		{
 			png_byte pHeader[8];
 			if (pStream->Read(pHeader, 8) != 8)

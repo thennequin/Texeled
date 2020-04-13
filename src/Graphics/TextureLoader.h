@@ -6,7 +6,7 @@
 
 namespace Graphics
 {
-	typedef ErrorCode(*TextureLoaderFunc)(Core::Stream* pStream, Texture* pTexture);
+	typedef ErrorCode(*TextureLoaderFunc)(IO::Stream* pStream, Texture* pTexture);
 
 	typedef struct
 	{
@@ -17,7 +17,7 @@ namespace Graphics
 
 	void						RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
 
-	ErrorCode					LoadFromStream(Texture* pTexture, Core::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode					LoadFromStream(Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
 	ErrorCode					LoadFromFile(Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);
 	void						GetTextureLoaders(const TextureLoaderInfo** pOutLoaders, int* pOutCount);
 }

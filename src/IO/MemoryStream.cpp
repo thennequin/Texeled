@@ -1,8 +1,8 @@
-#include "Core/MemoryStream.h"
+#include "IO/MemoryStream.h"
 
 #include <string> //memcpy
 
-namespace Core
+namespace IO
 {
 	MemoryStream::MemoryStream(void* pMemory, size_t iSize)
 		: m_pMemory(pMemory)

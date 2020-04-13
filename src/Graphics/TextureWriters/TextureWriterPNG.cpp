@@ -10,7 +10,7 @@ namespace Graphics
 	namespace TextureWriter
 	{
 		ESupportedWriter TextureWriterSupportedPNG(Texture* pTexture);
-		bool TextureWriterPNG(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream);
+		bool TextureWriterPNG(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
 
 		void RegisterWriterPNG()
 		{
@@ -58,11 +58,11 @@ namespace Graphics
 
 		void WriteToStream(void* pContext, void* pData, int iSize)
 		{
-			Core::Stream* pStream = (Core::Stream*)pContext;
+			IO::Stream* pStream = (IO::Stream*)pContext;
 			CORE_VERIFY(pStream->Write(pData, iSize) == iSize);
 		}
 
-		bool TextureWriterPNG(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream)
+		bool TextureWriterPNG(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream)
 		{
 			Texture oNewTexture;
 

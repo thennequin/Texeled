@@ -10,7 +10,7 @@ namespace Graphics
 	namespace TextureWriter
 	{
 		ESupportedWriter TextureWriterSupportedEXR(Texture* pTexture);
-		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream);
+		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
 
 		void RegisterWriterEXR()
 		{
@@ -58,7 +58,7 @@ namespace Graphics
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* /*pSettings*/, Core::Stream* pStream)
+		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* /*pSettings*/, IO::Stream* pStream)
 		{
 			Texture oNewTexture;
 

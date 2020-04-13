@@ -8,7 +8,7 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderSTBI(IO::Stream* pStream, Texture* pTexture);
 
 		void RegisterLoaderSTBI()
 		{
@@ -21,23 +21,23 @@ namespace Graphics
 
 		int StreamRead(void* pUser, char* pData, int iSize)
 		{
-			Core::Stream* pStream = (Core::Stream*)pUser;
+			IO::Stream* pStream = (IO::Stream*)pUser;
 			return (int)pStream->Read(pData, (size_t)iSize);
 		}
 
 		void StreamSkip(void* pUser, int n)
 		{
-			Core::Stream* pStream = (Core::Stream*)pUser;
-			pStream->Seek(n, Core::Stream::SeekModeEnum::OFFSET);
+			IO::Stream* pStream = (IO::Stream*)pUser;
+			pStream->Seek(n, IO::Stream::SeekModeEnum::OFFSET);
 		}
 
 		int StreamEof(void* pUser)
 		{
-			Core::Stream* pStream = (Core::Stream*)pUser;
+			IO::Stream* pStream = (IO::Stream*)pUser;
 			return pStream->IsEndOfStream() ? 1 : 0;
 		}
 
-		ErrorCode TextureLoaderSTBI(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderSTBI(IO::Stream* pStream, Texture* pTexture)
 		{
 			stbi_io_callbacks oCallbacks;
 			oCallbacks.read = StreamRead;
@@ -51,10 +51,10 @@ namespace Graphics
 				return ErrorCode::Fail;
 			}
 
-			if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
+			if (pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN)
 				&& stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
-				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+				pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
 
 				float* pImage = stbi_loadf_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
@@ -71,10 +71,10 @@ namespace Graphics
 					oDesc.pData[0][0] = pImage;
 				}
 			}
-			/*else if (pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN)
+			/*else if (pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN)
 				&& stbi_is_16_bit_from_callbacks(&oCallbacks, pStream))
 			{
-				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+				pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
 				stbi_us* pImage = stbi_load_16_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
 				{
@@ -92,7 +92,7 @@ namespace Graphics
 			}*/
 			else
 			{
-				pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+				pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
 				stbi_uc* pImage = stbi_load_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
 				{

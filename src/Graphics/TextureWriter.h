@@ -18,7 +18,7 @@ namespace Graphics
 	};
 
 	typedef ESupportedWriter(*TextureWriterSupportedFunc)(Texture* pTexture);
-	typedef bool(*TextureWriterFunc)(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream);
+	typedef bool(*TextureWriterFunc)(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
 
 	typedef struct
 	{
@@ -30,7 +30,7 @@ namespace Graphics
 
 	void							RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester);
 
-	ErrorCode						SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToStream(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	ErrorCode						SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	void							GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount);
 }

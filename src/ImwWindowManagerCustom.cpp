@@ -2,7 +2,7 @@
 #include "ImwWindowManagerCustom.h"
 using namespace ImWindow;
 
-#include "Core/MemoryStream.h"
+#include "IO/MemoryStream.h"
 
 #include "Math/Arithmetic.h"
 
@@ -31,7 +31,7 @@ bool ImwWindowManagerCustom::InternalInit()
 
 	//Load Image
 	Graphics::Texture oTexture;
-	Core::MemoryStream oMemStream(Resources::Icons::Default_24_png::Data, Resources::Icons::Default_24_png::Size);
+	IO::MemoryStream oMemStream(Resources::Icons::Default_24_png::Data, Resources::Icons::Default_24_png::Size);
 	CORE_VERIFY(Graphics::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
 	if (oTexture.IsValid())
 	{

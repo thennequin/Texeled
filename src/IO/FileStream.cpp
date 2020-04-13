@@ -6,7 +6,7 @@
 #include <time.h> //time
 #include <stdlib.h> //srand/rand
 
-namespace Core
+namespace IO
 {
 	FileStream::FileStream()
 		: m_pFile(NULL)
@@ -55,8 +55,8 @@ namespace Core
 				m_pSourceFile = pSourceFile;
 				m_eAccessMode = eAccessMode;
 				m_iPos = 0;
-				m_pFileName = StringUtils::StrDup(pNewName);
-				m_pSourceFileName = StringUtils::StrDup(pFilename);
+				m_pFileName = Core::StringUtils::StrDup(pNewName);
+				m_pSourceFileName = Core::StringUtils::StrDup(pFilename);
 				return true;
 			}
 			if (pFile != NULL)
@@ -72,7 +72,7 @@ namespace Core
 				m_pFile = pFile;
 				m_eAccessMode = eAccessMode;
 				m_iPos = 0;
-				m_pFileName = StringUtils::StrDup(pFilename);
+				m_pFileName = Core::StringUtils::StrDup(pFilename);
 
 				return true;
 			}

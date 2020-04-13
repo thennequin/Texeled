@@ -10,13 +10,13 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderKTX(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Texture* pTexture);
 		void RegisterLoaderKTX()
 		{
 			RegisterTextureLoader("Kronos Texture", ".ktx\0", Graphics::TextureLoader::TextureLoaderKTX);
 		}
 
-		ErrorCode TextureLoaderKTX(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Texture* pTexture)
 		{
 			KTX::KTXHeader oHeader;
 
@@ -185,7 +185,7 @@ namespace Graphics
 				//TODO
 
 				uint32_t iPadding = 3 - ((iKeyValueByteSize + 3) % 4);
-				if (pStream->Seek(iPadding, Core::Stream::SeekModeEnum::OFFSET) == false)
+				if (pStream->Seek(iPadding, IO::Stream::SeekModeEnum::OFFSET) == false)
 				{
 					return ErrorCode::Fail;
 				}
@@ -225,7 +225,7 @@ namespace Graphics
 
 							//End of line padding
 							size_t iPadding = (oFaceData.iWidth * oPixelFormatInfo.iBlockWidth) % 4;
-							if (pStream->Seek(iPadding, Core::Stream::SeekModeEnum::OFFSET) == false)
+							if (pStream->Seek(iPadding, IO::Stream::SeekModeEnum::OFFSET) == false)
 							{
 								return ErrorCode::Fail;
 							}

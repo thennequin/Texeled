@@ -21,7 +21,7 @@ namespace Windows
 
 		//Load Image
 		Graphics::Texture oTexture;
-		Core::MemoryStream oMemStream(Resources::Icons::Default_png::Data, Resources::Icons::Default_png::Size);
+		IO::MemoryStream oMemStream(Resources::Icons::Default_png::Data, Resources::Icons::Default_png::Size);
 		CORE_VERIFY(Graphics::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
 		if (oTexture.IsValid())
 		{

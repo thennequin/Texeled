@@ -1,9 +1,9 @@
-#ifndef __CORE_MEMORY_STREAM_H__
-#define __CORE_MEMORY_STREAM_H__
+#ifndef __IO_MEMORY_STREAM_H__
+#define __IO_MEMORY_STREAM_H__
 
 #include "IO/Stream.h"
 
-namespace Core
+namespace IO
 {
 	class MemoryStream : public Stream
 	{
@@ -31,4 +31,4 @@ namespace Core
 }
 //namespace Core
 
-#endif //__CORE_MEMORY_STREAM_H__
+#endif //__IO_MEMORY_STREAM_H__

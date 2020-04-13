@@ -18,7 +18,7 @@ namespace Graphics
 		s_oTextureWriters.push_back(oInfo);
 	}
 
-	ErrorCode SaveToStream(Texture* pTexture, const WriterSettings* pSettings, Core::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToStream(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{
@@ -60,8 +60,8 @@ namespace Graphics
 	{
 		if (pTexture != NULL)
 		{
-			Core::FileStream oFileStream;
-			if (oFileStream.Open(pFilename, Core::FileStream::AccessModeEnum::WRITE_SAFE))
+			IO::FileStream oFileStream;
+			if (oFileStream.Open(pFilename, IO::FileStream::AccessModeEnum::WRITE_SAFE))
 			{
 				ErrorCode oErr = SaveToStream(pTexture, pSettings, &oFileStream, pFilename, pUseWriter);
 

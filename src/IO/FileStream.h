@@ -1,9 +1,9 @@
-#ifndef __CORE_FILE_STREAM_H__
-#define __CORE_FILE_STREAM_H__
+#ifndef __IO_FILE_STREAM_H__
+#define __IO_FILE_STREAM_H__
 
 #include "IO/Stream.h"
 
-namespace Core
+namespace IO
 {
 	class FileStream : public Stream
 	{
@@ -47,4 +47,4 @@ namespace Core
 }
 //namespace Core
 
-#endif //__CORE_FILE_STREAM_H__
+#endif //__IO_FILE_STREAM_H__

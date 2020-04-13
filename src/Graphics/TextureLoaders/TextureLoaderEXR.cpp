@@ -10,13 +10,13 @@ namespace Graphics
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderEXR(Core::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderEXR(IO::Stream* pStream, Texture* pTexture);
 		void RegisterLoaderEXR()
 		{
 			Graphics::RegisterTextureLoader("OpenEXR", "*.exr\0", Graphics::TextureLoader::TextureLoaderEXR);
 		}
 
-		ErrorCode TextureLoaderEXR(Core::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderEXR(IO::Stream* pStream, Texture* pTexture)
 		{
 			const char* pErr = NULL;
 
@@ -47,14 +47,14 @@ namespace Graphics
 			}
 
 			Core::Array<unsigned char> oStreamContent;
-			pStream->Seek(0, Core::Stream::SeekModeEnum::END);
+			pStream->Seek(0, IO::Stream::SeekModeEnum::END);
 
 			if (oStreamContent.resize(pStream->Tell(), false) == false)
 			{
 				return ErrorCode(1, "Not enought free memory");
 			}
 
-			pStream->Seek(0, Core::Stream::SeekModeEnum::BEGIN);
+			pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
 
 			if (pStream->Read(oStreamContent.begin(), oStreamContent.size()) != oStreamContent.size())
 			{
