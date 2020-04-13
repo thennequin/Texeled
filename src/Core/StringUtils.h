@@ -9,6 +9,8 @@ namespace Core
 	{
 		size_t					StrLen(const char* pString, size_t iBufferSize);
 		char*					StrDup(const char* pString);
+		int						StrCmp(const char* pLeft, size_t iLeftLen, const char* pRight, size_t iRightLen);
+		int						StrCmpI(const char* pLeft, size_t iLeftLen, const char* pRight, size_t iRightLen);
 		void					SubString(const char* pSource, size_t iSourceLength, char* pDest, size_t iDestSize, int iStart, int iLength = -1);
 		int						FindFirst(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize);
 		int						FindLast(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize);

@@ -2,7 +2,7 @@
 
 #include "Core/Assert.h"
 
-#include <string.h> // strlen
+#include <string.h> // strlen / tolower
 #include <ctype.h> // toupper
 #include <stdlib.h> // malloc
 #include <stdio.h> // vsnprintf
@@ -60,6 +60,38 @@ namespace Core
 				++pStart;
 			}
 			*pDest = 0;
+		}
+
+		int StrCmp(const char* pLeft, size_t iLeftLen, const char* pRight, size_t iRightLen)
+		{
+			size_t iPosLeft = 0;
+			size_t iPosRight = 0;
+			while (iPosLeft < iLeftLen && iPosRight < iRightLen && pLeft[iPosLeft] == pRight[iPosRight])
+			{
+				iPosLeft++;
+				iPosRight++;
+			}
+
+			if (iPosLeft == iLeftLen && iPosRight == iRightLen)
+				return 0;
+
+			return pLeft[iPosLeft] - pRight[iPosRight];
+		}
+
+		int StrCmpI(const char* pLeft, size_t iLeftLen, const char* pRight, size_t iRightLen)
+		{
+			size_t iPosLeft = 0;
+			size_t iPosRight = 0;
+			while (iPosLeft < iLeftLen && iPosRight < iRightLen && tolower(pLeft[iPosLeft]) == tolower(pRight[iPosRight]))
+			{
+				iPosLeft++;
+				iPosRight++;
+			}
+
+			if (iPosLeft == iLeftLen && iPosRight == iRightLen)
+				return 0;
+
+			return pLeft[iPosLeft] - pRight[iPosRight];
 		}
 
 		int FindFirst(const char* pSource, size_t iSourceSize, const char* pSearch, size_t iSearchSize)
