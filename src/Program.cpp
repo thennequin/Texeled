@@ -13,6 +13,8 @@
 #include "Core/StringBuilder.h"
 #include "Core/StringUtils.h"
 
+#include "IO/FileSystem.h"
+
 #include "Graphics/TextureLoader.h"
 #include "Graphics/TextureWriter.h"
 
@@ -128,6 +130,9 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_O, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
 	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
 	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
+
+	m_oShortkeys.pOpenPreviousFile = m_pShortKeyManager->RegisterShortKey("Open previous file", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEUP, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenPreviousFileCallback), false);
+	m_oShortkeys.pOpenNextFile = m_pShortKeyManager->RegisterShortKey("Open next", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEDOWN, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenNextFileCallback), false);
 
 	m_pMenus = new Menus();
 	new StatusBars();
@@ -357,4 +362,62 @@ void Program::SaveAs()
 		LoadFile(pBuffer);
 	}
 	free(pExts);
+}
+
+bool Program::OpenPreviousFile()
+{
+	if (m_pTexturePath != NULL)
+	{
+		char pBuffers[2][1024];
+		char* pPreviousFile = pBuffers[0];
+		char* pFile = pBuffers[1];
+		strcpy(pFile, m_pTexturePath);
+		while (IO::FileSystem::GetPreviousFile(pFile, pPreviousFile, sizeof(pBuffers[0])))
+		{
+			Core::LogDebug("Program", "Try loding file '%s'", pPreviousFile);
+			if (LoadFileInternal(pPreviousFile) == ErrorCode::Ok)
+			{
+				Core::LogDebug("Program", "File '%s' loaded", pPreviousFile);
+				return true;
+			}
+
+			pFile = pPreviousFile;
+			pPreviousFile = pFile;
+		}
+	}
+	return false;
+}
+
+bool Program::OpenNextFile()
+{
+	if (m_pTexturePath != NULL)
+	{
+		char pBuffers[2][1024];
+		char* pNextFile = pBuffers[0];
+		char* pFile = pBuffers[1];
+		strcpy(pFile, m_pTexturePath);
+		while (IO::FileSystem::GetNextFile(pFile, pNextFile, sizeof(pBuffers[0])))
+		{
+			Core::LogDebug("Program", "Try loding file '%s'", pNextFile);
+			if (LoadFileInternal(pNextFile) == ErrorCode::Ok)
+			{
+				Core::LogDebug("Program", "File '%s' loaded", pNextFile);
+				return true;
+			}
+
+			pFile = pNextFile;
+			pNextFile = pFile;
+		}
+	}
+	return false;
+}
+
+void Program::OpenPreviousFileCallback()
+{
+	OpenPreviousFile();
+}
+
+void Program::OpenNextFileCallback()
+{
+	OpenNextFile();
 }

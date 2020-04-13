@@ -33,6 +33,9 @@ struct Shortkeys
 	const ShortKeyManager::ShortKey* pOpen;
 	const ShortKeyManager::ShortKey* pSave;
 	const ShortKeyManager::ShortKey* pSaveAs;
+
+	const ShortKeyManager::ShortKey* pOpenPreviousFile;
+	const ShortKeyManager::ShortKey* pOpenNextFile;
 };
 
 struct Fonts
@@ -127,6 +130,9 @@ public:
 	void									Save();
 	void									SaveAs();
 
+	bool									OpenPreviousFile();
+	bool									OpenNextFile();
+
 	const Shortkeys&						GetShortkeys() const { return m_oShortkeys; }
 	const Fonts&							GetFonts() const { return m_oFonts; }
 
@@ -139,6 +145,9 @@ public:
 	void									ClearLogs();
 protected:
 	virtual void							Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage);
+
+	void									OpenPreviousFileCallback();
+	void									OpenNextFileCallback();
 
 	static Program*							s_pInstance;
 
