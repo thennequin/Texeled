@@ -1,8 +1,9 @@
 #include "Graphics/TextureUtils.h"
 
 #include "Core/Assert.h"
-#include "Core/FileStream.h"
 #include "Core/StringUtils.h"
+
+#include "IO/FileStream.h"
 
 #include "Math/Arithmetic.h"
 #include "Math/Constants.h"

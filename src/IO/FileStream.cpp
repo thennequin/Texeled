@@ -1,4 +1,4 @@
-#include "Core/FileStream.h"
+#include "IO/FileStream.h"
 
 #include "Core/StringUtils.h"
 

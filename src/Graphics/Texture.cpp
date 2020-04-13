@@ -1,6 +1,6 @@
 #include "Graphics/Texture.h"
 
-#include "Core/FileStream.h"
+#include "IO/FileStream.h"
 
 #include <stdlib.h> //malloc/free/NULL
 #include <string.h> //memcpy/memset

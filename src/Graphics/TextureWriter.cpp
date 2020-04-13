@@ -1,7 +1,8 @@
 #include "Graphics/TextureWriter.h"
 
 #include "Core/StringUtils.h"
-#include "Core/FileStream.h"
+
+#include "IO/FileStream.h"
 
 namespace Graphics
 {

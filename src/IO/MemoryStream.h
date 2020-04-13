@@ -1,7 +1,7 @@
 #ifndef __CORE_MEMORY_STREAM_H__
 #define __CORE_MEMORY_STREAM_H__
 
-#include "Core/Stream.h"
+#include "IO/Stream.h"
 
 namespace Core
 {

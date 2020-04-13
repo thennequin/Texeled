@@ -2,7 +2,7 @@
 
 #include "Program.h"
 
-#include "Core/MemoryStream.h"
+#include "IO/MemoryStream.h"
 
 #include "Graphics/TextureLoader.h"
 #include "GraphicResources/Texture2D.h"

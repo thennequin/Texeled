@@ -2,9 +2,10 @@
 #define __GRAPHICS_TEXTURE_H__
 
 #include "Core/ErrorCode.h"
-#include "Core/Stream.h"
 #include "Core/Array.h"
 #include "Core/Memory.h"
+
+#include "IO/Stream.h"
 
 #include "Graphics/PixelFormat.h"
 
