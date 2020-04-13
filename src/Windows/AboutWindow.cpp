@@ -4,7 +4,8 @@
 
 #include "IO/MemoryStream.h"
 
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
+
 #include "GraphicResources/Texture2D.h"
 
 #include "Resources/Icons/Default_png.h"
@@ -22,7 +23,7 @@ namespace Windows
 		//Load Image
 		Graphics::Texture oTexture;
 		IO::MemoryStream oMemStream(Resources::Icons::Default_png::Data, Resources::Icons::Default_png::Size);
-		CORE_VERIFY(Graphics::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIcon));

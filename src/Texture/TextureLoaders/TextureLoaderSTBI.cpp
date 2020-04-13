@@ -1,24 +1,13 @@
-#include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
+#include "Texture/TextureLoaders/TextureLoaderSTBI.h"
 
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
 
 #include "stb_image.h"
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderSTBI(IO::Stream* pStream, Texture* pTexture);
-
-		void RegisterLoaderSTBI()
-		{
-			RegisterTextureLoader("Joint Photographic Experts Group", "*.jpg\0*.jpeg\0", Graphics::TextureLoader::TextureLoaderSTBI);
-			RegisterTextureLoader("Truevision Targa", "*.tga\0", Graphics::TextureLoader::TextureLoaderSTBI);
-			RegisterTextureLoader("Bitmap", "*.bmp\0", Graphics::TextureLoader::TextureLoaderSTBI);
-			RegisterTextureLoader("HDR", "*.hdr\0", Graphics::TextureLoader::TextureLoaderSTBI);
-			RegisterTextureLoader("Photoshop", "*.psd\0", Graphics::TextureLoader::TextureLoaderSTBI);
-		}
-
 		int StreamRead(void* pUser, char* pData, int iSize)
 		{
 			IO::Stream* pStream = (IO::Stream*)pUser;
@@ -37,14 +26,14 @@ namespace Graphics
 			return pStream->IsEndOfStream() ? 1 : 0;
 		}
 
-		ErrorCode TextureLoaderSTBI(IO::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderSTBI(IO::Stream* pStream, Graphics::Texture* pTexture)
 		{
 			stbi_io_callbacks oCallbacks;
 			oCallbacks.read = StreamRead;
 			oCallbacks.skip = StreamSkip;
 			oCallbacks.eof = StreamEof;
 
-			Texture::Desc oDesc;
+			Graphics::Texture::Desc oDesc;
 			int iComponentCount = 0;
 			if (stbi_info_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount) == 0)
 			{
@@ -62,10 +51,10 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						oDesc.ePixelFormat = PixelFormatEnum::RGB32_FLOAT;
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB32_FLOAT;
 						break;
 					case 4:
-						oDesc.ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA32_FLOAT;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
@@ -99,17 +88,17 @@ namespace Graphics
 					switch (iComponentCount)
 					{
 					case 3:
-						oDesc.ePixelFormat = PixelFormatEnum::RGB8_UNORM;
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 						break;
 					case 4:
-						oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 						break;
 					}
 					oDesc.pData[0][0] = pImage;
 				}
 			}
 
-			if (oDesc.ePixelFormat != PixelFormatEnum::_NONE && oDesc.pData[0][0] != NULL)
+			if (oDesc.ePixelFormat != Graphics::PixelFormatEnum::_NONE && oDesc.pData[0][0] != NULL)
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
 				stbi_image_free((void*)oDesc.pData[0][0]);
@@ -118,7 +107,16 @@ namespace Graphics
 			const char* pError = stbi_failure_reason();
 			return ErrorCode(1, "%s", pError);
 		}
+
+		void RegisterLoaderSTBI()
+		{
+			RegisterTextureLoader("Joint Photographic Experts Group", "*.jpg\0*.jpeg\0", TextureLoaderSTBI);
+			RegisterTextureLoader("Truevision Targa", "*.tga\0", TextureLoaderSTBI);
+			RegisterTextureLoader("Bitmap", "*.bmp\0", TextureLoaderSTBI);
+			RegisterTextureLoader("HDR", "*.hdr\0", TextureLoaderSTBI);
+			RegisterTextureLoader("Photoshop", "*.psd\0", TextureLoaderSTBI);
+		}
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture

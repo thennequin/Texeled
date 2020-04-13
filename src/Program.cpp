@@ -15,18 +15,18 @@
 
 #include "IO/FileSystem.h"
 
-#include "Graphics/TextureLoader.h"
-#include "Graphics/TextureWriter.h"
+#include "Texture/TextureLoader.h"
+#include "Texture/TextureWriter.h"
 
-#include "Graphics/TextureLoaders/TextureLoaderSTBI.h"
-#include "Graphics/TextureLoaders/TextureLoaderPNG.h"
-#include "Graphics/TextureLoaders/TextureLoaderDDS.h"
-#include "Graphics/TextureLoaders/TextureLoaderEXR.h"
-#include "Graphics/TextureLoaders/TextureLoaderKTX.h"
+#include "Texture/TextureLoaders/TextureLoaderSTBI.h"
+#include "Texture/TextureLoaders/TextureLoaderPNG.h"
+#include "Texture/TextureLoaders/TextureLoaderDDS.h"
+#include "Texture/TextureLoaders/TextureLoaderEXR.h"
+#include "Texture/TextureLoaders/TextureLoaderKTX.h"
 
-#include "Graphics/TextureWriters/TextureWriterDDS.h"
-#include "Graphics/TextureWriters/TextureWriterPNG.h"
-#include "Graphics/TextureWriters/TextureWriterEXR.h"
+#include "Texture/TextureWriters/TextureWriterDDS.h"
+#include "Texture/TextureWriters/TextureWriterPNG.h"
+#include "Texture/TextureWriters/TextureWriterEXR.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
 #include "Resources/Fonts/Consolas_Bold_ttf.h"
@@ -60,15 +60,15 @@ Program::Program(int iArgCount, char** pArgs)
 		CORE_ASSERT(Graphics::PixelFormatEnumInfos[i].eFormat == i);
 	}
 
-	Graphics::TextureLoader::RegisterLoaderPNG();
-	Graphics::TextureLoader::RegisterLoaderSTBI();
-	Graphics::TextureLoader::RegisterLoaderDDS();
-	Graphics::TextureLoader::RegisterLoaderEXR();
-	Graphics::TextureLoader::RegisterLoaderKTX();
+	Texture::TextureLoader::RegisterLoaderPNG();
+	Texture::TextureLoader::RegisterLoaderSTBI();
+	Texture::TextureLoader::RegisterLoaderDDS();
+	Texture::TextureLoader::RegisterLoaderEXR();
+	Texture::TextureLoader::RegisterLoaderKTX();
 
-	Graphics::TextureWriter::RegisterWriterDDS();
-	Graphics::TextureWriter::RegisterWriterPNG();
-	Graphics::TextureWriter::RegisterWriterEXR();
+	Texture::TextureWriter::RegisterWriterDDS();
+	Texture::TextureWriter::RegisterWriterPNG();
+	Texture::TextureWriter::RegisterWriterEXR();
 
 	ImFontConfig oConfig;
 	oConfig.MergeMode = false;
@@ -254,7 +254,7 @@ void Program::UpdateTexture2DRes()
 	}
 }
 
-bool Program::LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
+bool Program::LoadFile(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader)
 {
 	ErrorCode oErr = LoadFileInternal(pFile, pUseLoader);
 	if (oErr == ErrorCode::Ok)
@@ -266,9 +266,9 @@ bool Program::LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUs
 	return false;
 }
 
-ErrorCode Program::LoadFileInternal(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader)
+ErrorCode Program::LoadFileInternal(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader)
 {
-	ErrorCode oErr = Graphics::LoadFromFile(&m_oTexture, pFile, pUseLoader);
+	ErrorCode oErr = Texture::LoadFromFile(&m_oTexture, pFile, pUseLoader);
 	if (oErr == ErrorCode::Ok)
 	{
 		if (m_pTexturePath != NULL)
@@ -287,7 +287,7 @@ void Program::Open()
 	Core::StringBuilder oExts;
 	static char* s_pExts = NULL;
 
-	const Graphics::TextureLoaderInfo* pLoaders;
+	const Texture::TextureLoaderInfo* pLoaders;
 	int iLoaderCount;
 	GetTextureLoaders(&pLoaders, &iLoaderCount);
 
@@ -315,7 +315,7 @@ void Program::Open()
 	char* pExts = oExts.Export();
 	if (PlatformUtils::OpenFileDialog("Open file", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
-		const Graphics::TextureLoaderInfo* pLoaderInfo = NULL;
+		const Texture::TextureLoaderInfo* pLoaderInfo = NULL;
 		if (iSelectedIndex > 0)
 		{
 			pLoaderInfo = &pLoaders[iSelectedIndex - 1];
@@ -340,9 +340,9 @@ void Program::SaveAs()
 	Core::StringBuilder oExts;
 	static char* s_pExts = NULL;
 
-	const Graphics::TextureWriterInfo* pWriters;
+	const Texture::TextureWriterInfo* pWriters;
 	int iWriterCount;
-	Graphics::GetTextureWriters(&pWriters, &iWriterCount);
+	Texture::GetTextureWriters(&pWriters, &iWriterCount);
 
 	for (int iWriterIndex = 0; iWriterIndex < iWriterCount; ++iWriterIndex)
 	{
@@ -358,7 +358,7 @@ void Program::SaveAs()
 	char* pExts = oExts.Export();
 	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
-		CORE_VERIFY_OK(Graphics::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iSelectedIndex]));
+		CORE_VERIFY_OK(Texture::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iSelectedIndex]));
 		LoadFile(pBuffer);
 	}
 	free(pExts);

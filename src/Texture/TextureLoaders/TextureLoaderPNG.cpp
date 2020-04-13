@@ -1,8 +1,8 @@
-#include "Graphics/TextureLoaders/TextureLoaderPNG.h"
+#include "Texture/TextureLoaders/TextureLoaderPNG.h"
 
 #include "Core/Logger.h"
 
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
 
 #include <png.h>
 #ifdef _MSC_VER
@@ -11,17 +11,10 @@
 #endif
 
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderPNG(IO::Stream* pStream, Texture* pTexture);
-
-		void RegisterLoaderPNG()
-		{
-			RegisterTextureLoader("Portable Network Graphics", "*.png\0", Graphics::TextureLoader::TextureLoaderPNG);
-		}
-
 		void user_error_fn(png_structp /*pPng*/, png_const_charp pErrorMsg)
 		{
 			Core::LogError("TextureLoaderPNG", "%s", pErrorMsg);
@@ -42,7 +35,7 @@ namespace Graphics
 			}
 		}
 
-		ErrorCode TextureLoaderPNG(IO::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderPNG(IO::Stream* pStream, Graphics::Texture* pTexture)
 		{
 			png_byte pHeader[8];
 			if (pStream->Read(pHeader, 8) != 8)
@@ -126,7 +119,7 @@ namespace Graphics
 				}
 			}
 
-			Texture::Desc oDesc;
+			Graphics::Texture::Desc oDesc;
 			oDesc.iWidth = iWidth;
 			oDesc.iHeight = iHeight;
 			oDesc.pData[0][0] = pImage;
@@ -136,7 +129,7 @@ namespace Graphics
 			case PNG_COLOR_TYPE_GRAY:
 				if (iNewBitDepth == 8)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::R8_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
 					iPixelSize = 1;
 				}
 				else if (iNewBitDepth == 16)
@@ -148,7 +141,7 @@ namespace Graphics
 			case PNG_COLOR_TYPE_GRAY_ALPHA:
 				if (iNewBitDepth == 8)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::RG8_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::RG8_UNORM;
 					iPixelSize = 2;
 				}
 				else if (iNewBitDepth == 16)
@@ -160,24 +153,24 @@ namespace Graphics
 			case PNG_COLOR_TYPE_RGB:
 				if (iNewBitDepth == 8)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::RGB8_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 					iPixelSize = 3;
 				}
 				else if (iNewBitDepth == 16)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::RGB16_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB16_UNORM;
 					iPixelSize = 6;
 				}
 				break;
 			case PNG_COLOR_TYPE_RGBA:
 				if (iNewBitDepth == 8)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 					iPixelSize = 4;
 				}
 				else if (iNewBitDepth == 16)
 				{
-					oDesc.ePixelFormat = PixelFormatEnum::RGBA16_UNORM;
+					oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA16_UNORM;
 					iPixelSize = 8;
 				}
 				break;
@@ -185,7 +178,7 @@ namespace Graphics
 				break;
 			}
 
-			if (oDesc.ePixelFormat != PixelFormatEnum::_NONE)
+			if (oDesc.ePixelFormat != Graphics::PixelFormatEnum::_NONE)
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
 
@@ -203,7 +196,12 @@ namespace Graphics
 
 			return ErrorCode::Ok;
 		}
+
+		void RegisterLoaderPNG()
+		{
+			RegisterTextureLoader("Portable Network Graphics", "*.png\0", TextureLoaderPNG);
+		}
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture

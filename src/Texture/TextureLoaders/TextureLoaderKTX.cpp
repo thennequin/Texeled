@@ -1,22 +1,22 @@
-#include "Graphics/TextureLoaders/TextureLoaderKTX.h"
+#include "Texture/TextureLoaders/TextureLoaderKTX.h"
 
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
 
-#include "Graphics/KTX.h"
+#include "Texture/KTX.h"
 
 #include "Math/Arithmetic.h"
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Texture* pTexture);
+		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Graphics::Texture* pTexture);
 		void RegisterLoaderKTX()
 		{
-			RegisterTextureLoader("Kronos Texture", ".ktx\0", Graphics::TextureLoader::TextureLoaderKTX);
+			RegisterTextureLoader("Kronos Texture", ".ktx\0", TextureLoaderKTX);
 		}
 
-		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderKTX(IO::Stream* pStream, Graphics::Texture* pTexture)
 		{
 			KTX::KTXHeader oHeader;
 
@@ -46,7 +46,7 @@ namespace Graphics
 				return ErrorCode(1, "KTX : Big endian file not supported");
 			}
 
-			PixelFormatEnum ePixelFormat = PixelFormatEnum::_NONE;
+			Graphics::PixelFormatEnum ePixelFormat = Graphics::PixelFormatEnum::_NONE;
 
 			if (oHeader.iGLType != 0)
 			{
@@ -70,16 +70,16 @@ namespace Graphics
 					case KTX::PixelFormatEnum::GL_RED:
 					case KTX::PixelFormatEnum::GL_GREEN:
 					case KTX::PixelFormatEnum::GL_BLUE:
-						ePixelFormat = PixelFormatEnum::R8_UNORM;
+						ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
 						break;
 					case KTX::PixelFormatEnum::GL_LUMINANCE_ALPHA:
-						ePixelFormat = PixelFormatEnum::RG8_UNORM;
+						ePixelFormat = Graphics::PixelFormatEnum::RG8_UNORM;
 						break;
 					case KTX::PixelFormatEnum::GL_RGB:
-						ePixelFormat = PixelFormatEnum::RGB8_UNORM;
+						ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 						break;
 					case KTX::PixelFormatEnum::GL_RGBA:
-						ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
+						ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 						break;
 					default:
 						return ErrorCode(1, "KTX : GLFormat is not supported for this type");
@@ -107,10 +107,10 @@ namespace Graphics
 					switch (oHeader.iGLFormat)
 					{
 					case KTX::PixelFormatEnum::GL_RGB:
-						ePixelFormat = PixelFormatEnum::RGB16_FLOAT;
+						ePixelFormat = Graphics::PixelFormatEnum::RGB16_FLOAT;
 						break;
 					case KTX::PixelFormatEnum::GL_RGBA:
-						ePixelFormat = PixelFormatEnum::RGBA16_FLOAT;
+						ePixelFormat = Graphics::PixelFormatEnum::RGBA16_FLOAT;
 						break;
 					default:
 						return ErrorCode(1, "KTX : GLFormat is not supported for this type");
@@ -127,13 +127,13 @@ namespace Graphics
 				switch (oHeader.iGLInternalFormat)
 				{
 				case KTX::PixelFormatEnum::GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-					ePixelFormat = PixelFormatEnum::BC1;
+					ePixelFormat = Graphics::PixelFormatEnum::BC1;
 					break;
 				case KTX::PixelFormatEnum::GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-					ePixelFormat = PixelFormatEnum::BC2;
+					ePixelFormat = Graphics::PixelFormatEnum::BC2;
 					break;
 				case KTX::PixelFormatEnum::GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-					ePixelFormat = PixelFormatEnum::BC3;
+					ePixelFormat = Graphics::PixelFormatEnum::BC3;
 					break;
 				default:
 					return ErrorCode(1, "KTX : GL Internal Format not supported");
@@ -150,7 +150,7 @@ namespace Graphics
 				return ErrorCode(1, "KTX : Not supported 3D texture");
 			}
 
-			Texture::Desc oDesc;
+			Graphics::Texture::Desc oDesc;
 			oDesc.ePixelFormat = ePixelFormat;
 			oDesc.iWidth = oHeader.iPixelWidth > 0 ? oHeader.iPixelWidth : 1;
 			oDesc.iHeight = oHeader.iPixelHeight > 0 ? oHeader.iPixelHeight : 1;
@@ -193,7 +193,7 @@ namespace Graphics
 				iReadKeyValuePair += sizeof(uint32_t) + iKeyValueByteSize + iPadding;
 			}
 
-			const PixelFormatInfos& oPixelFormatInfo = PixelFormatEnumInfos[ePixelFormat];
+			const Graphics::PixelFormatInfos& oPixelFormatInfo = Graphics::PixelFormatEnumInfos[ePixelFormat];
 
 			for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
 			{
@@ -207,7 +207,7 @@ namespace Graphics
 				{
 					//TODO z_slice
 					{
-						const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+						const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
 
 						int iBlock = 0;
 						for (int iY = 0; iY < oFaceData.iHeight; iY += oPixelFormatInfo.iBlockHeight )
@@ -241,4 +241,4 @@ namespace Graphics
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture

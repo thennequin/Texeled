@@ -1,10 +1,10 @@
-#include "Graphics/TextureWriter.h"
+#include "Texture/TextureWriter.h"
 
 #include "Core/StringUtils.h"
 
 #include "IO/FileStream.h"
 
-namespace Graphics
+namespace Texture
 {
 	static Core::Array<TextureWriterInfo>	s_oTextureWriters;
 
@@ -18,7 +18,7 @@ namespace Graphics
 		s_oTextureWriters.push_back(oInfo);
 	}
 
-	ErrorCode SaveToStream(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToStream(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{
@@ -56,7 +56,7 @@ namespace Graphics
 		return ErrorCode(1, "Invalid arguments");
 	}
 
-	ErrorCode SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToFile(Graphics::Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{

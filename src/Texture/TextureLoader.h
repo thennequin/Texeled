@@ -1,12 +1,12 @@
-#ifndef __GRAPHICS_TEXTURE_LOADER_H__
-#define __GRAPHICS_TEXTURE_LOADER_H__
+#ifndef __TEXTURE_TEXTURE_LOADER_H__
+#define __TEXTURE_TEXTURE_LOADER_H__
 
 #include "Core/ErrorCode.h"
 #include "Graphics/Texture.h"
 
-namespace Graphics
+namespace Texture
 {
-	typedef ErrorCode(*TextureLoaderFunc)(IO::Stream* pStream, Texture* pTexture);
+	typedef ErrorCode(*TextureLoaderFunc)(IO::Stream* pStream, Graphics::Texture* pTexture);
 
 	typedef struct
 	{
@@ -17,9 +17,10 @@ namespace Graphics
 
 	void						RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
 
-	ErrorCode					LoadFromStream(Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
-	ErrorCode					LoadFromFile(Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode					LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode					LoadFromFile(Graphics::Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);
 	void						GetTextureLoaders(const TextureLoaderInfo** pOutLoaders, int* pOutCount);
 }
+//namespace Texture
 
-#endif //__GRAPHICS_TEXTURE_LOADER_H__
+#endif //__TEXTURE_TEXTURE_LOADER_H__

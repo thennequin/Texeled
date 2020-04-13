@@ -1,10 +1,10 @@
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
 
 #include "Core/StringUtils.h"
 
 #include "IO/FileStream.h"
 
-namespace Graphics
+namespace Texture
 {
 	static Core::Array<TextureLoaderInfo>	s_oTextureLoaders;
 
@@ -21,11 +21,11 @@ namespace Graphics
 		s_oTextureLoaders.push_back(oInfo);
 	}
 
-	ErrorCode LoadFromStream(Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader)
+	ErrorCode LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader)
 	{
 		if (pTexture != NULL && pStream != NULL && pStream->IsReadable())
 		{
-			Texture oTemp;
+			Graphics::Texture oTemp;
 			if (pUseLoader != NULL)
 			{
 				ErrorCode oErr = pUseLoader->pLoader(pStream, &oTemp);
@@ -57,7 +57,7 @@ namespace Graphics
 		return ErrorCode::Fail;
 	}
 
-	ErrorCode LoadFromFile(Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader)
+	ErrorCode LoadFromFile(Graphics::Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader)
 	{
 		if (pTexture != NULL)
 		{

@@ -1,7 +1,7 @@
-#ifndef __GRAPHICS_TEXTURE_LOADER_EXR_H__
-#define __GRAPHICS_TEXTURE_LOADER_EXR_H__
+#ifndef __TEXTURE_TEXTURE_LOADER_EXR_H__
+#define __TEXTURE_TEXTURE_LOADER_EXR_H__
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureLoader
 	{
@@ -9,6 +9,6 @@ namespace Graphics
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture
 
-#endif //__GRAPHICS_TEXTURE_LOADER_EXR_H__
+#endif //__TEXTURE_TEXTURE_LOADER_EXR_H__

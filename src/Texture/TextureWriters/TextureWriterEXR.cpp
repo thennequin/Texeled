@@ -1,54 +1,46 @@
-#include "Graphics/TextureWriters/TextureWriterEXR.h"
+#include "Texture/TextureWriters/TextureWriterEXR.h"
 
-#include "Graphics/TextureWriter.h"
+#include "Texture/TextureWriter.h"
 #include "Graphics/TextureUtils.h"
 
 #include "tinyexr.h"
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureWriter
 	{
-		ESupportedWriter TextureWriterSupportedEXR(Texture* pTexture);
-		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
-
-		void RegisterWriterEXR()
-		{
-			RegisterTextureWriter("OpenEXR", "*.exr\0", TextureWriterEXR, TextureWriterSupportedEXR);
-		}
-
-		ESupportedWriter TextureWriterSupportedEXR(Texture* pTexture)
+		ESupportedWriter TextureWriterSupportedEXR(Graphics::Texture* pTexture)
 		{
 			if (pTexture->GetMipCount() != 1 || pTexture->GetFaceCount() != 1)
 			{
 				return E_SUPPORTED_WRITER_PARTIAL;
 			}
 
-			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
+			Graphics::PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
+			int iComp = Graphics::PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
-			if( ePixelFormat != PixelFormatEnum::RGB16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGB32_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT )
+			if( ePixelFormat != Graphics::PixelFormatEnum::RGB16_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA16_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGB32_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA32_FLOAT )
 			{
 				if (iComp == 3)
 				{
-					ePixelFormat = PixelFormatEnum::RGB32_FLOAT;
+					ePixelFormat = Graphics::PixelFormatEnum::RGB32_FLOAT;
 				}
 				else if (iComp == 4)
 				{
-					ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
+					ePixelFormat = Graphics::PixelFormatEnum::RGBA32_FLOAT;
 				}
 				else
 				{
 					return E_SUPPORTED_WRITER_FALSE;
 				}
 
-				PixelFormat::ConvertionFuncChain oConvertionFuncChain;
+				Graphics::PixelFormat::ConvertionFuncChain oConvertionFuncChain;
 				int iConvertionChainLength;
 				int iAdditionalBits;
-				if (PixelFormat::GetConvertionChain(pTexture->GetPixelFormat(), ePixelFormat, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits) == false)
+				if (Graphics::PixelFormat::GetConvertionChain(pTexture->GetPixelFormat(), ePixelFormat, &oConvertionFuncChain, &iConvertionChainLength, &iAdditionalBits) == false)
 				{
 					return E_SUPPORTED_WRITER_FALSE;
 				}
@@ -58,25 +50,25 @@ namespace Graphics
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterEXR(Texture* pTexture, const WriterSettings* /*pSettings*/, IO::Stream* pStream)
+		bool TextureWriterEXR(Graphics::Texture* pTexture, const WriterSettings* /*pSettings*/, IO::Stream* pStream)
 		{
-			Texture oNewTexture;
+			Graphics::Texture oNewTexture;
 
-			PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
-			const int iComp = PixelFormatEnumInfos[ePixelFormat].iComponentCount;
+			Graphics::PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
+			const int iComp = Graphics::PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
-			if (ePixelFormat != PixelFormatEnum::RGB16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA16_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGB32_FLOAT
-				&& ePixelFormat != PixelFormatEnum::RGBA32_FLOAT )
+			if (ePixelFormat != Graphics::PixelFormatEnum::RGB16_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA16_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGB32_FLOAT
+				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA32_FLOAT )
 			{
 				if (iComp == 3)
 				{
-					ePixelFormat = PixelFormatEnum::RGB32_FLOAT;
+					ePixelFormat = Graphics::PixelFormatEnum::RGB32_FLOAT;
 				}
 				else if (iComp == 4)
 				{
-					ePixelFormat = PixelFormatEnum::RGBA32_FLOAT;
+					ePixelFormat = Graphics::PixelFormatEnum::RGBA32_FLOAT;
 				}
 				else
 				{
@@ -90,9 +82,9 @@ namespace Graphics
 				pTexture = &oNewTexture;
 			}
 
-			const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(0, 0);
+			const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(0, 0);
 
-			bool bHalf = (ePixelFormat == PixelFormatEnum::RGB16_FLOAT) || (ePixelFormat == PixelFormatEnum::RGBA16_FLOAT);
+			bool bHalf = (ePixelFormat == Graphics::PixelFormatEnum::RGB16_FLOAT) || (ePixelFormat == Graphics::PixelFormatEnum::RGBA16_FLOAT);
 			EXRHeader header;
 			InitEXRHeader(&header);
 
@@ -153,8 +145,12 @@ namespace Graphics
 
 			return bOk;
 		}
+
+		void RegisterWriterEXR()
+		{
+			RegisterTextureWriter("OpenEXR", "*.exr\0", TextureWriterEXR, TextureWriterSupportedEXR);
+		}
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
-
+//namespace Texture

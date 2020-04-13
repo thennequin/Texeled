@@ -1,30 +1,21 @@
-#include "Graphics/TextureWriters/TextureWriterDDS.h"
+#include "Texture/TextureWriters/TextureWriterDDS.h"
 
-#include "Graphics/TextureWriter.h"
+#include "Texture/TextureWriter.h"
 
-#include "Graphics/DDS.h"
+#include "Texture/DDS.h"
 
 #include "Math/Arithmetic.h"
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureWriter
 	{
-		ESupportedWriter TextureWriterSupportedDDS(Texture* pTexture);
-		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
-
-		void RegisterWriterDDS()
-		{
-			RegisterTextureWriter("DirectDraw Surface", "*.dds\0", TextureWriterDDS, TextureWriterSupportedDDS);
-		}
-
-
-		ESupportedWriter TextureWriterSupportedDDS(Texture* pTexture)
+		ESupportedWriter TextureWriterSupportedDDS(Graphics::Texture* pTexture)
 		{
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterDDS(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream)
+		bool TextureWriterDDS(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream)
 		{
 			uint32_t iDDSMagic = DDS_MAGIC;
 			DDS_HEADER oDDSHeader;
@@ -64,75 +55,75 @@ namespace Graphics
 
 			switch (pTexture->GetPixelFormat())
 			{
-			case PixelFormatEnum::RGB8_UNORM:
+			case Graphics::PixelFormatEnum::RGB8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::RGBA8_UNORM:
+			case Graphics::PixelFormatEnum::RGBA8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R8G8B8A8, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::BGR8_UNORM:
+			case Graphics::PixelFormatEnum::BGR8_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_B8G8R8, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::R5G6B5_UNORM:
+			case Graphics::PixelFormatEnum::R5G6B5_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_R5G6B5, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::B5G6BR_UNORM:
+			case Graphics::PixelFormatEnum::B5G6BR_UNORM:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_B5G6R5, sizeof(DDS_PIXELFORMAT));
 				break;
 
-			case PixelFormatEnum::BC1:
+			case Graphics::PixelFormatEnum::BC1:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT1, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::BC2:
+			case Graphics::PixelFormatEnum::BC2:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT3, sizeof(DDS_PIXELFORMAT));
 				break;
-			case PixelFormatEnum::BC3:
+			case Graphics::PixelFormatEnum::BC3:
 				memcpy(&oDDSHeader.oPixelFormat, &DDSPF_DXT5, sizeof(DDS_PIXELFORMAT));
 				break;
 
 			//DX10
-			case PixelFormatEnum::RGBA16_FLOAT:
+			case Graphics::PixelFormatEnum::RGBA16_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 				break;
-			case PixelFormatEnum::R32_FLOAT:
+			case Graphics::PixelFormatEnum::R32_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32_FLOAT;
 				break;
-			case PixelFormatEnum::RG32_FLOAT:
+			case Graphics::PixelFormatEnum::RG32_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 				break;
-			case PixelFormatEnum::RGB32_FLOAT:
+			case Graphics::PixelFormatEnum::RGB32_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 				break;
-			case PixelFormatEnum::RGBA32_FLOAT:
+			case Graphics::PixelFormatEnum::RGBA32_FLOAT:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 				break;
-			case PixelFormatEnum::R10G10B10A2_UNORM:
+			case Graphics::PixelFormatEnum::R10G10B10A2_UNORM:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R10G10B10A2_UNORM;
 				break;
-			case PixelFormatEnum::R9G9B9E5_SHAREDEXP:
+			case Graphics::PixelFormatEnum::R9G9B9E5_SHAREDEXP:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
 				break;
 
-			case PixelFormatEnum::BC4:
+			case Graphics::PixelFormatEnum::BC4:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC4_TYPELESS;
 				break;
-			case PixelFormatEnum::BC5:
+			case Graphics::PixelFormatEnum::BC5:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC5_TYPELESS;
 				break;
-			case PixelFormatEnum::BC6H:
+			case Graphics::PixelFormatEnum::BC6H:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC6H_TYPELESS;
 				break;
-			case PixelFormatEnum::BC7:
+			case Graphics::PixelFormatEnum::BC7:
 				bHasDX10Header = true;
 				oDDSHeaderDX10.oDxgiFormat = DXGI_FORMAT_BC7_TYPELESS;
 				break;
@@ -142,15 +133,15 @@ namespace Graphics
 				return false;
 			}
 
-			if (PixelFormat::IsCompressed(pTexture->GetPixelFormat()))
+			if (Graphics::PixelFormat::IsCompressed(pTexture->GetPixelFormat()))
 			{
 				oDDSHeader.iHeaderFlags |= DDS_HEADER_FLAGS_PITCH;
-				oDDSHeader.iPitchOrLinearSize = PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
+				oDDSHeader.iPitchOrLinearSize = Graphics::PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
 			}
 			else
 			{
 				oDDSHeader.iHeaderFlags |= DDS_HEADER_FLAGS_PITCH;
-				oDDSHeader.iPitchOrLinearSize = PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
+				oDDSHeader.iPitchOrLinearSize = Graphics::PixelFormat::GetPitch(pTexture->GetPixelFormat(), pTexture->GetWidth());
 			}
 
 			if (bHasDX10Header)
@@ -175,7 +166,7 @@ namespace Graphics
 			{
 				for (int iMip = 0; iMip < pTexture->GetMipCount(); ++iMip)
 				{
-					const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+					const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
 					uint32_t iPadMipWidth = oFaceData.iWidth;
 					uint32_t iPadMipHeight = oFaceData.iHeight;
 
@@ -187,7 +178,12 @@ namespace Graphics
 			//CORE_ASSERT(false);
 			return true;
 		}
+
+		void RegisterWriterDDS()
+		{
+			RegisterTextureWriter("DirectDraw Surface", "*.dds\0", TextureWriterDDS, TextureWriterSupportedDDS);
+		}
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture

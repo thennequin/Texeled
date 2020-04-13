@@ -6,8 +6,8 @@
 // https://github.com/HeliumProject/NvidiaTextureTools/blob/master/src/nvimage/BlockDXT.cpp
 // https://github.com/baldurk/renderdoc/blob/v1.x/renderdoc/common/dds_readwrite.cpp
 
-#ifndef _DDS_H_
-#define _DDS_H_
+#ifndef __TEXTURE_DDS_H__
+#define __TEXTURE_DDS_H__
 
 #include <stdint.h> //uint32_t
 
@@ -258,4 +258,4 @@ static_assert((0xA0B70708 & 0xFF) == 8, "Platform is not LittleEndian");
 
 #pragma pack(pop)
 
-#endif // _DDS_H
+#endif // __TEXTURE_DDS_H__

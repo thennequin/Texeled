@@ -1,5 +1,5 @@
-#ifndef _GRAPHICS_KTX_H_
-#define _GRAPHICS_KTX_H_
+#ifndef _TEXTURE_KTX_H_
+#define _TEXTURE_KTX_H_
 
 /*
 https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
@@ -114,4 +114,4 @@ namespace KTX
 	};
 }
 
-#endif //_GRAPHICS_KTX_H_
+#endif //_TEXTURE_KTX_H_

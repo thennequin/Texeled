@@ -1,22 +1,16 @@
-#include "Graphics/TextureLoaders/TextureLoaderEXR.h"
+#include "Texture/TextureLoaders/TextureLoaderEXR.h"
 
-#include "Graphics/TextureLoader.h"
+#include "Texture/TextureLoader.h"
 
 #include "Core/Array.h"
 
 #include "tinyexr.h"
 
-namespace Graphics
+namespace Texture
 {
 	namespace TextureLoader
 	{
-		ErrorCode TextureLoaderEXR(IO::Stream* pStream, Texture* pTexture);
-		void RegisterLoaderEXR()
-		{
-			Graphics::RegisterTextureLoader("OpenEXR", "*.exr\0", Graphics::TextureLoader::TextureLoaderEXR);
-		}
-
-		ErrorCode TextureLoaderEXR(IO::Stream* pStream, Texture* pTexture)
+		ErrorCode TextureLoaderEXR(IO::Stream* pStream, Graphics::Texture* pTexture)
 		{
 			const char* pErr = NULL;
 
@@ -102,8 +96,8 @@ namespace Graphics
 				}
 			}
 
-			Texture::Desc oDesc;
-			oDesc.ePixelFormat = (iChannels[3] != -1) ? PixelFormatEnum::RGBA32_FLOAT : PixelFormatEnum::RGB32_FLOAT;
+			Graphics::Texture::Desc oDesc;
+			oDesc.ePixelFormat = (iChannels[3] != -1) ? Graphics::PixelFormatEnum::RGBA32_FLOAT : Graphics::PixelFormatEnum::RGB32_FLOAT;
 			oDesc.iWidth = oExrImage.width;
 			oDesc.iHeight = oExrImage.height;
 			oDesc.iFaceCount = 1;
@@ -137,7 +131,12 @@ namespace Graphics
 
 			return ErrorCode(oErr);
 		}
+
+		void RegisterLoaderEXR()
+		{
+			RegisterTextureLoader("OpenEXR", "*.exr\0", TextureLoaderEXR);
+		}
 	}
 	//namespace TextureLoader
 }
-//namespace Graphics
+//namespace Texture

@@ -6,7 +6,8 @@
 #include "Core/Logger.h"
 
 #include "Graphics/Texture.h"
-#include "Graphics/TextureLoader.h"
+
+#include "Texture/TextureLoader.h"
 
 #include "ShortKeyManager.h"
 
@@ -119,8 +120,8 @@ public:
 	ID3D11Device*							GetDX11Device() const;
 	ID3D11DeviceContext*					GetDX11DeviceContext() const;
 
-	bool									LoadFile(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader = NULL);
-	ErrorCode								LoadFileInternal(const char* pFile, const Graphics::TextureLoaderInfo* pUseLoader = NULL);
+	bool									LoadFile(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader = NULL);
+	ErrorCode								LoadFileInternal(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader = NULL);
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
 	const char*								GetTextureFilePath() const { return m_pTexturePath; }

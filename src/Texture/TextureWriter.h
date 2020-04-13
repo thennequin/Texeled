@@ -1,9 +1,9 @@
-#ifndef __GRAPHICS_TEXTURE_WRITER_H__
-#define __GRAPHICS_TEXTURE_WRITER_H__
+#ifndef __TEXTURE_TEXTURE_WRITER_H__
+#define __TEXTURE_TEXTURE_WRITER_H__
 
 #include "Graphics/Texture.h"
 
-namespace Graphics
+namespace Texture
 {
 	struct WriterSettings
 	{
@@ -17,8 +17,8 @@ namespace Graphics
 		E_SUPPORTED_WRITER_FULL,
 	};
 
-	typedef ESupportedWriter(*TextureWriterSupportedFunc)(Texture* pTexture);
-	typedef bool(*TextureWriterFunc)(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
+	typedef ESupportedWriter(*TextureWriterSupportedFunc)(Graphics::Texture* pTexture);
+	typedef bool(*TextureWriterFunc)(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream);
 
 	typedef struct
 	{
@@ -30,10 +30,10 @@ namespace Graphics
 
 	void							RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester);
 
-	ErrorCode						SaveToStream(Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
-	ErrorCode						SaveToFile(Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToStream(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToFile(Graphics::Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	void							GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount);
 }
-//namspace Graphics
+//namspace Texture
 
-#endif //__GRAPHICS_TEXTURE_WRITER_H__
+#endif //__TEXTURE_TEXTURE_WRITER_H__
