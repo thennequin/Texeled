@@ -58,38 +58,39 @@ namespace Texture
 			CORE_VERIFY(pStream->Write(pData, iSize) == iSize);
 		}
 
-		bool TextureWriterPNG(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream)
+		bool TextureWriterPNG(Graphics::Texture* pTexture, const WriterSettings* /*pSettings*/, IO::Stream* pStream)
 		{
 			Graphics::Texture oNewTexture;
 
 			Graphics::PixelFormatEnum ePixelFormat = pTexture->GetPixelFormat();
 			int iComp = Graphics::PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 
-			if (ePixelFormat != Graphics::PixelFormatEnum::RGB8_UNORM
-				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA8_UNORM)
+			if( iComp == 1 )
 			{
-				if (iComp == 1)
-				{
-					ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
-				}
-				else if (iComp == 2 || iComp == 3)
-				{
-					iComp = 3;
-					ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
-				}
-				else if (iComp == 4)
-				{
-					ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
-				}
-				else
-				{
-					return false;
-				}
+				ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
+			}
+			else if( iComp == 2 )
+			{
+				ePixelFormat = Graphics::PixelFormatEnum::RG8_UNORM;
+			}
+			else if( iComp == 3 )
+			{
+				ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
+			}
+			else if( iComp == 4 )
+			{
+				ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
+			}
+			else
+			{
+				return false;
+			}
 
-				if (ConvertPixelFormat(pTexture, &oNewTexture, ePixelFormat) != ErrorCode::Ok)
-				{
+			if( ePixelFormat != pTexture->GetPixelFormat() )
+			{
+				if( ConvertPixelFormat( pTexture, &oNewTexture, ePixelFormat ) != ErrorCode::Ok )
 					return false;
-				}
+
 				pTexture = &oNewTexture;
 			}
 
