@@ -1,4 +1,5 @@
 #include "Core/Assert.h"
+#include "Core/Logger.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -11,6 +12,8 @@ namespace Core
 	{
 		if (bCondition == false)
 		{
+			LogError( "Assert", "%s", pCondition );
+
 			va_list args;
 			va_start(args, pFormat);
 			char pMsgBuffer[2048];
