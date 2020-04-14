@@ -26,6 +26,7 @@
 
 #include "Texture/TextureWriters/TextureWriterDDS.h"
 #include "Texture/TextureWriters/TextureWriterPNG.h"
+#include "Texture/TextureWriters/TextureWriterTGA.h"
 #include "Texture/TextureWriters/TextureWriterEXR.h"
 
 #include "Resources/Fonts/Consolas_ttf.h"
@@ -68,6 +69,7 @@ Program::Program(int iArgCount, char** pArgs)
 
 	Texture::TextureWriter::RegisterWriterDDS();
 	Texture::TextureWriter::RegisterWriterPNG();
+	Texture::TextureWriter::RegisterWriterTGA();
 	Texture::TextureWriter::RegisterWriterEXR();
 
 	ImFontConfig oConfig;
