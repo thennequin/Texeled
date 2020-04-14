@@ -22,7 +22,11 @@ namespace Texture
 			if (ePixelFormat != Graphics::PixelFormatEnum::RGB8_UNORM
 				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA8_UNORM)
 			{
-				if (iComp == 3)
+				if( iComp == 1 )
+				{
+					ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
+				}
+				else if (iComp == 2 || iComp == 3)
 				{
 					ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 				}
@@ -64,8 +68,13 @@ namespace Texture
 			if (ePixelFormat != Graphics::PixelFormatEnum::RGB8_UNORM
 				&& ePixelFormat != Graphics::PixelFormatEnum::RGBA8_UNORM)
 			{
-				if (iComp == 3)
+				if (iComp == 1)
 				{
+					ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
+				}
+				else if (iComp == 2 || iComp == 3)
+				{
+					iComp = 3;
 					ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 				}
 				else if (iComp == 4)
