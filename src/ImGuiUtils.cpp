@@ -4,6 +4,8 @@
 #include "Program.h"
 #include "imgui.h"
 
+#include "Math/Arithmetic.h"
+
 #include "GraphicResources/SamplerState.h"
 
 #include <d3d11.h>
