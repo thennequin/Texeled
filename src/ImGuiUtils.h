@@ -32,6 +32,8 @@ namespace ImGuiUtils
 	typedef GroupedPart::Enum GroupedPartEnum;
 
 	bool GroupedButton( const char* label, bool bSelected, GroupedPartEnum ePart );
+
+	void TextPathWrapped(const char* pPath);
 }
 //namespace ImGuiUtils
 

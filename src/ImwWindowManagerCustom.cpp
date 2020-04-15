@@ -4,14 +4,14 @@ using namespace ImWindow;
 
 #include "IO/MemoryStream.h"
 
-#include "Math/Arithmetic.h"
-
 #include "Texture/TextureLoader.h"
 #include "GraphicResources/Texture2D.h"
 
 #include "Resources/Icons/Default_24_png.h"
 
 #include "Program.h"
+
+#include "ImGuiUtils.h"
 
 ImwWindowManagerCustom::ImwWindowManagerCustom(bool bCustomFrame)
 	: ImwWindowManagerDX11(bCustomFrame)
@@ -91,36 +91,7 @@ void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, b
 				ImGui::TextUnformatted("-");
 				ImGui::SameLine();
 
-				const float fMaxWidth = ImGui::GetContentRegionAvailWidth();
-				const float fPathSize = ImGui::CalcTextSize(pPath, NULL).x;
-
-				if (fPathSize > fMaxWidth)
-				{
-					const float fDotSize = ImGui::CalcTextSize("...", NULL).x;
-
-					const char* pLastDelimiter = Math::Max(strrchr(pPath, '/'), strrchr(pPath, '\\'));
-					const float fNameSize = ImGui::CalcTextSize(pLastDelimiter, NULL).x;
-
-					const float fMaxPathSize = fMaxWidth - fDotSize - fNameSize;
-					const char* pEnd = pLastDelimiter - 1;
-					while (ImGui::CalcTextSize(pPath, pEnd).x > fMaxPathSize && pEnd > pPath)
-					{
-						pEnd--;
-					}
-
-					if (pPath != pEnd)
-					{
-						ImGui::TextUnformatted(pPath, pEnd);
-						ImGui::SameLine(0.f, 0.f);
-						ImGui::TextUnformatted("...\\");
-						ImGui::SameLine(0.f, 0.f);
-					}
-					ImGui::TextUnformatted(pLastDelimiter + 1);
-				}
-				else
-				{
-					ImGui::TextUnformatted(pPath);
-				}
+				ImGuiUtils::TextPathWrapped(pPath);
 
 				ImGui::PopFont();
 			}

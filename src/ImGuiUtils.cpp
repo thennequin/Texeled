@@ -183,4 +183,43 @@ namespace ImGuiUtils
 
 		return pressed;
 	}
+
+	void TextPathWrapped(const char* pPath)
+	{
+		const float fMaxWidth = ImGui::GetContentRegionAvailWidth() - 1.f;
+		const float fPathSize = ImGui::CalcTextSize(pPath, NULL).x;
+
+
+		if (fPathSize > fMaxWidth)
+		{
+			const float fDotSize = ImGui::CalcTextSize("...", NULL).x;
+
+			const char* pLastDelimiter = Math::Max(strrchr(pPath, '/'), strrchr(pPath, '\\'));
+			const float fNameSize = ImGui::CalcTextSize(pLastDelimiter, NULL).x;
+
+			const float fMaxPathSize = fMaxWidth - fDotSize - fNameSize;
+			const char* pEnd = pLastDelimiter - 1;
+			while (ImGui::CalcTextSize(pPath, pEnd).x > fMaxPathSize && pEnd > pPath)
+			{
+				pEnd--;
+			}
+
+			ImGui::BeginGroup();
+
+			if (pPath != pEnd)
+			{
+				ImGui::TextUnformatted(pPath, pEnd);
+				ImGui::SameLine(0.f, 0.f);
+				ImGui::TextUnformatted("...\\");
+				ImGui::SameLine(0.f, 0.f);
+			}
+			ImGui::TextUnformatted(pLastDelimiter + 1);
+
+			ImGui::EndGroup();
+		}
+		else
+		{
+			ImGui::TextUnformatted(pPath);
+		}
+	}
 }
