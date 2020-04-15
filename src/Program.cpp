@@ -355,6 +355,12 @@ void Program::SaveAs()
 		oExts += (char)0;
 		oExts += pWriters[iWriterIndex].pExt;
 		oExts += (char)0;
+
+		if (m_pTexturePath != NULL
+			&& Core::StringUtils::Wildcard(pWriters[iWriterIndex].pExt, m_pTexturePath, false))
+		{
+			iSelectedIndex = iWriterIndex + 1;
+		}
 	}
 
 	char* pExts = oExts.Export();
