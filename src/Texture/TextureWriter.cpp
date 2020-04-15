@@ -26,7 +26,7 @@ namespace Texture
 			{
 				for (Core::Array<TextureWriterInfo>::iterator it = s_oTextureWriters.begin(), itEnd = s_oTextureWriters.end(); it != itEnd; ++it)
 				{
-					if (Core::StringUtils::Wildcard(it->pExt, pFilename))
+					if (Core::StringUtils::Wildcard(it->pExt, pFilename, false))
 					{
 						pUseWriter = &*it;
 						break;
