@@ -217,7 +217,7 @@ namespace Core
 		}
 
 		//https://github.com/clibs/wildcardcmp/
-		bool Wildcard(const char* pPattern, const char* pString)
+		bool Wildcard(const char* pPattern, const char* pString, bool bCaseSensitive)
 		{
 			const char* pLastStart = NULL; // last `*`
 			const char* pLastChar = NULL; // last checked char
@@ -241,7 +241,9 @@ namespace Core
 				}
 				else
 				{
-					if (*pPattern != *pString)
+					if (bCaseSensitive
+						? (*pPattern != *pString)
+						: (toupper(*pPattern) != toupper(*pString)))
 					{
 						if ('*' == *pPattern)
 						{

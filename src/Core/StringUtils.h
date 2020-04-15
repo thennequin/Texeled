@@ -19,7 +19,7 @@ namespace Core
 		int						VSNPrintf(char* pBuffer, size_t iBufferSize, const char* pFormat, va_list oArgs);
 
 		bool					EndsWith(const char* pString, const char* pEnd, bool bCaseSensitive = true);
-		bool					Wildcard(const char* pPattern, const char* pString);
+		bool					Wildcard(const char* pPattern, const char* pString, bool bCaseSensitive = true);
 
 		void					GetReadableSize(size_t iSize, char* pOutBuffer, size_t iOutBufferSize);
 	}
