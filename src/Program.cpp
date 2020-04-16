@@ -133,6 +133,7 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
 	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
 
+	m_oShortkeys.pReloadFile = m_pShortKeyManager->RegisterShortKey("Reload file", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_R, new EasyWindow::InstanceCaller<Program, void>(this, &Program::ReloadFile), false);
 	m_oShortkeys.pOpenPreviousFile = m_pShortKeyManager->RegisterShortKey("Open previous file", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEUP, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenPreviousFileCallback), false);
 	m_oShortkeys.pOpenNextFile = m_pShortKeyManager->RegisterShortKey("Open next", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEDOWN, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenNextFileCallback), false);
 
@@ -270,14 +271,21 @@ bool Program::LoadFile(const char* pFile, const Texture::TextureLoaderInfo* pUse
 
 ErrorCode Program::LoadFileInternal(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader)
 {
+	Core::LogInfo("Program", "Loading file '%s'", pFile);
 	ErrorCode oErr = Texture::LoadFromFile(&m_oTexture, pFile, pUseLoader);
 	if (oErr == ErrorCode::Ok)
 	{
+		Core::LogInfo("Program", "File loaded");
+		char* pNewPath = Core::StringUtils::StrDup(pFile);
 		if (m_pTexturePath != NULL)
 			free(m_pTexturePath);
-		m_pTexturePath = Core::StringUtils::StrDup(pFile);
+		m_pTexturePath = pNewPath;
+
 		UpdateTexture2DRes();
+		return ErrorCode::Ok;
 	}
+
+	Core::LogError("Program", "Can't load file : %s", oErr.ToString());
 	return oErr;
 }
 
@@ -418,6 +426,14 @@ bool Program::OpenNextFile()
 		}
 	}
 	return false;
+}
+
+void Program::ReloadFile()
+{
+	if (m_pTexturePath != NULL)
+	{
+		LoadFile(m_pTexturePath);
+	}
 }
 
 void Program::OpenPreviousFileCallback()

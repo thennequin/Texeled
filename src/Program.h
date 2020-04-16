@@ -35,6 +35,7 @@ struct Shortkeys
 	const ShortKeyManager::ShortKey* pSave;
 	const ShortKeyManager::ShortKey* pSaveAs;
 
+	const ShortKeyManager::ShortKey* pReloadFile;
 	const ShortKeyManager::ShortKey* pOpenPreviousFile;
 	const ShortKeyManager::ShortKey* pOpenNextFile;
 };
@@ -147,6 +148,7 @@ public:
 protected:
 	virtual void							Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage);
 
+	void									ReloadFile();
 	void									OpenPreviousFileCallback();
 	void									OpenNextFileCallback();
 
