@@ -149,6 +149,12 @@ namespace Core
 			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
 			return (T*)((char*)m_iMemory + m_iPos);
 		}
+
+		explicit operator void*() const
+		{
+			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			return (void*)((char*)m_iMemory + m_iPos);
+		}
 	};
 
 	CORE_PTR_VOID				Malloc(size_t iSize);
