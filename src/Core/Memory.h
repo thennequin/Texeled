@@ -13,12 +13,14 @@
 #	define CORE_PTR_VOID Core::PointerVoid
 #	define CORE_PTR(Type) Core::Pointer<Type>
 #	define CORE_PTR_NULL (Core::PointerVoid(NULL, 0))
-#	define CORE_PTR_CAST(Type,Data) ((Core::Pointer<Type>)Data)
+#	define CORE_PTR_CAST(Type,Data) ((Core::Pointer<Type>)(Data))
+#	define CORE_PTR_CAST_VOID(Data) ((Core::PointerVoid)(Data))
 #else
 #	define CORE_PTR_VOID void*
 #	define CORE_PTR(Type) Type*
 #	define CORE_PTR_NULL (NULL)
-#	define CORE_PTR_CAST(Type,Data) ((Type*)Data)
+#	define CORE_PTR_CAST(Type,Data) ((Type*)(Data))
+#	define CORE_PTR_CAST_VOID(Data) ((void*)(Data))
 #endif
 
 namespace Core
@@ -32,6 +34,15 @@ namespace Core
 	public:
 		PointerVoid();
 		PointerVoid(void* pMemory, size_t iSize, size_t iPos = 0);
+		PointerVoid(const PointerVoid& oRight);
+
+		template<typename T2>
+		explicit PointerVoid(const Pointer<T2>& oRight)
+		{
+			m_iMemory = oRight.m_iMemory;
+			m_iSize = oRight.m_iSize;
+			m_iPos = oRight.m_iPos;
+		}
 
 		bool operator ==(intptr_t pRight) const;
 		bool operator !=(intptr_t pRight) const;
@@ -46,7 +57,7 @@ namespace Core
 		}
 
 		template<typename T>
-		operator Pointer<T>() const
+		explicit operator Pointer<T>() const
 		{
 			return Pointer<T>((T*)m_iMemory, m_iSize, m_iPos);
 		}
@@ -72,10 +83,32 @@ namespace Core
 	{
 		friend class PointerVoid;
 	public:
+		Pointer()
+		{
+			m_iMemory = -1;
+			m_iSize = 0;
+			m_iPos = 0;
+		}
+
 		Pointer(T* pMemory, size_t iSize, size_t iPos)
 			: PointerVoid(pMemory, iSize, iPos)
 		{
 			CORE_ASSERT(iPos <= iSize - sizeof(T));
+		}
+
+		Pointer(const Pointer<T>& oRight)
+		{
+			m_iMemory = oRight.m_iMemory;
+			m_iSize = oRight.m_iSize;
+			m_iPos = oRight.m_iPos;
+		}
+
+		template<typename T2>
+		explicit Pointer(const Pointer<T2>& oRight)
+		{
+			PointerVoid oRightVoid = (PointerVoid)oRight;
+			PointerVoid* pLeftVoid = (PointerVoid*)this;
+			*pLeftVoid = oRightVoid;
 		}
 
 		Pointer<T>& operator =(Pointer<T> oRight)

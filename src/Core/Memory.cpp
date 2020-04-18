@@ -23,6 +23,13 @@ namespace Core
 		m_iPos = iPos;
 	}
 
+	PointerVoid::PointerVoid(const PointerVoid& oRight)
+	{
+		m_iMemory = oRight.m_iMemory;
+		m_iSize = oRight.m_iSize;
+		m_iPos = oRight.m_iPos;
+	}
+
 	bool PointerVoid::IsRootAllocation() const
 	{
 		return m_iPos == 0;
