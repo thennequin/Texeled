@@ -238,7 +238,7 @@ void Menus::OnMenu()
 
 		if (ImGui::MenuItem("About"))
 		{
-			const ImVec2 c_vAboutBoxSize = ImVec2(600.f, 160.f);
+			const ImVec2 c_vAboutBoxSize = ImVec2(600.f, 350.f);
 
 			// Centering floating window
 			ImWindow::ImwWindowManager* pWindowManager = Program::GetInstance()->GetWindowManager();

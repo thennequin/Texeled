@@ -10,6 +10,8 @@
 
 #include "Resources/Icons/Default_png.h"
 
+#include "ImGuiUtils.h"
+
 #include "Version.h"
 
 namespace Windows
@@ -87,5 +89,53 @@ namespace Windows
 #endif //TEXELED_REVISION
 		}
 		ImGui::EndGroup();
+
+		ImGui::Text("Third parties :");
+		ImVec2 vPadding = ImGui::GetStyle().WindowPadding;
+		if (ImGui::BeginChild("Third party", ImVec2(-vPadding.x, -vPadding.y), true));
+		{
+			const ImVec2 vDummySize(1.f, 6.f);
+
+			ImGui::Text("dear imgui, v1.53");
+			ImGuiUtils::Link("https://github.com/ocornut/imgui");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("ImWindow");
+			ImGuiUtils::Link("https://github.com/thennequin/ImWindow");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("EasyWindow");
+			ImGuiUtils::Link("https://github.com/thennequin/EasyWindow");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("stb_image v2.23");
+			ImGui::Text("stb_image_write v1.13");
+			ImGui::Text("stb_image_resize v0.96");
+			ImGuiUtils::Link("https://github.com/nothings/stb");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("libpng v1.6.37");
+			ImGuiUtils::Link("http://www.libpng.org/pub/png/libpng.html");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("zlib v1.2.11");
+			ImGuiUtils::Link("https://zlib.net/");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("tinyexr");
+			ImGuiUtils::Link("https://github.com/syoyo/tinyexr");
+
+			ImGui::Dummy(vDummySize);
+
+			ImGui::Text("CMP_Core from Compressonator");
+			ImGuiUtils::Link("https://github.com/GPUOpen-Tools/Compressonator");
+		}
+		ImGui::EndChild();
 	}
 }
