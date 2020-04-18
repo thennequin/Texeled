@@ -10,7 +10,6 @@
 #include "Windows/AboutWindow.h"
 #include "Windows/LoggerWindow.h"
 
-bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, ImFont* pShortkeyFont, bool selected, bool enabled)
 #include "IO/MemoryStream.h"
 
 #include "ImGuiUtils.h"
