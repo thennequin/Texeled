@@ -224,4 +224,32 @@ namespace ImGuiUtils
 			ImGui::TextUnformatted(pPath);
 		}
 	}
+
+	void Link(const char* pUrl)
+	{
+		ImVec4 oColor = ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_Text, oColor);
+
+		ImGui::TextUnformatted(pUrl);
+
+		bool bHovered = ImGui::IsItemHovered();
+
+		if (bHovered)
+		{
+			if (ImGui::IsMouseClicked(0))
+			{
+				//TODO : change of to open URL
+				ShellExecute(NULL, NULL, pUrl, NULL, NULL, SW_SHOWNORMAL);
+			}
+		}
+		else
+		{
+			ImVec2 vMin = ImGui::GetItemRectMin();
+			ImVec2 vMax = ImGui::GetItemRectMax();
+			vMin.y = vMax.y;
+			ImGui::GetWindowDrawList()->AddLine(vMin, vMax, ImGui::ColorConvertFloat4ToU32(oColor), 1.0f);
+		}
+
+		ImGui::PopStyleColor();
+	}
 }

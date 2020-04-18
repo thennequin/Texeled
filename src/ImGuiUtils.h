@@ -34,6 +34,8 @@ namespace ImGuiUtils
 	bool GroupedButton( const char* label, bool bSelected, GroupedPartEnum ePart );
 
 	void TextPathWrapped(const char* pPath);
+
+	void Link(const char* pUrl);
 }
 //namespace ImGuiUtils
 
