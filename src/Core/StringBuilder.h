@@ -1,19 +1,16 @@
 #ifndef __CORE_STRING_BUILDER_H__
 #define __CORE_STRING_BUILDER_H__
 
-//#define __STRINGBUILDER_USE_STD_STRING__
-#ifdef __STRINGBUILDER_USE_STD_STRING__
-#include <string>
-#endif // __STRINGBUILDER_USE_STD_STRING__
+#include <stdint.h> // size_t
+
+#include "Core/String.h"
 
 namespace Core
 {
 
 	class StringBuilder
 	{
-		typedef unsigned int uint32;
-
-		static const uint32 c_iPoolSize = 2048;
+		static const size_t c_iPoolSize = 2048;
 
 		struct Pool
 		{
@@ -28,30 +25,28 @@ namespace Core
 		~StringBuilder();
 
 		void				Clear(bool bFreePools = false);
-		int					Size() const { return m_iPosition; }
+		size_t				Size() const { return m_iPosition; }
 
 		void				Append(char cChar);
 		void				Append(const char* pString);
+		void				Append(const Core::String& oString);
+
 		void				CopyTo(char* pDest);
+		void				CopyTo(Core::String& sOut);
+
 		char*				Export(); //Using malloc passed to constructor
 
 		void				operator +=(char cChar);
 		void				operator +=(const char* pString);
-
-#ifdef __STRINGBUILDER_USE_STD_STRING__
-		void				Append(const std::string& oString);
-		void				CopyTo(std::string& sOut);
-
-		void				operator +=(const std::string& oString);
-#endif //__STRINGBUILDER_USE_STD_STRING__
+		void				operator +=(const Core::String& oString);
 
 	protected:
-		void				AppendInternal(const char* pString, uint32 iLen);
+		void				AppendInternal(const char* pString, size_t iLen);
 
 		MallocFuncPtr		m_pMallocFunc;
 		FreeFuncPtr			m_pFreeFunc;
 
-		uint32				m_iPosition;
+		size_t				m_iPosition;
 		Pool				m_oFirstPool;
 		Pool*				m_pCurrentPool;
 		int					m_iCurrentPoolIndex;

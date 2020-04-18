@@ -45,7 +45,12 @@ namespace Core
 
 	void StringBuilder::Append(const char* pString)
 	{
-		AppendInternal(pString, (uint32)strlen(pString));
+		AppendInternal(pString, (size_t)strlen(pString));
+	}
+
+	void StringBuilder::Append(const Core::String& oString)
+	{
+		AppendInternal(oString.c_str(), (size_t)oString.size());
 	}
 
 	void StringBuilder::CopyTo(char* pDest)
@@ -53,9 +58,9 @@ namespace Core
 		if (pDest != NULL)
 		{
 			Pool* pCurrentPool = &m_oFirstPool;
-			for (uint32 iPos = 0; iPos < m_iPosition; iPos += c_iPoolSize)
+			for (size_t iPos = 0; iPos < m_iPosition; iPos += c_iPoolSize)
 			{
-				int iLen = m_iPosition - iPos;
+				size_t iLen = m_iPosition - iPos;
 				if (iLen > c_iPoolSize)
 					iLen = c_iPoolSize;
 
@@ -65,6 +70,13 @@ namespace Core
 			}
 			*(pDest + m_iPosition) = 0;
 		}
+	}
+
+	void StringBuilder::CopyTo(Core::String& sOut)
+	{
+		sOut.resize(m_iPosition);
+		char* pOut = (char*)sOut.c_str();
+		CopyTo(pOut);
 	}
 
 	char* StringBuilder::Export()
@@ -87,33 +99,19 @@ namespace Core
 		Append(pString);
 	}
 
-#ifdef __STRINGBUILDER_USE_STD_STRING__
-	void StringBuilder::Append(const std::string& oString)
+	void StringBuilder::operator +=(const Core::String& oString)
 	{
-		AppendInternal(oString.c_str(), (uint32)oString.length());
+		Append(oString);
 	}
 
-	void StringBuilder::CopyTo(std::string& sOut)
-	{
-		sOut.resize(m_iPosition);
-		char* pOut = (char*)sOut.data();
-		CopyTo(pOut);
-	}
-
-	void StringBuilder::operator +=(const std::string& oString)
-	{
-		Append(pString);
-	}
-#endif //__STRINGBUILDER_USE_STD_STRING__
-
-	void StringBuilder::AppendInternal(const char* pString, uint32 iLen)
+	void StringBuilder::AppendInternal(const char* pString, size_t iLen)
 	{
 		if (iLen == 0)
 			return;
 
 		// Copy pString to pools
-		uint32 iPoolPos = m_iPosition - m_iCurrentPoolIndex * c_iPoolSize;
-		uint32 iStrPos = 0;
+		size_t iPoolPos = m_iPosition - m_iCurrentPoolIndex * c_iPoolSize;
+		size_t iStrPos = 0;
 		while (iStrPos < iLen)
 		{
 			if (iPoolPos >= c_iPoolSize)
@@ -134,8 +132,8 @@ namespace Core
 				iPoolPos = iPoolPos - c_iPoolSize;
 			}
 
-			int iMaxCopySize = c_iPoolSize - iPoolPos;
-			int iToCopySize = iLen - iStrPos;
+			size_t iMaxCopySize = c_iPoolSize - iPoolPos;
+			size_t iToCopySize = iLen - iStrPos;
 			if (iToCopySize > iMaxCopySize)
 				iToCopySize = iMaxCopySize;
 
