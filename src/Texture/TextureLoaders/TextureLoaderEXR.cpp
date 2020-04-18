@@ -110,7 +110,7 @@ namespace Texture
 				float* pData = (float*)pTexture->GetData().GetFaceData(0, 0).pData;
 				float** pSource = (float**)oExrImage.images;
 
-				for (uint32_t i = 0; i < oExrImage.width * oExrImage.height; i++)
+				for (uint32_t i = 0; i < (uint32_t)oExrImage.width * (uint32_t)oExrImage.height; i++)
 				{
 					for (int c = 0; c < iChannelCount; c++)
 					{
