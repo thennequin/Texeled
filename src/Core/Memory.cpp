@@ -37,19 +37,25 @@ namespace Core
 
 	bool PointerVoid::operator ==(intptr_t pRight) const
 	{
-		CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+		CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 		return (m_iMemory + (intptr_t)m_iPos) == pRight;
 	}
 
 	bool PointerVoid::operator !=(intptr_t pRight) const
 	{
-		CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+		CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 		return (m_iMemory + (intptr_t)m_iPos) != pRight;
 	}
 
 	PointerVoid::operator PointerVoid() const
 	{
 		return PointerVoid((void*)m_iMemory, m_iSize, m_iPos);
+	}
+
+	PointerVoid::operator void*() const
+	{
+		CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
+		return (void*)((char*)m_iMemory + m_iPos);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -76,7 +82,7 @@ namespace Core
 	void Free(CORE_PTR_VOID pMemory)
 	{
 #ifdef CORE_MEMORY_DEBUG
-		CORE_ASSERT((intptr_t)(void*)pMemory != -1, "Using of an uninitialized Pointer");
+		CORE_ASSERT((intptr_t)(void*)pMemory != -1, "Using an uninitialized Pointer");
 		CORE_ASSERT(pMemory.IsRootAllocation());
 		uint16_t* pAlloc = (uint16_t*)pMemory - 1;
 		CORE_ASSERT(*pAlloc == c_iAllocMagicNumber, "Trying to free an already free allocation");

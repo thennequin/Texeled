@@ -49,10 +49,12 @@ namespace Core
 
 		operator PointerVoid() const;
 
+		operator void*() const;
+
 		template<typename T>
 		operator T*() const
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			return (T*)((char*)m_iMemory + m_iPos);
 		}
 
@@ -113,7 +115,7 @@ namespace Core
 
 		Pointer<T>& operator =(Pointer<T> oRight)
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			m_iMemory = oRight.m_iMemory;
 			m_iSize = oRight.m_iSize;
 			m_iPos = oRight.m_iPos;
@@ -122,7 +124,7 @@ namespace Core
 
 		Pointer<T> operator+(intptr_t iOffset)
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			CORE_ASSERT((m_iPos + iOffset * sizeof(T)) < m_iSize);
 			Pointer<T> oNewPtr((T*)m_iMemory, m_iSize, m_iPos + iOffset * sizeof(T));
 			return oNewPtr;
@@ -130,7 +132,7 @@ namespace Core
 
 		Pointer<T> operator-(intptr_t iOffset)
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			CORE_ASSERT((m_iPos - iOffset * sizeof(T)) >= 0);
 			Pointer<T> oNewPtr((T*)m_iMemory, m_iSize, m_iPos - iOffset * sizeof(T));
 			return oNewPtr;
@@ -138,7 +140,7 @@ namespace Core
 
 		T& operator[](size_t iPos)
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			CORE_ASSERT(m_iMemory != NULL);
 			CORE_ASSERT((m_iPos + iPos * sizeof(T)) < m_iSize);
 			return *((T*)*this + iPos);
@@ -146,13 +148,13 @@ namespace Core
 
 		operator T*() const
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			return (T*)((char*)m_iMemory + m_iPos);
 		}
 
 		explicit operator void*() const
 		{
-			CORE_ASSERT(m_iMemory != -1, "Using of an uninitialized Pointer");
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			return (void*)((char*)m_iMemory + m_iPos);
 		}
 	};
