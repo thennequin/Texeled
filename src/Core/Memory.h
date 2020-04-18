@@ -161,6 +161,7 @@ namespace Core
 
 	CORE_PTR_VOID				Malloc(size_t iSize);
 	void						Free(CORE_PTR_VOID pMemory);
+	CORE_PTR_VOID				ToPointer(void* pMemory, size_t iSize);
 	void						MemCpy(CORE_PTR_VOID pDest, CORE_PTR_VOID pSource, size_t iSize);
 }
 

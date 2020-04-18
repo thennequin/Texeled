@@ -93,6 +93,16 @@ namespace Core
 #endif
 	}
 
+	CORE_PTR_VOID ToPointer(void* pMemory, size_t iSize)
+	{
+		CORE_ASSERT((pMemory != NULL && iSize > 0) || (pMemory == NULL && iSize == 0));
+#ifdef CORE_MEMORY_DEBUG
+		return PointerVoid(pMemory, iSize, 0);
+#else
+		return pMemory;
+#endif
+	}
+
 	void MemCpy(CORE_PTR_VOID pDest, CORE_PTR_VOID pSource, size_t iSize)
 	{
 #ifdef CORE_MEMORY_DEBUG
