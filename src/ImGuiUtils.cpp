@@ -252,4 +252,70 @@ namespace ImGuiUtils
 
 		ImGui::PopStyleColor();
 	}
+
+	const ImVec2 c_vMenuItemIconSize(16.f, 16.f);
+
+	bool BeginMenu(const char* pLabel, bool bEnabled)
+	{
+		ImGui::Dummy(c_vMenuItemIconSize);
+		ImGui::SameLine();
+		bool bOpen = ImGui::BeginMenu(pLabel, bEnabled);
+
+		return bOpen;
+	}
+
+	bool MenuItemPlus(const char* pLabel, ImFont* pLabelFont, const char* pShortcut, ImFont* pShortkeyFont, bool bSelected, bool bEnabled, ImTextureID pIcon, ImVec4 vIconColor)
+	{
+		ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
+		if (pWindow->SkipItems)
+			return false;
+
+		ImGuiContext& oContext = *GImGui;
+		ImVec2 vPos = pWindow->DC.CursorPos;
+		ImGui::PushFont(pLabelFont);
+		ImVec2 vLabelSize = ImGui::CalcTextSize(pLabel, NULL, true);
+		ImGui::PopFont();
+		ImGui::PushFont(pShortkeyFont);
+		ImVec2 vShortcutSize = pShortcut ? ImGui::CalcTextSize(pShortcut, NULL) : ImVec2(0.0f, 0.0f);
+		ImGui::PopFont();
+		float fWidth = pWindow->MenuColumns.DeclColumns(c_vMenuItemIconSize.x + oContext.Style.ItemSpacing.x + vLabelSize.x, vShortcutSize.x, 0.f/*, (float)(int)(oContext.FontSize * 1.20f)*/); // Feedback for next frame
+		float fExtraWidth = ImMax(0.0f, ImGui::GetContentRegionAvail().x - fWidth);
+
+		ImGui::PushFont(pLabelFont);
+		ImGui::PushID(pLabel);
+		bool bPressed = ImGui::Selectable("##MenuItem", false, ImGuiSelectableFlags_MenuItem | ImGuiSelectableFlags_DrawFillAvailWidth | (bEnabled ? 0 : ImGuiSelectableFlags_Disabled), ImVec2(fWidth, 0.0f));
+		bool bHovered = ImGui::IsItemHovered();
+		ImGui::PopID();
+		ImGui::PopFont();
+
+		if (pIcon != NULL)
+		{
+			if (bEnabled == false)
+			{
+				vIconColor.w *= 0.5f;
+			}
+			pWindow->DrawList->AddImage(pIcon, vPos, vPos + c_vMenuItemIconSize, ImVec2(0.f, 0.f), ImVec2(1.f, 1.f), ImGui::GetColorU32(vIconColor));
+		}
+
+		if (bEnabled == false)
+			ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+		ImGui::RenderText(vPos + ImVec2(pWindow->MenuColumns.Pos[0] + c_vMenuItemIconSize.x + oContext.Style.ItemSpacing.x, 0.0f), pLabel, NULL, false);
+		if (bEnabled == false)
+			ImGui::PopStyleColor();
+
+		if (vShortcutSize.x > 0.0f)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, oContext.Style.Colors[ImGuiCol_TextDisabled]);
+			ImGui::PushFont(pShortkeyFont);
+			float fColSize = pWindow->MenuColumns.Pos[2] - pWindow->MenuColumns.Pos[1];
+			ImGui::RenderText(vPos + ImVec2(pWindow->MenuColumns.Pos[1] + fExtraWidth + (fColSize - vShortcutSize.x), 0.0f), pShortcut, NULL, false);
+			ImGui::PopFont();
+			ImGui::PopStyleColor();
+		}
+
+		if (bSelected)
+			ImGui::RenderCheckMark(vPos + ImVec2(pWindow->MenuColumns.Pos[2] + fExtraWidth + oContext.FontSize * 0.20f, 0.0f), ImGui::GetColorU32(bEnabled ? ImGuiCol_Text : ImGuiCol_TextDisabled), oContext.FontSize);
+
+		return bPressed;
+	}
 }

@@ -11,39 +11,13 @@
 #include "Windows/LoggerWindow.h"
 
 bool MenuItemPlus(const char* label, ImFont* pLabelFont, const char* shortcut, ImFont* pShortkeyFont, bool selected, bool enabled)
-{
-	ImGuiWindow* window = ImGui::GetCurrentWindow();
-	if (window->SkipItems)
-		return false;
+#include "IO/MemoryStream.h"
 
-	ImGuiContext& g = *GImGui;
-	ImVec2 pos = window->DC.CursorPos;
-	ImGui::PushFont(pLabelFont);
-	ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
-	ImGui::PopFont();
-	ImGui::PushFont(pShortkeyFont);
-	ImVec2 shortcut_size = shortcut ? ImGui::CalcTextSize(shortcut, NULL) : ImVec2(0.0f, 0.0f);
-	ImGui::PopFont();
-	float w = window->MenuColumns.DeclColumns(label_size.x, shortcut_size.x, (float)(int)(g.FontSize * 1.20f)); // Feedback for next frame
-	float extra_w = ImMax(0.0f, ImGui::GetContentRegionAvail().x - w);
+#include "ImGuiUtils.h"
 
-	ImGui::PushFont(pLabelFont);
-	bool pressed = ImGui::Selectable(label, false, ImGuiSelectableFlags_MenuItem | ImGuiSelectableFlags_DrawFillAvailWidth | (enabled ? 0 : ImGuiSelectableFlags_Disabled), ImVec2(w, 0.0f));
-	ImGui::PopFont();
-	if (shortcut_size.x > 0.0f)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Text, g.Style.Colors[ImGuiCol_TextDisabled]);
-		ImGui::PushFont(pShortkeyFont);
-		ImGui::RenderText(pos + ImVec2(window->MenuColumns.Pos[1] + extra_w, 0.0f), shortcut, NULL, false);
-		ImGui::PopFont();
-		ImGui::PopStyleColor();
-	}
-
-	if (selected)
-		ImGui::RenderCheckMark(pos + ImVec2(window->MenuColumns.Pos[2] + extra_w + g.FontSize * 0.20f, 0.0f), ImGui::GetColorU32(enabled ? ImGuiCol_Text : ImGuiCol_TextDisabled), g.FontSize);
-
-	return pressed;
-}
+#include "Resources/Icons/Open_16_png.h"
+#include "Resources/Icons/Save_16_png.h"
+#include "Resources/Icons/Help_16_png.h"
 
 Menus::Menus()
 	: ImWindow::ImwMenu()
@@ -51,7 +25,63 @@ Menus::Menus()
 	, m_iResizeNewWidth(0)
 	, m_iResizeNewHeight(0)
 	, m_fResizeRatio(0.f)
+	, m_pIconOpen(NULL)
+	, m_pIconSave(NULL)
+	, m_pIconHelp(NULL)
 {
+
+	//Load icons
+	Graphics::Texture oTexture;
+
+	// Open
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Open_16_png::Data, Resources::Icons::Open_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconOpen));
+		}
+	}
+	// Save
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Save_16_png::Data, Resources::Icons::Save_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconSave));
+		}
+	}
+	// Help
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Help_16_png::Data, Resources::Icons::Help_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconHelp));
+		}
+	}
+
+}
+
+Menus::~Menus()
+{
+	if (m_pIconOpen != NULL)
+	{
+		delete m_pIconOpen;
+		m_pIconOpen = NULL;
+	}
+
+	if (m_pIconSave != NULL)
+	{
+		delete m_pIconSave;
+		m_pIconSave = NULL;
+	}
+
+	if (m_pIconHelp != NULL)
+	{
+		delete m_pIconHelp;
+		m_pIconHelp = NULL;
+	}
 }
 
 void Menus::OnMenu()
@@ -63,29 +93,29 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("File"))
 	{
-		if (MenuItemPlus("Open", NULL, oShortkeys.pOpen->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true))
+		if (ImGuiUtils::MenuItemPlus("Open", NULL, oShortkeys.pOpen->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true, (ImTextureID)m_pIconOpen->GetTextureView()))
 		{
 			pProgram->Open();
 		}
-		if (MenuItemPlus("Save", NULL, oShortkeys.pSave->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
+		if (ImGuiUtils::MenuItemPlus("Save", NULL, oShortkeys.pSave->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid(), (ImTextureID)m_pIconSave->GetTextureView()))
 		{
 			pProgram->Save();
 		}
-		if (MenuItemPlus("Save as", NULL, oShortkeys.pSaveAs->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
+		if (ImGuiUtils::MenuItemPlus("Save as", NULL, oShortkeys.pSaveAs->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
 		{
 			pProgram->SaveAs();
 		}
 		ImGui::Separator();
-		if (MenuItemPlus("Open previous file", NULL, oShortkeys.pOpenPreviousFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
+		if (ImGuiUtils::MenuItemPlus("Open previous file", NULL, oShortkeys.pOpenPreviousFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
 		{
 			pProgram->OpenPreviousFile();
 		}
-		if (MenuItemPlus("Open next file", NULL, oShortkeys.pOpenNextFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
+		if (ImGuiUtils::MenuItemPlus("Open next file", NULL, oShortkeys.pOpenNextFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath() != NULL))
 		{
 			pProgram->OpenNextFile();
 		}
 		ImGui::Separator();
-		if (MenuItemPlus("Exit", NULL, NULL, oFonts.pFontConsolas, false, true))
+		if (ImGuiUtils::MenuItemPlus("Exit", NULL, oShortkeys.pClose->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true))
 		{
 			pProgram->AskExit();
 		}
@@ -96,7 +126,7 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Edit"))
 	{
-		if (ImGui::BeginMenu("Convert pixel format to", oTexture.IsValid()))
+		if (ImGuiUtils::BeginMenu("Convert pixel format to", oTexture.IsValid()))
 		{
 			static Graphics::PixelFormat::ConvertionInfoList s_oAvailableConvertionFormats;
 			static int s_iAvailableConvertionFormatCount = 0;
@@ -116,7 +146,7 @@ void Menus::OnMenu()
 				bool bGoodHeight = ((iTextureHeight / oPixelFormatInfos.iBlockHeight) * oPixelFormatInfos.iBlockHeight == iTextureHeight);
 				bool bAvailable = bGoodWidth && bGoodHeight;
 
-				if (ImGui::MenuItem(oPixelFormatInfos.pName, NULL, false, bAvailable))
+				if (ImGuiUtils::MenuItemPlus(oPixelFormatInfos.pName, NULL, NULL, NULL, false, bAvailable))
 				{
 					if (Graphics::ConvertPixelFormat(&oTexture, &oTexture, ePixelFormat) == ErrorCode::Ok)
 					{
@@ -141,7 +171,7 @@ void Menus::OnMenu()
 		ImGui::Separator();
 
 		bool bIsResizablePixelFormat = oTexture.IsValid() && Graphics::IsPixelFormatResizable(oTexture.GetPixelFormat());
-		if (ImGui::MenuItem("Resize", NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Resize", NULL, NULL, NULL, false, bIsResizablePixelFormat))
 		{
 			bOpenResizeMenu = true;
 		}
@@ -150,13 +180,13 @@ void Menus::OnMenu()
 			ImGui::SetTooltip("Resize not supported for this pixel format");
 		}
 
-		if (ImGui::MenuItem("Generate all mips", NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Generate all mips", NULL, NULL, NULL, false, bIsResizablePixelFormat))
 		{
 			if (Graphics::GenerateMips(&oTexture, &oTexture, false) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
 		}
 
-		if (ImGui::MenuItem("Generate missing mips", NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Generate missing mips", NULL, NULL, NULL, false, bIsResizablePixelFormat))
 		{
 			if (Graphics::GenerateMips(&oTexture, &oTexture, true) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
@@ -228,7 +258,7 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Help"))
 	{
-		if (ImGui::MenuItem("Logs"))
+		if (ImGuiUtils::MenuItemPlus("Logs"))
 		{
 			ImWindow::ImwWindowManager* pWindowManager = Program::GetInstance()->GetWindowManager();
 			pWindowManager->Dock(new Windows::LoggerWindow(), ImWindow::E_DOCK_ORIENTATION_BOTTOM, 0.3f);
@@ -236,7 +266,7 @@ void Menus::OnMenu()
 
 		ImGui::Separator();
 
-		if (ImGui::MenuItem("About"))
+		if (ImGuiUtils::MenuItemPlus("About", NULL, NULL, NULL, false, true, (ImTextureID)m_pIconHelp->GetTextureView()))
 		{
 			const ImVec2 c_vAboutBoxSize = ImVec2(600.f, 350.f);
 

@@ -3,17 +3,24 @@
 
 #include "ImWindow/ImwMenu.h"
 
+#include "GraphicResources/Texture2D.h"
+
 class Menus : ImWindow::ImwMenu
 {
 public:
-								Menus();
+	Menus();
+	virtual ~Menus();
 
-	virtual void				OnMenu();
+	virtual void						OnMenu();
 protected:
-	bool						m_bResizeKeepRatio;
-	int							m_iResizeNewWidth;
-	int							m_iResizeNewHeight;
-	double						m_fResizeRatio;
+	bool								m_bResizeKeepRatio;
+	int									m_iResizeNewWidth;
+	int									m_iResizeNewHeight;
+	double								m_fResizeRatio;
+
+	GraphicResources::Texture2D*		m_pIconOpen;
+	GraphicResources::Texture2D*		m_pIconSave;
+	GraphicResources::Texture2D*		m_pIconHelp;
 };
 
 #endif //_MENUS_H_
