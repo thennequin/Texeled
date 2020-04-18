@@ -8,7 +8,7 @@
 
 namespace Core
 {
-	template <typename T>
+	template <typename T, bool WithConstructor = false>
 	class Array
 	{
 	public:
@@ -34,6 +34,8 @@ namespace Core
 		iterator				end()							{ return m_pData + m_iSize;}
 		const_iterator			end() const						{ return m_pData + m_iSize; }
 
+		T*						data()							{ return m_pData; }
+
 		size_t					find(const T& oRight) const;
 
 		bool					push_back(const T& oValue);
@@ -53,44 +55,105 @@ namespace Core
 		size_t 					m_iSize;
 		size_t 					m_iCapacity;
 		T*						m_pData;
-	};
 
+		template<bool WithConstructor_>
+		inline static void		ctor(T* pMemory);
+		template<bool WithConstructor_>
+		inline static void		ctor_copy(T* pMemory, const T& oRight);
+		template<bool WithConstructor_>
+		inline static void		dtor(T* pMemory);
+
+		// With constructor call
+		template<>
+		inline static void ctor<true>(T* pMemory)
+		{
+			new(pMemory) T();
+		}
+
+		template<>
+		inline static void ctor_copy<true>(T* pMemory, const T& oRight)
+		{
+			new(pMemory) T(oRight);
+		}
+
+		template<>
+		inline static void dtor<true>(T* pMemory)
+		{
+			pMemory->~T();
+		}
+
+		// Without constructor call
+		template<>
+		inline static void ctor<false>(T* /*pMemory*/)
+		{
+			// Do nothing
+		}
+
+		template<>
+		inline static void ctor_copy<false>(T* pMemory, const T& oRight)
+		{
+			memcpy(pMemory, &oRight, sizeof(T));
+		}
+
+		template<>
+		inline static void dtor<false>(T* /*pMemory*/)
+		{
+			//Do Nothing
+		}
+	};
 	////////////////////////////////////////////////////////////////////////
 
-	template <typename T>
-	Array<T>::Array()
+	template <typename T, bool WithConstructor>
+	Array<T, WithConstructor>::Array()
 	{
 		m_iSize = 0;
 		m_iCapacity = 0;
 		m_pData = NULL;
 	}
 
-	template <typename T>
-	Array<T>::~Array()
+	template <typename T, bool WithConstructor>
+	Array<T, WithConstructor>::~Array()
 	{
 		clear();
 		free(m_pData);
 	}
 
-	template <typename T>
-	void Array<T>::clear()
+	template <typename T, bool WithConstructor>
+	void Array<T, WithConstructor>::clear()
 	{
 		resize(0);
 	}
 
-	template <typename T>
-	bool Array<T>::resize(size_t iSize, bool bGrowth)
+	template <typename T, bool WithConstructor>
+	bool Array<T, WithConstructor>::resize(size_t iSize, bool bGrowth)
 	{
 		if (reserve(bGrowth ? growCapacity(iSize) : iSize))
 		{
+			if (WithConstructor)
+			{
+				if (m_iSize <= iSize)
+				{
+					for (size_t iIndex = m_iSize; iIndex < iSize; ++iIndex)
+					{
+						ctor<WithConstructor>(m_pData + iIndex);
+					}
+				}
+				else
+				{
+					for (size_t iIndex = m_iSize; iIndex > iSize; --iIndex)
+					{
+						dtor<WithConstructor>(m_pData + iIndex - 1);
+					}
+				}
+			}
 			m_iSize = iSize;
 			return true;
 		}
 		return false;
 	}
 
-	template <typename T>
-	bool Array<T>::reserve(size_t iNewCapacity)
+	template <typename T, bool WithConstructor>
+	bool Array<T, WithConstructor>::reserve(size_t iNewCapacity)
 	{
 		if (iNewCapacity <= m_iCapacity)
 			return true;
@@ -133,29 +196,31 @@ namespace Core
 		return false;
 	}
 
-	template <typename T>
-	bool Array<T>::push_back(const T& oValue)
+	template <typename T, bool WithConstructor>
+	bool Array<T, WithConstructor>::push_back(const T& oValue)
 	{
 		if (reserve(m_iSize + 1))
 		{
-			m_pData[m_iSize++] = oValue;
+			ctor_copy<WithConstructor>(m_pData + m_iSize, oValue);
+			m_iSize++;
 			return true;
 		}
 		return false;
 	}
 
-	template <typename T>
-	void Array<T>::pop_back()
+	template <typename T, bool WithConstructor>
+	void Array<T, WithConstructor>::pop_back()
 	{
 		CORE_ASSERT(m_iSize > 0);
 		if (m_iSize > 0)
 		{
 			--m_iSize;
+			dtor<WithConstructor>(m_pData + m_iSize);
 		}
 	}
 
-	template <typename T>
-	size_t Array<T>::find(const T& oRight) const
+	template <typename T, bool WithConstructor>
+	size_t Array<T, WithConstructor>::find(const T& oRight) const
 	{
 		for (size_t iIndex = 0; iIndex < m_iSize; ++iIndex)
 		{
@@ -165,8 +230,8 @@ namespace Core
 		return InvalidIndex;
 	}
 
-	template <typename T>
-	size_t Array<T>::growCapacity(size_t iSize) const
+	template <typename T, bool WithConstructor>
+	size_t Array<T, WithConstructor>::growCapacity(size_t iSize) const
 	{
 		size_t iNewCapacity = (m_iCapacity > 0) ? m_iCapacity : 8; // minimum 8 values
 		while (iNewCapacity < iSize)
