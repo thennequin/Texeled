@@ -17,6 +17,12 @@ namespace Math
 	{
 		return ((oValue > oMax) ? oMax : ((oValue < oMin) ? oMin : oValue));
 	}
+
+	template<typename T>
+	inline T Lerp(T oMin, T oMax, float fLerp)
+	{
+		return (oMin * (1.f - fLerp)) + oMax * fLerp;
+	}
 }
 
 #endif //__MATH_ARITHMETIC_H__
