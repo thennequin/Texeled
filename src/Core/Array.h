@@ -8,7 +8,7 @@
 
 namespace Core
 {
-	template <typename T, bool WithConstructor = false>
+	template <typename T, bool WithConstructor = true>
 	class Array
 	{
 	public:
