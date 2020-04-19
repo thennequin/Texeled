@@ -21,6 +21,9 @@ protected:
 	GraphicResources::Texture2D*		m_pIconOpen;
 	GraphicResources::Texture2D*		m_pIconSave;
 	GraphicResources::Texture2D*		m_pIconExit;
+	GraphicResources::Texture2D*		m_pIconResize;
+	GraphicResources::Texture2D*		m_pIconMipMap;
+	GraphicResources::Texture2D*		m_pIconMissingMipMap;
 	GraphicResources::Texture2D*		m_pIconLog;
 	GraphicResources::Texture2D*		m_pIconHelp;
 };

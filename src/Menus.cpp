@@ -17,6 +17,9 @@
 #include "Resources/Icons/Open_16_png.h"
 #include "Resources/Icons/Save_16_png.h"
 #include "Resources/Icons/Exit_16_png.h"
+#include "Resources/Icons/Resize_16_png.h"
+#include "Resources/Icons/MipMap_16_png.h"
+#include "Resources/Icons/MissingMipMap_16_png.h"
 #include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
 
@@ -29,6 +32,9 @@ Menus::Menus()
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
 	, m_pIconExit(NULL)
+	, m_pIconResize(NULL)
+	, m_pIconMipMap(NULL)
+	, m_pIconMissingMipMap(NULL)
 	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
 {
@@ -61,6 +67,33 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconExit));
+		}
+	}
+	// Resize
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Resize_16_png::Data, Resources::Icons::Resize_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconResize));
+		}
+	}
+	// MipMap
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::MipMap_16_png::Data, Resources::Icons::MipMap_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconMipMap));
+		}
+	}
+	// MissingMipMap
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::MissingMipMap_16_png::Data, Resources::Icons::MissingMipMap_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconMissingMipMap));
 		}
 	}
 	// Log
@@ -102,6 +135,24 @@ Menus::~Menus()
 	{
 		delete m_pIconExit;
 		m_pIconExit = NULL;
+	}
+
+	if (m_pIconResize != NULL)
+	{
+		delete m_pIconResize;
+		m_pIconResize = NULL;
+	}
+
+	if (m_pIconMipMap != NULL)
+	{
+		delete m_pIconMipMap;
+		m_pIconMipMap = NULL;
+	}
+
+	if (m_pIconMissingMipMap != NULL)
+	{
+		delete m_pIconMissingMipMap;
+		m_pIconMissingMipMap = NULL;
 	}
 
 	if (m_pIconLog != NULL)
@@ -204,7 +255,7 @@ void Menus::OnMenu()
 		ImGui::Separator();
 
 		bool bIsResizablePixelFormat = oTexture.IsValid() && Graphics::IsPixelFormatResizable(oTexture.GetPixelFormat());
-		if (ImGuiUtils::MenuItemPlus("Resize", NULL, NULL, NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Resize", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconResize->GetTextureView()))
 		{
 			bOpenResizeMenu = true;
 		}
@@ -213,13 +264,13 @@ void Menus::OnMenu()
 			ImGui::SetTooltip("Resize not supported for this pixel format");
 		}
 
-		if (ImGuiUtils::MenuItemPlus("Generate all mips", NULL, NULL, NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Generate all mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMipMap->GetTextureView()))
 		{
 			if (Graphics::GenerateMips(&oTexture, &oTexture, false) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
 		}
 
-		if (ImGuiUtils::MenuItemPlus("Generate missing mips", NULL, NULL, NULL, false, bIsResizablePixelFormat))
+		if (ImGuiUtils::MenuItemPlus("Generate missing mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMissingMipMap->GetTextureView()))
 		{
 			if (Graphics::GenerateMips(&oTexture, &oTexture, true) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
