@@ -20,6 +20,8 @@ protected:
 
 	GraphicResources::Texture2D*		m_pIconOpen;
 	GraphicResources::Texture2D*		m_pIconSave;
+	GraphicResources::Texture2D*		m_pIconExit;
+	GraphicResources::Texture2D*		m_pIconLog;
 	GraphicResources::Texture2D*		m_pIconHelp;
 };
 

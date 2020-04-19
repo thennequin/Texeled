@@ -16,6 +16,8 @@
 
 #include "Resources/Icons/Open_16_png.h"
 #include "Resources/Icons/Save_16_png.h"
+#include "Resources/Icons/Exit_16_png.h"
+#include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
 
 Menus::Menus()
@@ -26,6 +28,8 @@ Menus::Menus()
 	, m_fResizeRatio(0.f)
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
+	, m_pIconExit(NULL)
+	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
 {
 
@@ -48,6 +52,24 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconSave));
+		}
+	}
+	// Exit
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Exit_16_png::Data, Resources::Icons::Exit_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconExit));
+		}
+	}
+	// Log
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Log_16_png::Data, Resources::Icons::Log_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconLog));
 		}
 	}
 	// Help
@@ -74,6 +96,18 @@ Menus::~Menus()
 	{
 		delete m_pIconSave;
 		m_pIconSave = NULL;
+	}
+
+	if (m_pIconExit != NULL)
+	{
+		delete m_pIconExit;
+		m_pIconExit = NULL;
+	}
+
+	if (m_pIconLog != NULL)
+	{
+		delete m_pIconLog;
+		m_pIconLog = NULL;
 	}
 
 	if (m_pIconHelp != NULL)
@@ -114,7 +148,7 @@ void Menus::OnMenu()
 			pProgram->OpenNextFile();
 		}
 		ImGui::Separator();
-		if (ImGuiUtils::MenuItemPlus("Exit", NULL, oShortkeys.pClose->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true))
+		if (ImGuiUtils::MenuItemPlus("Exit", NULL, oShortkeys.pClose->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true, (ImTextureID)m_pIconExit->GetTextureView()))
 		{
 			pProgram->AskExit();
 		}
@@ -257,7 +291,7 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Help"))
 	{
-		if (ImGuiUtils::MenuItemPlus("Logs"))
+		if (ImGuiUtils::MenuItemPlus("Logs", NULL, NULL, NULL, false, true, (ImTextureID)m_pIconLog->GetTextureView()))
 		{
 			ImWindow::ImwWindowManager* pWindowManager = Program::GetInstance()->GetWindowManager();
 			pWindowManager->Dock(new Windows::LoggerWindow(), ImWindow::E_DOCK_ORIENTATION_BOTTOM, 0.3f);
