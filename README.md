@@ -3,7 +3,11 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4oxhg62kiwrglghb/branch/master?svg=true)](https://ci.appveyor.com/project/thennequin/texeled/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3994ad06b426497191628431c945fa5e)](https://www.codacy.com/app/thennequin/Texeled?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=thennequin/Texeled&amp;utm_campaign=Badge_Grade)
 
-Simple texture viewer and editor
+Simple texture viewer and editor for Windows
+
+**Name origin** : Texeled is the combination of Texel and Ed
+  * **Texel** : a texel, texture element, or texture pixel is the fundamental unit of a texture map. (from Wikipedia)
+  * **Ed** : short version of Editor
 
 ![Demo](https://raw.githubusercontent.com/wiki/thennequin/Texeled/images/Texeled.gif)
 
