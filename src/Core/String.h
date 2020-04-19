@@ -14,6 +14,7 @@ namespace Core
 		typedef const char*		const_iterator;
 	public:
 		String();
+		String(const String& sRight);
 		~String();
 
 		bool					resize(size_t iLength);

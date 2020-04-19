@@ -14,6 +14,14 @@ namespace Core
 	{
 	}
 
+	String::String(const String& sRight)
+		: m_pData(NULL)
+		, m_iSize(0)
+		, m_iCapacity(0)
+	{
+		*this = sRight;
+	}
+
 	String::~String()
 	{
 		if (m_pData != NULL)
@@ -67,12 +75,15 @@ namespace Core
 	String& String::operator=(const String& sString)
 	{
 		size_t iLen = sString.size();
-		resize(iLen);
 		if (iLen > 0)
 		{
+			resize(iLen);
 			memcpy(m_pData, sString.m_pData, iLen);
 		}
-		m_pData[iLen] = 0;
+		if (m_pData != NULL)
+		{
+			m_pData[iLen] = 0;
+		}
 		return *this;
 	}
 
@@ -94,6 +105,9 @@ namespace Core
 
 	bool String::_Alloc(size_t iLength)
 	{
+		if (m_iCapacity >= (iLength + 1))
+			return true;
+
 		if (m_pData == NULL)
 		{
 			char* pNewData = (char*)malloc((iLength + 1) * sizeof(char));
