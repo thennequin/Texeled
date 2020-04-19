@@ -87,6 +87,8 @@ namespace Windows
 			ImGui::SameLine();
 			ImGui::TextUnformatted(STRINGIFY(TEXELED_REVISION));
 #endif //TEXELED_REVISION
+
+			ImGuiUtils::Link("https://github.com/thennequin/Texeled");
 		}
 		ImGui::EndGroup();
 
