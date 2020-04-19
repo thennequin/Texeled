@@ -23,7 +23,7 @@ namespace Core
 
 		void					clear();
 		bool 					resize(size_t iCount, bool bGrowth = true);
-		bool 					reserve(size_t iCount);
+		bool 					reserve(size_t iCount, bool bGrowth = true);
 
 		bool					empty() const					{ return m_iSize == 0; }
 		size_t					size() const					{ return m_iSize; }
@@ -57,46 +57,55 @@ namespace Core
 		T*						m_pData;
 
 		template<bool WithConstructor_>
-		inline static void		ctor(T* pMemory);
+		inline static void		ctor(T* pMemory, size_t iCount);
 		template<bool WithConstructor_>
-		inline static void		ctor_copy(T* pMemory, const T& oRight);
+		inline static void		ctor_copy(T* pMemory, const T* pRight, size_t iCount);
 		template<bool WithConstructor_>
-		inline static void		dtor(T* pMemory);
+		inline static void		dtor(T* pMemory, size_t iCount);
 
 		// With constructor call
 		template<>
-		inline static void ctor<true>(T* pMemory)
+		inline static void ctor<true>(T* pMemory, size_t iCount)
 		{
-			new(pMemory) T();
+			for (size_t i = 0; i < iCount; ++i)
+			{
+				new(pMemory + i) T();
+			}
 		}
 
 		template<>
-		inline static void ctor_copy<true>(T* pMemory, const T& oRight)
+		inline static void ctor_copy<true>(T* pMemory, const T* pRight, size_t iCount)
 		{
-			new(pMemory) T(oRight);
+			for (size_t i = 0; i < iCount; ++i)
+			{
+				new(pMemory + i) T(pRight[i]);
+			}
 		}
 
 		template<>
-		inline static void dtor<true>(T* pMemory)
+		inline static void dtor<true>(T* pMemory, size_t iCount)
 		{
-			pMemory->~T();
+			for (size_t i = 0; i < iCount; ++i)
+			{
+				(pMemory + i)->~T();
+			}
 		}
 
 		// Without constructor call
 		template<>
-		inline static void ctor<false>(T* /*pMemory*/)
+		inline static void ctor<false>(T* /*pMemory*/, size_t iCount)
 		{
 			// Do nothing
 		}
 
 		template<>
-		inline static void ctor_copy<false>(T* pMemory, const T& oRight)
+		inline static void ctor_copy<false>(T* pMemory, const T* pRight, size_t iCount)
 		{
-			memcpy(pMemory, &oRight, sizeof(T));
+			memcpy(pMemory, pRight, sizeof(T) * iCount);
 		}
 
 		template<>
-		inline static void dtor<false>(T* /*pMemory*/)
+		inline static void dtor<false>(T* /*pMemory*/, size_t iCount)
 		{
 			//Do Nothing
 		}
@@ -127,25 +136,17 @@ namespace Core
 	template <typename T, bool WithConstructor>
 	bool Array<T, WithConstructor>::resize(size_t iSize, bool bGrowth)
 	{
-		if (reserve(bGrowth ? growCapacity(iSize) : iSize))
+		if (reserve(iSize, bGrowth))
 		{
-			if (WithConstructor)
+			if (m_iSize <= iSize)
 			{
-				if (m_iSize <= iSize)
-				{
-					for (size_t iIndex = m_iSize; iIndex < iSize; ++iIndex)
-					{
-						ctor<WithConstructor>(m_pData + iIndex);
-					}
-				}
-				else
-				{
-					for (size_t iIndex = m_iSize; iIndex > iSize; --iIndex)
-					{
-						dtor<WithConstructor>(m_pData + iIndex - 1);
-					}
-				}
+				ctor<WithConstructor>(m_pData + m_iSize, iSize - m_iSize);
 			}
+			else
+			{
+				dtor<WithConstructor>(m_pData + iSize, m_iSize - iSize);
+			}
+
 			m_iSize = iSize;
 			return true;
 		}
@@ -153,8 +154,9 @@ namespace Core
 	}
 
 	template <typename T, bool WithConstructor>
-	bool Array<T, WithConstructor>::reserve(size_t iNewCapacity)
+	bool Array<T, WithConstructor>::reserve(size_t iNewCapacity, bool bGrowth)
 	{
+		iNewCapacity = bGrowth ? growCapacity(iNewCapacity) : iNewCapacity;
 		if (iNewCapacity <= m_iCapacity)
 			return true;
 
@@ -185,8 +187,10 @@ namespace Core
 				pNewData = (T*)malloc(iNewCapacity * sizeof(T));
 				if (m_pData != NULL && pNewData != NULL)
 				{
-					memcpy(pNewData, m_pData, iNewCapacity * sizeof(T));
+					ctor_copy<WithConstructor>(pNewData, m_pData, m_iSize);
+					dtor<WithConstructor>(m_pData, m_iSize);
 					free(m_pData);
+
 					m_pData = pNewData;
 					m_iCapacity = iNewCapacity;
 					return true;
@@ -199,9 +203,9 @@ namespace Core
 	template <typename T, bool WithConstructor>
 	bool Array<T, WithConstructor>::push_back(const T& oValue)
 	{
-		if (reserve(m_iSize + 1))
+		if (reserve(m_iSize + 1, true))
 		{
-			ctor_copy<WithConstructor>(m_pData + m_iSize, oValue);
+			ctor_copy<WithConstructor>(m_pData + m_iSize, &oValue, 1);
 			m_iSize++;
 			return true;
 		}
@@ -215,7 +219,7 @@ namespace Core
 		if (m_iSize > 0)
 		{
 			--m_iSize;
-			dtor<WithConstructor>(m_pData + m_iSize);
+			dtor<WithConstructor>(m_pData + m_iSize, 1);
 		}
 	}
 
