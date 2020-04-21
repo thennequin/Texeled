@@ -1,1 +1,1 @@
-build vs2017
+"%~dp0\build.bat" vs2017
