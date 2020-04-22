@@ -19,6 +19,7 @@ namespace Core
 		typedef const T*		const_iterator;
 
 		Array();
+		Array(const Array& oRight);
 		~Array();
 
 		void					clear();
@@ -48,6 +49,8 @@ namespace Core
 
 		T&						operator[](size_t iIndex)		{ CORE_ASSERT(iIndex < m_iSize); return m_pData[iIndex]; }
 		const T&				operator[](size_t iIndex) const	{ CORE_ASSERT(iIndex < m_iSize); return m_pData[iIndex]; }
+
+		Array&					operator=(const Array& oRight);
 
 	protected:
 		size_t					growCapacity(size_t iSize) const;
@@ -118,6 +121,15 @@ namespace Core
 		m_iSize = 0;
 		m_iCapacity = 0;
 		m_pData = NULL;
+	}
+
+	template <typename T, bool WithConstructor>
+	Array<T, WithConstructor>::Array(const Array& oRight)
+	{
+		m_iSize = 0;
+		m_iCapacity = 0;
+		m_pData = NULL;
+		*this = oRight;
 	}
 
 	template <typename T, bool WithConstructor>
@@ -221,6 +233,26 @@ namespace Core
 			--m_iSize;
 			dtor<WithConstructor>(m_pData + m_iSize, 1);
 		}
+	}
+
+	template <typename T, bool WithConstructor>
+	Array<T, WithConstructor >& Array<T, WithConstructor>::operator=(const Array& oRight)
+	{
+		// Avoid self copy
+		if (&oRight == this)
+			return *this;
+
+		if (reserve(oRight.size()))
+		{
+			ctor_copy<WithConstructor>(m_pData, oRight.m_pData, oRight.size());
+			m_iSize = oRight.size();
+		}
+		else
+		{
+			CORE_ASSERT(false, "Can't allocate");
+		}
+
+		return *this;
 	}
 
 	template <typename T, bool WithConstructor>
