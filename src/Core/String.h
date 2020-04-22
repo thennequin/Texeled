@@ -15,6 +15,7 @@ namespace Core
 	public:
 		String();
 		String(const String& sRight);
+		String(const char* pString);
 		~String();
 
 		bool					resize(size_t iLength);

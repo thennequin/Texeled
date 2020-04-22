@@ -22,6 +22,14 @@ namespace Core
 		*this = sRight;
 	}
 
+	String::String(const char* pString)
+		: m_pData(NULL)
+		, m_iSize(0)
+		, m_iCapacity(0)
+	{
+		*this = pString;
+	}
+
 	String::~String()
 	{
 		if (m_pData != NULL)
