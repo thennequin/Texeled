@@ -28,7 +28,12 @@ namespace Texture
 		TextureWriterSupportedFunc	pTester;
 	} TextureWriterInfo;
 
-	void							RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester);
+	typedef size_t TextureWriterHandle;
+	const TextureWriterHandle TextureWriterHandleInvalid = (TextureWriterHandle)-1;
+
+	TextureWriterHandle				RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester);
+
+	const TextureWriterInfo*		GetTextureWriter(TextureWriterHandle hWriter);
 
 	ErrorCode						SaveToStream(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	ErrorCode						SaveToFile(Graphics::Texture* pTexture, const WriterSettings* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);

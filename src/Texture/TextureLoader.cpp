@@ -8,17 +8,31 @@ namespace Texture
 {
 	static Core::Array<TextureLoaderInfo>	s_oTextureLoaders;
 
-	void RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader)
+	TextureLoaderHandle RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader)
 	{
 		CORE_ASSERT(pName != NULL);
-		CORE_ASSERT(pExts != NULL && pExts[strlen(pExts)] == 0);
+		CORE_ASSERT(pExts != NULL);
 		CORE_ASSERT(pLoader != NULL);
+
+		if (pName == NULL || pExts == NULL || pLoader == NULL )
+			return TextureLoaderHandleInvalid;
 
 		TextureLoaderInfo oInfo;
 		oInfo.pName = pName;
 		oInfo.pExts = pExts;
 		oInfo.pLoader = pLoader;
 		s_oTextureLoaders.push_back(oInfo);
+		return s_oTextureLoaders.size() - 1;
+	}
+
+	const TextureLoaderInfo* GetTextureLoadder(TextureLoaderHandle hLoader)
+	{
+		if (hLoader == (size_t)-1)
+			return NULL;
+
+		CORE_ASSERT(hLoader < s_oTextureLoaders.size());
+
+		return &s_oTextureLoaders[hLoader];
 	}
 
 	ErrorCode LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader)

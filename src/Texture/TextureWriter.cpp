@@ -8,14 +8,33 @@ namespace Texture
 {
 	static Core::Array<TextureWriterInfo>	s_oTextureWriters;
 
-	void RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester)
+	TextureWriterHandle RegisterTextureWriter(const char* pName, const char* pExts, TextureWriterFunc pWriter, TextureWriterSupportedFunc pWriterTester)
 	{
+		CORE_ASSERT(pName != NULL);
+		CORE_ASSERT(pExts != NULL);
+		CORE_ASSERT(pWriter != NULL);
+		CORE_ASSERT(pWriterTester != NULL);
+
+		if (pName == NULL || pExts == NULL || pWriter == NULL || pWriterTester == NULL)
+			return TextureWriterHandleInvalid;
+
 		TextureWriterInfo oInfo;
 		oInfo.pName = pName;
 		oInfo.pExt = pExts;
 		oInfo.pWriter = pWriter;
 		oInfo.pTester = pWriterTester;
 		s_oTextureWriters.push_back(oInfo);
+		return s_oTextureWriters.size() - 1;
+	}
+
+	const TextureWriterInfo* GetTextureWriter(TextureWriterHandle hWriter)
+	{
+		if (hWriter == (size_t)-1)
+			return NULL;
+
+		CORE_ASSERT(hWriter < s_oTextureWriters.size());
+
+		return &s_oTextureWriters[hWriter];
 	}
 
 	ErrorCode SaveToStream(Graphics::Texture* pTexture, const WriterSettings* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)

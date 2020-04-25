@@ -15,7 +15,12 @@ namespace Texture
 		TextureLoaderFunc		pLoader;
 	} TextureLoaderInfo;
 
-	void						RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
+	typedef size_t TextureLoaderHandle;
+	const TextureLoaderHandle TextureLoaderHandleInvalid = (TextureLoaderHandle)-1;
+
+	TextureLoaderHandle			RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
+
+	const TextureLoaderInfo*	GetTextureLoader(TextureLoaderHandle hWriter);
 
 	ErrorCode					LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
 	ErrorCode					LoadFromFile(Graphics::Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);
