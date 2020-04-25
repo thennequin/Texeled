@@ -25,7 +25,7 @@ namespace Texture
 		return s_oTextureLoaders.size() - 1;
 	}
 
-	const TextureLoaderInfo* GetTextureLoadder(TextureLoaderHandle hLoader)
+	const TextureLoaderInfo* GetTextureLoader(TextureLoaderHandle hLoader)
 	{
 		if (hLoader == (size_t)-1)
 			return NULL;
