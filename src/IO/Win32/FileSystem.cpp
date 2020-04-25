@@ -46,13 +46,20 @@ namespace IO
 				{
 					const char* pCurrentFileName = oFindData[iCount % 2].cFileName;
 					size_t iCurrentFileNameLen = Core::StringUtils::StrLen(pCurrentFileName, MAX_PATH);
-					if (Core::StringUtils::StrCmpI(oFindData[iCount % 2].cFileName, iCurrentFileNameLen, pFileName, iFileNameLen) == 0) // Ignore case
+					if (Core::StringUtils::StrCmpI(pCurrentFileName, iCurrentFileNameLen, pFileName, iFileNameLen) == 0) // Ignore case
 					{
 						if (iCount != 0)
 						{
 							int iPreviousModulo = iCount - 1;
 							const char* pPreviousFileName = oFindData[iPreviousModulo % 2].cFileName;
 							size_t iPreviousFileNameLen = Core::StringUtils::StrLen(pPreviousFileName, MAX_PATH);
+
+							if (Core::StringUtils::StrCmp(pPreviousFileName, iPreviousFileNameLen, ".", 1) == 0
+								|| Core::StringUtils::StrCmp(pPreviousFileName, iPreviousFileNameLen, "..", 2) == 0)
+							{
+								return false;
+							}
+
 							if ((iPreviousFileNameLen + iSlashPos) < iPreviousFilenameSize)
 							{
 								strcpy(pOutPreviousFilename, pParentFolder);
@@ -114,6 +121,13 @@ namespace IO
 						{
 							const char* pNextFileName = oFindData.cFileName;
 							size_t iNextFileNameLen = Core::StringUtils::StrLen(pNextFileName, MAX_PATH);
+
+							if (Core::StringUtils::StrCmp(pNextFileName, iNextFileNameLen, ".", 1) == 0
+								|| Core::StringUtils::StrCmp(pNextFileName, iNextFileNameLen, "..", 2) == 0)
+							{
+								return false;
+							}
+
 							if ((iNextFileNameLen + iSlashPos) < iNextFilenameSize)
 							{
 								strcpy(pOutNextFilename, pParentFolder);
