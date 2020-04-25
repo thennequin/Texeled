@@ -58,7 +58,7 @@ namespace Texture
 			CORE_VERIFY(pStream->Write(pData, iSize) == iSize);
 		}
 
-		bool TextureWriterPNG(Graphics::Texture* pTexture, const WriterSettings* /*pSettings*/, IO::Stream* pStream)
+		bool TextureWriterPNG(Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
 		{
 			Graphics::Texture oNewTexture;
 
