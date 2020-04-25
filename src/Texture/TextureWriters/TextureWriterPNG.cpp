@@ -102,9 +102,17 @@ namespace Texture
 			return false;
 		}
 
+
+		TextureWriterHandle	s_hWriterInfoHandlePNG = TextureWriterHandleInvalid;
 		void RegisterWriterPNG()
 		{
-			RegisterTextureWriter("Portable Network Graphics", "*.png\0", TextureWriterPNG, TextureWriterSupportedPNG);
+			CORE_ASSERT(s_hWriterInfoHandlePNG == TextureWriterHandleInvalid, "TextureWriterPNG already registered");
+			s_hWriterInfoHandlePNG = RegisterTextureWriter("Portable Network Graphics", "*.png\0", TextureWriterPNG, TextureWriterSupportedPNG);
+		}
+
+		const TextureWriterInfo* GetWriterPNG()
+		{
+			return GetTextureWriter(s_hWriterInfoHandlePNG);
 		}
 	}
 	//namespace TextureLoader
