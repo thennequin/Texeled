@@ -23,6 +23,8 @@ namespace Math
 	{
 		return (oMin * (1.f - fLerp)) + oMax * fLerp;
 	}
+
+	inline float Sqrt(float fValue);
 }
 
 #endif //__MATH_ARITHMETIC_H__
