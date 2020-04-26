@@ -54,7 +54,6 @@ namespace Core
 
 	protected:
 		inline size_t			growCapacity(size_t iSize) const;
-		inline bool				enoughCapacity(size_t iSize) const;
 
 		size_t 					m_iSize;
 		size_t 					m_iCapacity;
@@ -149,7 +148,7 @@ namespace Core
 	template <typename T, bool WithConstructor>
 	bool Array<T, WithConstructor>::resize(size_t iSize, bool bGrowth)
 	{
-		if (enoughCapacity(iSize) || reserve(iSize, bGrowth))
+		if (m_iCapacity >= iSize || reserve(iSize, bGrowth))
 		{
 			if (m_iSize <= iSize)
 			{
@@ -175,7 +174,8 @@ namespace Core
 		if (iNewCapacity <= m_iCapacity)
 			return true;
 
-		iNewCapacity = bGrowth ? growCapacity(iNewCapacity) : iNewCapacity;
+		if (bGrowth)
+			iNewCapacity = growCapacity(iNewCapacity);
 
 		if (m_pData == NULL)
 		{
@@ -217,7 +217,7 @@ namespace Core
 	template <typename T, bool WithConstructor>
 	bool Array<T, WithConstructor>::push_back(const T& oValue)
 	{
-		if (enoughCapacity(m_iSize + 1) || reserve(m_iSize + 1, true))
+		if (m_iCapacity >= (m_iSize + 1) || reserve(m_iSize + 1, true))
 		{
 			ctor_copy<WithConstructor>(m_pData + m_iSize, &oValue, 1);
 			m_iSize++;
@@ -273,16 +273,10 @@ namespace Core
 	template <typename T, bool WithConstructor>
 	inline size_t Array<T, WithConstructor>::growCapacity(size_t iSize) const
 	{
-		size_t iNewCapacity = (m_iCapacity > 0) ? m_iCapacity : 8; // minimum 8 elements
+		size_t iNewCapacity = (m_iCapacity > 0) ? m_iCapacity : 8; // minimum 8 values
 		while (iNewCapacity < iSize)
 			iNewCapacity *= 2;
 		return iNewCapacity;
-	}
-
-	template <typename T, bool WithConstructor>
-	inline bool Array<T, WithConstructor>::enoughCapacity(size_t iSize) const
-	{
-		return m_iCapacity >= iSize;
 	}
 } // namespace Core
 
