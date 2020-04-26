@@ -60,7 +60,7 @@ namespace Core
 		struct tm* oTimeInfo = localtime(&iSeconds);
 
 		char pDateBuffer[26];
-		strftime(pDateBuffer, 26, "%Y:%m:%d %H:%M:%S", oTimeInfo);
+		strftime(pDateBuffer, 26, "%Y-%m-%d %H:%M:%S", oTimeInfo);
 
 		WORD iColor;
 		const char* pCategory;
