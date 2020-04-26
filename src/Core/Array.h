@@ -96,7 +96,7 @@ namespace Core
 
 		// Without constructor call
 		template<>
-		inline static void ctor<false>(T* /*pMemory*/, size_t iCount)
+		inline static void ctor<false>(T* /*pMemory*/, size_t /*iCount*/)
 		{
 			// Do nothing
 		}
@@ -108,7 +108,7 @@ namespace Core
 		}
 
 		template<>
-		inline static void dtor<false>(T* /*pMemory*/, size_t iCount)
+		inline static void dtor<false>(T* /*pMemory*/, size_t /*iCount*/)
 		{
 			//Do Nothing
 		}
