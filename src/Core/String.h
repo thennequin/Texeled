@@ -19,7 +19,11 @@ namespace Core
 		~String();
 
 		bool					resize(size_t iLength);
+		void					clear();
+
 		size_t					size() const { return m_iSize; }
+		size_t					length() const { return m_iSize; } // Same as size()
+		bool					empty() const { return m_iSize == 0; }
 
 		const char*				c_str() const { return m_pData; }
 		iterator				begin() { return m_pData; }
@@ -37,6 +41,7 @@ namespace Core
 	protected:
 		bool					_Alloc(size_t iLength);
 
+		char					m_oHeapData[16];
 		char*					m_pData;
 		size_t					m_iSize;
 		size_t					m_iCapacity;

@@ -8,31 +8,31 @@
 namespace Core
 {
 	String::String()
-		: m_pData(NULL)
+		: m_pData(m_oHeapData)
 		, m_iSize(0)
-		, m_iCapacity(0)
+		, m_iCapacity(sizeof(m_oHeapData))
 	{
 	}
 
 	String::String(const String& sRight)
-		: m_pData(NULL)
+		: m_pData(m_oHeapData)
 		, m_iSize(0)
-		, m_iCapacity(0)
+		, m_iCapacity(sizeof(m_oHeapData))
 	{
 		*this = sRight;
 	}
 
 	String::String(const char* pString)
-		: m_pData(NULL)
+		: m_pData(m_oHeapData)
 		, m_iSize(0)
-		, m_iCapacity(0)
+		, m_iCapacity(sizeof(m_oHeapData))
 	{
 		*this = pString;
 	}
 
 	String::~String()
 	{
-		if (m_pData != NULL)
+		if (m_pData != NULL && m_iCapacity > sizeof(m_oHeapData))
 		{
 			free(m_pData);
 		}
@@ -56,6 +56,12 @@ namespace Core
 			return true;
 		}
 		return false;
+	}
+
+	void String::clear()
+	{
+		m_iSize = 0;
+		m_pData[0] = 0;
 	}
 
 	size_t String::find(char cChar) const
@@ -116,36 +122,33 @@ namespace Core
 		if (m_iCapacity >= (iLength + 1))
 			return true;
 
-		if (m_pData == NULL)
+		char* pNewData = NULL;
+		// Try realloc
+		if (m_iCapacity > sizeof(m_oHeapData))
 		{
-			char* pNewData = (char*)malloc((iLength + 1) * sizeof(char));
-			if (pNewData != NULL)
-			{
-				m_pData = pNewData;
-				m_iCapacity = iLength;
-				return true;
-			}
+			pNewData = (char*)realloc(m_pData, (iLength + 1) * sizeof(char));
+		}
+
+		if (pNewData != NULL)
+		{
+			m_pData = pNewData;
+			m_iCapacity = iLength;
+			return true;
 		}
 		else
 		{
-			char* pNewData = (char*)realloc(m_pData, (iLength + 1) * sizeof(char));
-			if (pNewData != NULL)
+			size_t iNewCapacity = iLength + 1;
+			pNewData = (char*)malloc(iNewCapacity);
+			if (m_pData != NULL)
 			{
-				m_pData = pNewData;
-				m_iCapacity = iLength;
-				return true;
-			}
-			else
-			{
-				pNewData = (char*)malloc((iLength + 1) * sizeof(char));
-				if (m_pData != NULL)
+				memcpy(pNewData, m_pData, m_iSize + 1);
+				if (m_iCapacity > sizeof(m_oHeapData))
 				{
-					memcpy(pNewData, m_pData, m_iSize + 1);
 					free(m_pData);
-					m_pData = pNewData;
-					m_iCapacity = iLength;
-					return true;
 				}
+				m_pData = pNewData;
+				m_iCapacity = iNewCapacity;
+				return true;
 			}
 		}
 		return false;
