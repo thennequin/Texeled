@@ -27,7 +27,7 @@ namespace Texture
 
 	const TextureLoaderInfo* GetTextureLoader(TextureLoaderHandle hLoader)
 	{
-		if (hLoader == (size_t)-1)
+		if (hLoader == TextureLoaderHandleInvalid)
 			return NULL;
 
 		CORE_ASSERT(hLoader < s_oTextureLoaders.size());

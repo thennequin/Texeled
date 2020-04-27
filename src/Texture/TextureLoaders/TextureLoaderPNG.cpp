@@ -197,9 +197,17 @@ namespace Texture
 			return ErrorCode::Ok;
 		}
 
+		static TextureLoaderHandle s_hTextureLoaderPNG = TextureLoaderHandleInvalid;
+
 		void RegisterLoaderPNG()
 		{
-			RegisterTextureLoader("Portable Network Graphics", "*.png\0", TextureLoaderPNG);
+			CORE_ASSERT(s_hTextureLoaderPNG == TextureLoaderHandleInvalid);
+			s_hTextureLoaderPNG = RegisterTextureLoader("Portable Network Graphics", "*.png\0", TextureLoaderPNG);
+		}
+
+		const TextureLoaderInfo* GetLoaderPNG()
+		{
+			return GetTextureLoader(s_hTextureLoaderPNG);
 		}
 	}
 	//namespace TextureLoader

@@ -84,7 +84,7 @@ namespace Texture
 
 	const TextureWriterInfo* GetTextureWriter(TextureWriterHandle hWriter)
 	{
-		if (hWriter == (size_t)-1)
+		if (hWriter == TextureWriterHandleInvalid)
 			return NULL;
 
 		CORE_ASSERT(hWriter < s_oTextureWriters.size());
