@@ -50,7 +50,6 @@ Program::Program(int iArgCount, char** pArgs)
 	, m_eMode(ProgramModeEnum::VIEWER)
 	, m_oImWindowMgr(true)
 	, m_pTexture2D(NULL)
-	, m_pTexturePath(NULL)
 {
 	s_pInstance = this;
 	Core::Logger::RegisterLoggerOutputer(this);
@@ -153,7 +152,6 @@ Program::~Program()
 {
 	ImwSafeDelete(m_pTexture2D);
 	ImwSafeDelete(m_pShortKeyManager);
-	ImwSafeFree(m_pTexturePath);
 	ClearLogs();
 }
 
@@ -257,6 +255,13 @@ void Program::UpdateTexture2DRes()
 	}
 }
 
+void Program::ClearTexture()
+{
+	CORE_VERIFY_OK(m_oTexture.Destroy());
+	m_sTexturePath = "";
+	ImwSafeDelete(m_pTexture2D);
+}
+
 bool Program::LoadFile(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader)
 {
 	ErrorCode oErr = LoadFileInternal(pFile, pUseLoader);
@@ -276,10 +281,7 @@ ErrorCode Program::LoadFileInternal(const char* pFile, const Texture::TextureLoa
 	if (oErr == ErrorCode::Ok)
 	{
 		Core::LogInfo("Program", "File loaded");
-		char* pNewPath = Core::StringUtils::StrDup(pFile);
-		if (m_pTexturePath != NULL)
-			free(m_pTexturePath);
-		m_pTexturePath = pNewPath;
+		m_sTexturePath = pFile;
 
 		UpdateTexture2DRes();
 		return ErrorCode::Ok;
@@ -364,8 +366,8 @@ void Program::SaveAs()
 		oExts += pWriters[iWriterIndex].pExt;
 		oExts += (char)0;
 
-		if (m_pTexturePath != NULL
-			&& Core::StringUtils::Wildcard(pWriters[iWriterIndex].pExt, m_pTexturePath, false))
+		if (m_sTexturePath.empty() == false
+			&& Core::StringUtils::Wildcard(pWriters[iWriterIndex].pExt, m_sTexturePath.c_str(), false))
 		{
 			iSelectedIndex = iWriterIndex + 1;
 		}
@@ -382,12 +384,12 @@ void Program::SaveAs()
 
 bool Program::OpenPreviousFile()
 {
-	if (m_pTexturePath != NULL)
+	if (m_sTexturePath.empty() == false)
 	{
 		char pBuffers[2][1024];
 		char* pPreviousFile = pBuffers[0];
 		char* pFile = pBuffers[1];
-		strcpy(pFile, m_pTexturePath);
+		strcpy(pFile, m_sTexturePath.c_str());
 		while (IO::FileSystem::GetPreviousFile(pFile, pPreviousFile, sizeof(pBuffers[0])))
 		{
 			Core::LogDebug("Program", "Try loding file '%s'", pPreviousFile);
@@ -406,12 +408,12 @@ bool Program::OpenPreviousFile()
 
 bool Program::OpenNextFile()
 {
-	if (m_pTexturePath != NULL)
+	if (m_sTexturePath.empty() == false)
 	{
 		char pBuffers[2][1024];
 		char* pNextFile = pBuffers[0];
 		char* pFile = pBuffers[1];
-		strcpy(pFile, m_pTexturePath);
+		strcpy(pFile, m_sTexturePath.c_str());
 		while (IO::FileSystem::GetNextFile(pFile, pNextFile, sizeof(pBuffers[0])))
 		{
 			Core::LogDebug("Program", "Try loding file '%s'", pNextFile);
@@ -430,9 +432,9 @@ bool Program::OpenNextFile()
 
 void Program::ReloadFile()
 {
-	if (m_pTexturePath != NULL)
+	if (m_sTexturePath.empty() == false)
 	{
-		LoadFile(m_pTexturePath);
+		LoadFile(m_sTexturePath.c_str());
 	}
 }
 

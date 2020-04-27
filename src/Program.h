@@ -4,6 +4,7 @@
 #include "ImwWindowManagerCustom.h"
 
 #include "Core/Logger.h"
+#include "Core/String.h"
 
 #include "Graphics/Texture.h"
 
@@ -125,8 +126,9 @@ public:
 	ErrorCode								LoadFileInternal(const char* pFile, const Texture::TextureLoaderInfo* pUseLoader = NULL);
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
-	const char*								GetTextureFilePath() const { return m_pTexturePath; }
+	const Core::String&						GetTextureFilePath() const { return m_sTexturePath; }
 	void									UpdateTexture2DRes();
+	void									ClearTexture();
 
 	void									Open();
 	void									Save();
@@ -173,7 +175,7 @@ protected:
 
 	Graphics::Texture						m_oTexture;
 	GraphicResources::Texture2D*			m_pTexture2D;
-	char*									m_pTexturePath;
+	Core::String							m_sTexturePath;
 };
 
 #endif // __PROGRAM_H__
