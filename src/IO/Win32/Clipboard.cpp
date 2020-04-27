@@ -24,25 +24,46 @@ namespace IO
 				return false;
 			}
 
-			HANDLE hClipboardTextData = GetClipboardData(CF_TEXT);
-			if (hClipboardTextData == NULL)
+			HANDLE hClipboardTextData;
+			if ((hClipboardTextData = GetClipboardData(CF_UNICODETEXT)) != NULL)
+			{
+				const wchar_t* pWideText = (const wchar_t*)GlobalLock(hClipboardTextData);
+				if (pWideText == NULL)
+				{
+					GlobalUnlock(hClipboardTextData);
+					CloseClipboard();
+					return false;
+				}
+
+				size_t iTextDataSize = GlobalSize(hClipboardTextData);
+				size_t iWideTextLen = wcsnlen_s(pWideText, iTextDataSize);
+				size_t iUtf8Len = WideCharToMultiByte(CP_UTF8, 0, pWideText, iWideTextLen, NULL, 0, NULL, NULL);
+
+				pOutText->resize(iUtf8Len);
+
+				WideCharToMultiByte(CP_UTF8, 0, pWideText, iWideTextLen, pOutText->begin(), iUtf8Len, NULL, NULL);
+			}
+			else if ((hClipboardTextData = GetClipboardData(CF_TEXT)) != NULL)
+			{
+				const char* pText = (const char*)GlobalLock(hClipboardTextData);
+				if (pText == NULL)
+				{
+					GlobalUnlock(hClipboardTextData);
+					CloseClipboard();
+					return false;
+				}
+
+				size_t iTextDataSize = GlobalSize(hClipboardTextData);
+				size_t pTextLen = Core::StringUtils::StrLen(pText, iTextDataSize);
+
+				pOutText->resize(pTextLen);
+				memcpy(pOutText->begin(), pText, pTextLen);
+			}
+			else
 			{
 				CloseClipboard();
 				return false;
 			}
-
-			const char* pText = (const char*)GlobalLock(hClipboardTextData);
-			if (pText == NULL)
-			{
-				GlobalUnlock(hClipboardTextData);
-				CloseClipboard();
-				return false;
-			}
-
-			size_t iLen = strlen(pText);
-
-			pOutText->resize(iLen);
-			memcpy(pOutText->begin(), pText, iLen + 1);
 
 			GlobalUnlock(hClipboardTextData);
 			CloseClipboard();
