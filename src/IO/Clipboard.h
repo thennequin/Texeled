@@ -3,12 +3,16 @@
 
 #include "Core/String.h"
 
+#include "Graphics/Texture.h"
+
 namespace IO
 {
 	namespace Clipboard
 	{
 		bool		GetText(Core::String* pOutText);
 		bool		SetText(const char* pText);
+
+		bool		GetTexture(Graphics::Texture* pOutTexture);
 	}
 }
 //namespace IO
