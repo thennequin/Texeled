@@ -228,7 +228,7 @@ namespace IO
 						uint32_t iPixel = 0;
 						memcpy(&iPixel, (void*)pPixelIn, iInputPixelByteCount);
 
-						for (int iC = 0; iC < iOutputPixelComponentCount; ++iC)
+						for (size_t iC = 0; iC < iOutputPixelComponentCount; ++iC)
 							pPixelOut[iC] = (iRGBAMasks[iC] != 0) ? ((iPixel & iRGBAMasks[iC]) >> iRGBAShifts[iC]) : iRGBADefault[iC];
 					}
 				}
