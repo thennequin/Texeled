@@ -98,6 +98,14 @@ namespace Graphics
 
 	typedef struct
 	{
+		uint8_t					iMantixBits;
+		uint8_t					iMantixShift;
+		uint8_t					iExpBits;
+		uint8_t					iExpShift;
+	} ComponentMask;
+
+	typedef struct
+	{
 		PixelFormatEnum			eFormat;
 		int						iBitsPerPixel;
 		int						iBlockWidth;
@@ -108,6 +116,10 @@ namespace Graphics
 		ComponentEncodingEnum	eEncoding;
 		const char* const		pShortName;
 		const char* const		pName;
+		ComponentMask			iMaskRed;
+		ComponentMask			iMaskGreen;
+		ComponentMask			iMaskBlue;
+		ComponentMask			iMaskAlpha;
 	} PixelFormatInfos;
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];
