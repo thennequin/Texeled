@@ -106,8 +106,11 @@ namespace Core
 	void MemCpy(CORE_PTR_VOID pDest, CORE_PTR_VOID pSource, size_t iSize)
 	{
 #ifdef CORE_MEMORY_DEBUG
-		((CORE_PTR(char))pDest) + iSize;
-		((CORE_PTR(char))pSource) + iSize;
+		if (iSize > 0)
+		{
+			((CORE_PTR(char))pDest) + (iSize - 1);
+			((CORE_PTR(char))pSource) + (iSize - 1);
+		}
 #endif
 		memcpy((void*)pDest, (void*)pSource, iSize);
 	}
