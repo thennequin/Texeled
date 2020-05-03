@@ -108,8 +108,8 @@ namespace Core
 #ifdef CORE_MEMORY_DEBUG
 		if (iSize > 0)
 		{
-			((CORE_PTR(char))pDest) + (iSize - 1);
-			((CORE_PTR(char))pSource) + (iSize - 1);
+			CORE_PTR_CAST(char, pDest) + (iSize - 1);
+			CORE_PTR_CAST(char, pSource) + (iSize - 1);
 		}
 #endif
 		memcpy((void*)pDest, (void*)pSource, iSize);
