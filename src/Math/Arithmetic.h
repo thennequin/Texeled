@@ -1,6 +1,8 @@
 #ifndef __MATH_ARITHMETIC_H__
 #define __MATH_ARITHMETIC_H__
 
+#include <stdint.h> // uint8_t / uint64_t
+
 namespace Math
 {
 	template<typename T>
@@ -25,6 +27,23 @@ namespace Math
 	}
 
 	inline float Sqrt(float fValue);
+
+	// Return first high bit
+	// Return 0 if no high bit;
+	// Example : HighBitFirst of 26 (11010) => 2
+	//                               ...|.
+	uint8_t HighBitFirst(uint64_t iNumber);
+
+	// Return last high bit
+	// Return 0 if no high bit;
+	// Example : HighBitLast of 26 (11010) => 5
+	//                              |....
+	uint8_t HighBitLast(uint64_t iNumber);
+
+	// Extract high bit count in unsigned number
+	// Example : HighBitCount of 26 (11010) => 3
+	//                               ||.|.
+	uint8_t HighBitCount(uint64_t iNumber);
 }
 
 #endif //__MATH_ARITHMETIC_H__
