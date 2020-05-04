@@ -10,7 +10,7 @@ namespace Core
 {
 	namespace Logger
 	{
-		Array<LoggerOutputer*, false> s_oOutputer;
+		Array<LoggerOutputer*> s_oOutputer;
 
 		void RegisterLoggerOutputer(LoggerOutputer* pOutputer)
 		{
