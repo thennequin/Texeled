@@ -114,4 +114,15 @@ namespace Core
 #endif
 		memcpy((void*)pDest, (void*)pSource, iSize);
 	}
+
+	void MemZero(CORE_PTR_VOID pData, size_t iSize)
+	{
+#ifdef CORE_MEMORY_DEBUG
+		if (iSize > 0)
+		{
+			CORE_PTR_CAST(char, pData) + (iSize - 1);
+		}
+#endif
+		memset((void*)pData, 0, iSize);
+	}
 }

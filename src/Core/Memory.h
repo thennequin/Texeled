@@ -163,6 +163,7 @@ namespace Core
 	void						Free(CORE_PTR_VOID pMemory);
 	CORE_PTR_VOID				ToPointer(void* pMemory, size_t iSize);
 	void						MemCpy(CORE_PTR_VOID pDest, CORE_PTR_VOID pSource, size_t iSize);
+	void						MemZero(CORE_PTR_VOID pData, size_t iSize);
 }
 
 #endif // __CORE_MEMORY_H__
