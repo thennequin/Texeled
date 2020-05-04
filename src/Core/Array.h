@@ -3,12 +3,14 @@
 
 #include <stdlib.h> // malloc/free
 #include <string.h> // memcpy
+#include <type_traits> // std::is_trivial
+#include <new> // new
 
 #include "Core/Assert.h"
 
 namespace Core
 {
-	template <typename T, bool WithConstructor = true>
+	template <typename T, bool WithConstructor = std::is_trivial<T>() == false>
 	class Array
 	{
 	public:
