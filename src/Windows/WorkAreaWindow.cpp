@@ -102,10 +102,10 @@ namespace Windows
 	}
 
 	WorkAreaWindow::WorkAreaWindow()
-		: m_pCheckboardTexture2DRes(NULL)
+		: ImWindow::ImwWindow(ImWindow::E_WINDOW_MODE_ALONE)
+		, m_pCheckboardTexture2DRes(NULL)
 	{
 		SetTitle("WorkArea");
-		SetAlone(true);
 		SetFillingSpace(true);
 
 		m_fZoom = 1.0;

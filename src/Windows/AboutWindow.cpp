@@ -17,9 +17,9 @@
 namespace Windows
 {
 	AboutWindow::AboutWindow()
-		: m_pIcon(NULL)
+		: ImWindow::ImwWindow(ImWindow::E_WINDOW_MODE_ALONE)
+		, m_pIcon(NULL)
 	{
-		SetAlone(true);
 		SetTitle("About");
 
 		//Load Image
