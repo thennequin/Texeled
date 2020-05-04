@@ -1,5 +1,6 @@
 #include "Texture/TextureLoader.h"
 
+#include "Core/Array.h"
 #include "Core/StringUtils.h"
 
 #include "IO/FileStream.h"

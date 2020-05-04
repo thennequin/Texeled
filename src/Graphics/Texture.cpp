@@ -5,6 +5,7 @@
 #include <stdlib.h> //malloc/free/NULL
 #include <string.h> //memcpy/memset
 #include <assert.h> //asert
+#include <algorithm> //std::swap
 
 using namespace Graphics;
 

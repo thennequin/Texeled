@@ -2,6 +2,9 @@
 #define __TEXTURE_TEXTURE_LOADER_H__
 
 #include "Core/ErrorCode.h"
+
+#include "IO/Stream.h"
+
 #include "Graphics/Texture.h"
 
 namespace Texture

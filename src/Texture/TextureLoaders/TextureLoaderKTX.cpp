@@ -4,6 +4,8 @@
 
 #include "Texture/KTX.h"
 
+#include "Core/Array.h"
+
 #include "Math/Arithmetic.h"
 
 namespace Texture

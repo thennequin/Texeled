@@ -4,6 +4,8 @@
 #include "Core/Array.h"
 #include "Core/String.h"
 
+#include "IO/Stream.h"
+
 #include "Graphics/Texture.h"
 
 namespace Texture

@@ -3,6 +3,7 @@
 
 #include "ImwWindowManagerCustom.h"
 
+#include "Core/Array.h"
 #include "Core/Logger.h"
 #include "Core/String.h"
 
