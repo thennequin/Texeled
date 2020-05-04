@@ -45,11 +45,17 @@ namespace Texture
 			{
 				pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
 
-				float* pImage = stbi_loadf_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
+				float* pImage = stbi_loadf_from_callbacks(&oCallbacks, pStream, &iWidth, &iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
 				{
 					switch (iComponentCount)
 					{
+					case 1:
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::R32_FLOAT;
+						break;
+					case 2:
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RG32_FLOAT;
+						break;
 					case 3:
 						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB32_FLOAT;
 						break;
@@ -87,6 +93,12 @@ namespace Texture
 				{
 					switch (iComponentCount)
 					{
+					case 1:
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::R8_UNORM;
+						break;
+					case 2:
+						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RG8_UNORM;
+						break;
 					case 3:
 						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGB8_UNORM;
 						break;
