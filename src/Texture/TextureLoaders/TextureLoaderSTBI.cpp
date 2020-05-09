@@ -34,12 +34,15 @@ namespace Texture
 			oCallbacks.eof = StreamEof;
 
 			Graphics::Texture::Desc oDesc;
+			int iWidth, iHeight;
 			int iComponentCount = 0;
-			if (stbi_info_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount) == 0)
+			if (stbi_info_from_callbacks(&oCallbacks, pStream, &iWidth, &iHeight, &iComponentCount) == 0)
 			{
 				return ErrorCode::Fail;
 			}
 
+			oDesc.iWidth = (uint16_t)iWidth;
+			oDesc.iHeight = (uint16_t)iHeight;
 			if (pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN)
 				&& stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
@@ -88,7 +91,7 @@ namespace Texture
 			else
 			{
 				pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN);
-				stbi_uc* pImage = stbi_load_from_callbacks(&oCallbacks, pStream, &oDesc.iWidth, &oDesc.iHeight, &iComponentCount, 0);
+				stbi_uc* pImage = stbi_load_from_callbacks(&oCallbacks, pStream, &iWidth, &iHeight, &iComponentCount, 0);
 				if (pImage != NULL)
 				{
 					switch (iComponentCount)
