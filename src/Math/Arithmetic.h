@@ -44,6 +44,12 @@ namespace Math
 	// Example : HighBitCount of 26 (11010) => 3
 	//                               ||.|.
 	uint8_t HighBitCount(uint64_t iNumber);
+
+	// Fill uint64_t
+	// Example : HighBitFill(5,3) = 11111000
+	//                              |...|
+	//                              5   3
+	uint64_t HighBitFill(uint8_t iBitCount, uint8_t iFirstBit);
 }
 
 #endif //__MATH_ARITHMETIC_H__
