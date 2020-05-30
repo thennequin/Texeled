@@ -411,13 +411,12 @@ namespace Windows
 					const float c_fPixelSize = 20.f;
 					const int c_iPixelAroundCount = 4;
 
-					ImVec2 oHoveredPixel = oCursorCoord;
+					int oHoveredPixel[2] = { (int)roundf(oCursorCoord.x - 0.5f), (int)roundf(oCursorCoord.y - 0.5f) };
+					oHoveredPixel[0] = oHoveredPixel[0] >> iCurrentMip;
+					oHoveredPixel[1] = oHoveredPixel[1] >> iCurrentMip;
 
-					oHoveredPixel.x = roundf(oHoveredPixel.x + 0.5f);
-					oHoveredPixel.y = roundf(oHoveredPixel.y + 0.5f);
-
-					if (oDisplayOptions.bTiling || (oHoveredPixel.x >= 0.f && oHoveredPixel.x <= oTextureSize.x &&
-						oHoveredPixel.y >= 0.f && oHoveredPixel.y <= oTextureSize.y))
+					if (oDisplayOptions.bTiling || (oHoveredPixel[0] >= 0.f && oHoveredPixel[0] <= oTextureSize.x &&
+						oHoveredPixel[1] >= 0.f && oHoveredPixel[1] <= oTextureSize.y))
 					{
 						ImGui::BeginTooltip();
 
@@ -434,8 +433,9 @@ namespace Windows
 								ImVec2(0.f, 0.f), ImVec2((c_iPixelAroundCount * 2 + 1) * 2.f, (c_iPixelAroundCount * 2 + 1) * 2.f)
 							);
 
-							ImVec2 oUvMin = (oHoveredPixel - ImVec2((float)c_iPixelAroundCount + 1, (float)c_iPixelAroundCount + 1)) / oTextureSize;
-							ImVec2 oUvMax = (oHoveredPixel + ImVec2((float)c_iPixelAroundCount, (float)c_iPixelAroundCount)) / oTextureSize;
+							ImVec2 oPixelPos((float)oHoveredPixel[0] + 1, (float)oHoveredPixel[1] + 1);
+							ImVec2 oUvMin = (oPixelPos - ImVec2((float)c_iPixelAroundCount + 1, (float)c_iPixelAroundCount + 1)) / oTextureMipSize;
+							ImVec2 oUvMax = (oPixelPos + ImVec2((float)c_iPixelAroundCount , (float)c_iPixelAroundCount)) / oTextureMipSize;
 
 							ImGuiUtils::PushPixelShader(m_pPixelShader);
 							ImGuiUtils::PushSampler((oDisplayOptions.bTiling ? m_pSamplerStatePointRepeat : m_pSamplerStatePointClamp));
@@ -459,10 +459,10 @@ namespace Windows
 
 						//Display Pixel position
 						{
-							int iX = ((int)oHoveredPixel.x) % (oTexture.GetWidth() + 1);
-							int iY = ((int)oHoveredPixel.y) % (oTexture.GetHeight() + 1);
-							while (iX < 1) iX += oTexture.GetWidth();
-							while (iY < 1) iY += oTexture.GetHeight();
+							int iX = oHoveredPixel[0] % oTexture.GetWidth();
+							int iY = oHoveredPixel[1] % oTexture.GetHeight();
+							while (iX < 0) iX += oTexture.GetWidth();
+							while (iY < 0) iY += oTexture.GetHeight();
 
 							ImGui::PushFont(oFonts.pFontConsolasBold);
 							ImGui::TextUnformatted("X:");
