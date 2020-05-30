@@ -228,7 +228,7 @@ namespace Windows
 			const Graphics::PixelFormatInfos& oPixelFormatInfo = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
 
 			ImVec2 oTextureSize((float)oTexture.GetWidth(), (float)oTexture.GetHeight());
-			ImVec2 oTextureMipSize((float)(oTexture.GetWidth() >> iCurrentMip), (float)(oTexture.GetHeight() >> iCurrentMip));
+			ImVec2 oTextureMipSize((float)Math::Max(1, oTexture.GetWidth() >> iCurrentMip), (float)Math::Max(1, oTexture.GetHeight() >> iCurrentMip));
 			double fTextureRatio = oTextureSize.x / oTextureSize.y;
 
 			ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
