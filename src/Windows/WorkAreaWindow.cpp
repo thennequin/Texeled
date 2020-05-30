@@ -4,6 +4,8 @@
 
 #include "Program.h"
 
+#include "Math/Arithmetic.h"
+
 #include "GraphicResources/Texture2D.h"
 #include "GraphicResources/SamplerState.h"
 
