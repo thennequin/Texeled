@@ -4,6 +4,8 @@
 
 #include "Core/StringUtils.h"
 
+#include "Math/Arithmetic.h"
+
 StatusBars::StatusBars()
 {
 
@@ -16,8 +18,10 @@ StatusBars::~StatusBars()
 
 void StatusBars::OnStatusBar()
 {
-	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
-	const Fonts& oFonts = Program::GetInstance()->GetFonts();
+	Program* pProgram = Program::GetInstance();
+	int iCurrentMip = pProgram->GetDisplayOptions().iMip;
+	Graphics::Texture& oTexture = pProgram->GetTexture();
+	const Fonts& oFonts = pProgram->GetFonts();
 	if (oTexture.IsValid())
 	{
 		//Width
@@ -27,7 +31,14 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%d", oTexture.GetWidth());
+		if (iCurrentMip > 0)
+		{
+			ImGui::Text("%d(%d)", oTexture.GetWidth(), Math::Max(1, oTexture.GetWidth() >> iCurrentMip));
+		}
+		else
+		{
+			ImGui::Text("%d", oTexture.GetWidth());
+		}
 		ImGui::PopFont();
 
 		//Height
@@ -38,7 +49,14 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%d", oTexture.GetHeight());
+		if (iCurrentMip > 0)
+		{
+			ImGui::Text("%d(%d)", oTexture.GetHeight(), Math::Max(1,oTexture.GetHeight() >> iCurrentMip));
+		}
+		else
+		{
+			ImGui::Text("%d", oTexture.GetHeight());
+		}
 		ImGui::PopFont();
 
 		//Face/Slice
