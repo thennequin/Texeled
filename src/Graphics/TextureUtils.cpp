@@ -538,7 +538,7 @@ namespace Graphics
 		return ErrorCode::Ok;
 	}
 
-	ErrorCode GenerateMips(const Texture* pTexture, Texture* pOutTexture, bool bOnlyMissingMips)
+	ErrorCode GenerateMips(const Texture* pTexture, Texture* pOutTexture, uint16_t iMipsMask)
 	{
 		if (pTexture == NULL || pOutTexture == NULL)
 		{
@@ -551,12 +551,10 @@ namespace Graphics
 		}
 
 		int iSize = Math::Max(pTexture->GetWidth(), pTexture->GetHeight());
-		int iMipCount = 1;
-		while (iSize > 1)
-		{
-			++iMipCount;
-			iSize = iSize >> 1;
-		}
+		int iMaxMipCount = Math::HighBitLast(iSize);
+		int iMipCount = Math::HighBitLast(iMipsMask);
+		if (iMipCount > iMaxMipCount)
+			iMipCount = iMaxMipCount;
 
 		Texture oTemp;
 		Texture::Desc oDesc;
@@ -577,7 +575,7 @@ namespace Graphics
 			{
 				const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(iMip, iFace);
 
-				if (iMip == 0 || (bOnlyMissingMips && iMip < pTexture->GetMipCount()))
+				if (iMip == 0 || (((1 << iMip) & iMipsMask) == 0 && iMip < pTexture->GetMipCount()))
 				{
 					const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
 					Core::MemCpy(oDstFaceData.pData, oSrcFaceData.pData, oSrcFaceData.iSize);
