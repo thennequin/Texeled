@@ -264,10 +264,12 @@ namespace Windows
 			ImVec2 oDiff((float)(oBBSize.x - oTextureSize.x * fPixelRatio[0]), (float)(oBBSize.y - oTextureSize.y * fPixelRatio[1]));
 
 			ImVec2 oZoomPixelRatio = ImVec2((float)(fPixelRatio[0] * m_fZoom), (float)(fPixelRatio[1] * m_fZoom));
+			ImVec2 oZoomMipPixelRatio = ImVec2((float)(fMipPixelRatio[0] * m_fZoom), (float)(fMipPixelRatio[1] * m_fZoom));
 
 			ImVec2 oCursorRealPos = ImGui::GetMousePos();
 			ImVec2 oCursorPos = oCursorRealPos - oBB.Min - oDiff / 2.f;
 			ImVec2 oCursorCoord = (oCursorPos - m_oOffset) / oZoomPixelRatio;
+			ImVec2 oCursorMipCoord = (oCursorPos - m_oOffset) / oZoomMipPixelRatio;
 
 			ImVec2 oOffset = m_oOffset;
 			ImVec2 oTextureMin = (ImVec2(0.f, 0.f) - m_oOffset - oDiff / 2.f) / oZoomPixelRatio;
@@ -404,9 +406,8 @@ namespace Windows
 					const float c_fPixelSize = 20.f;
 					const int c_iPixelAroundCount = 4;
 
-					int oHoveredPixel[2] = { (int)roundf(oCursorCoord.x - 0.5f), (int)roundf(oCursorCoord.y - 0.5f) };
-					oHoveredPixel[0] = oHoveredPixel[0] >> iCurrentMip;
-					oHoveredPixel[1] = oHoveredPixel[1] >> iCurrentMip;
+					int oHoveredPixel[2] = { (int)roundf(oCursorMipCoord.x - 0.5f), (int)roundf(oCursorMipCoord.y - 0.5f) };
+
 
 					if (oDisplayOptions.bTiling || (oHoveredPixel[0] >= 0.f && oHoveredPixel[0] <= oTextureSize.x &&
 						oHoveredPixel[1] >= 0.f && oHoveredPixel[1] <= oTextureSize.y))
