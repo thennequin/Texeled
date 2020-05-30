@@ -223,6 +223,8 @@ namespace Windows
 
 		if (oTexture.IsValid() && pTexture2DRes != NULL)
 		{
+			const Graphics::PixelFormatInfos& oPixelFormatInfo = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
+
 			ImVec2 oTextureSize((float)oTexture.GetWidth(), (float)oTexture.GetHeight());
 			ImVec2 oTextureMipSize((float)(oTexture.GetWidth() >> iCurrentMip), (float)(oTexture.GetHeight() >> iCurrentMip));
 			double fTextureRatio = oTextureSize.x / oTextureSize.y;
@@ -346,38 +348,79 @@ namespace Windows
 				//Draw pixel grid
 				if (oDisplayOptions.bShowPixelGrid && (Math::Min(fMipPixelSize[0], fMipPixelSize[1]) * m_fCurrentZoom) > 10.0)
 				{
-					double fStepX = fMipPixelRatio[0] * m_fCurrentZoom;
-					double fStepY = fMipPixelRatio[1] * m_fCurrentZoom;
-					ImU32 iColor = ImGui::GetColorU32(ImVec4(0.4f, 0.4f, 0.4f, 1.f));
-					//Draw pixel grid
+					pDrawList->ChannelsSplit(2);
 
-					double fStart;
+					double fStepX = fMipPixelSize[0] * m_fCurrentZoom;
+					double fStepY = fMipPixelSize[1] * m_fCurrentZoom;
+					ImU32 iColorBlock = ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, 1.f));
+					ImU32 iColorPixel = ImGui::GetColorU32(ImVec4(0.7f, 0.7f, 0.7f, 1.f));
+					ImU32 iColorBack = ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
 
 					// Vertical lines
-					fStart = oImageStart.x - oUv0.x * (fStepX * (double)oTextureMipSize.x);
-					while (fStart < oBB.Min.x)
-						fStart += fStepX;
-
-					while (oDisplayOptions.bTiling && fStart > oImageStart.x - fStepX)
-						fStart -= fStepX;
-
-					for (; fStart <= oImageEnd.x && fStart <= oBB.Max.x; fStart += fStepX)
+					int iCurrentX = floor(oUv0.x / (fStepX * (double)oTextureMipSize.x));
+					if (iCurrentX < 0)
+						iCurrentX = 0;
+					double fStartX = oImageStart.x - oUv0.x * (fStepX * (double)oTextureMipSize.x);
+					while (fStartX < oBB.Min.x)
 					{
-						pDrawList->AddLine(ImVec2((float)fStart, oImageStart.y), ImVec2((float)fStart, oImageEnd.y), iColor);
+						fStartX += fStepX;
+						iCurrentX++;
+					}
+
+					if (oDisplayOptions.bTiling && (fStartX  - fStepX ) > oImageStart.x )
+					{
+						while ((fStartX - fStepX) > oImageStart.x)
+						{
+							fStartX -= fStepX;
+							iCurrentX--;
+						}
+					}
+
+					ImVec2 oEnd = ImVec2(Math::Min(oImageEnd.x, oBB.Max.x) + 0.5f, Math::Min(oImageEnd.y, oBB.Max.y) + 0.5f);
+
+					for (; fStartX <= oEnd.x; fStartX += fStepX, iCurrentX++)
+					{
+						bool bIsBlock = oPixelFormatInfo.iBlockWidth > 1 && (Math::Abs(iCurrentX) % oPixelFormatInfo.iBlockWidth) == 0;
+						ImVec2 oLineStart = ImVec2((float)fStartX, oImageStart.y);
+						ImVec2 oLineEnd = ImVec2((float)fStartX, oImageEnd.y);
+						pDrawList->ChannelsSetCurrent(0);
+						pDrawList->AddLine(oLineStart, oLineEnd, iColorBack, bIsBlock ? 5.f : 3.f);
+						pDrawList->ChannelsSetCurrent(1);
+						pDrawList->AddLine(oLineStart, oLineEnd, bIsBlock ? iColorBlock : iColorPixel, bIsBlock ? 2.f : 1.f);
 					}
 
 					// Horizontal lines
-					fStart = oImageStart.y - oUv0.y * fStepY * oTextureMipSize.y;
-					while (fStart < oBB.Min.y)
-						fStart += fStepY;
-
-					while (oDisplayOptions.bTiling && fStart > oImageStart.y - fStepY)
-						fStart -= fStepY;
-
-					for (; fStart <= oImageEnd.y && fStart <= oBB.Max.y; fStart += fStepY)
+					int iCurrentY = floor(oUv0.y / (fStepY * (double)oTextureMipSize.y));
+					if (iCurrentY < 0)
+						iCurrentY = 0;
+					double fStartY = oImageStart.y - oUv0.y * fStepY * oTextureMipSize.y;
+					while (fStartY < oBB.Min.y)
 					{
-						pDrawList->AddLine(ImVec2(oImageStart.x, (float)fStart), ImVec2(oImageEnd.x, (float)fStart), iColor);
+						fStartY += fStepY;
+						iCurrentY++;
 					}
+
+					if (oDisplayOptions.bTiling && (fStartY - fStepY) > oImageStart.y)
+					{
+						while ((fStartY - fStepY) > oImageStart.y)
+						{
+							fStartY -= fStepY;
+							iCurrentY--;
+						}
+					}
+
+					for (; fStartY <= oEnd.y; fStartY += fStepY, iCurrentY++)
+					{
+						bool bIsBlock = oPixelFormatInfo.iBlockHeight > 1 && (Math::Abs(iCurrentY) % oPixelFormatInfo.iBlockHeight) == 0;
+						ImVec2 oLineStart = ImVec2(oImageStart.x, (float)fStartY);
+						ImVec2 oLineEnd = ImVec2(oImageEnd.x, (float)fStartY);
+						pDrawList->ChannelsSetCurrent(0);
+						pDrawList->AddLine(oLineStart, oLineEnd, iColorBack, bIsBlock ? 5.f : 3.f);
+						pDrawList->ChannelsSetCurrent(1);
+						pDrawList->AddLine(oLineStart, oLineEnd, bIsBlock ? iColorBlock : iColorPixel, bIsBlock ? 2.f : 1.f);
+					}
+
+					pDrawList->ChannelsMerge();
 				}
 			}
 
