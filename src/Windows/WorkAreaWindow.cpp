@@ -225,6 +225,7 @@ namespace Windows
 		{
 			ImVec2 oTextureSize((float)oTexture.GetWidth(), (float)oTexture.GetHeight());
 			ImVec2 oTextureMipSize((float)(oTexture.GetWidth() >> iCurrentMip), (float)(oTexture.GetHeight() >> iCurrentMip));
+			double fTextureRatio = oTextureSize.x / oTextureSize.y;
 
 			ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
 			ImDrawList* pDrawList = ImGui::GetWindowDrawList();
@@ -233,6 +234,7 @@ namespace Windows
 			const ImGuiID id = pWindow->GetID("##ImageArea");
 			const ImRect oBB(pWindow->DC.CursorPos, pWindow->DC.CursorPos + ImGui::GetContentRegionAvail());
 			const ImVec2 oBBSize = oBB.GetSize();
+			float fAreaRatio = oBBSize.x / oBBSize.y;
 			ImGui::ItemSize(oBB);
 			if (ImGui::ItemAdd(oBB, id))
 			{
@@ -258,22 +260,24 @@ namespace Windows
 			}
 
 			double oSafeAreaSize[2] = { oBBSize.x * 0.8f, oBBSize.y * 0.8f };
-			double fPixelRatio[2] = { oSafeAreaSize[0] / (double)oTextureSize.x, oSafeAreaSize[1] / (double)oTextureSize.y };
-			double fMipPixelRatio[2] = { oSafeAreaSize[0] / (double)oTextureMipSize.x, oSafeAreaSize[1] / (double)oTextureMipSize.y };
+			double fPixelRatio;
 
-			ImVec2 oDiff((float)(oBBSize.x - oTextureSize.x * fPixelRatio[0]), (float)(oBBSize.y - oTextureSize.y * fPixelRatio[1]));
+			if (fAreaRatio < fTextureRatio)
+			{
+				fPixelRatio = oSafeAreaSize[0] / (double)oTextureSize.x;
+			}
+			else
+			{
+				fPixelRatio = oSafeAreaSize[1] / (double)oTextureSize.y;
+			}
 
-			ImVec2 oZoomPixelRatio = ImVec2((float)(fPixelRatio[0] * m_fZoom), (float)(fPixelRatio[1] * m_fZoom));
-			ImVec2 oZoomMipPixelRatio = ImVec2((float)(fMipPixelRatio[0] * m_fZoom), (float)(fMipPixelRatio[1] * m_fZoom));
+			ImVec2 oDiff((float)(oBBSize.x - oTextureSize.x * fPixelRatio), (float)(oBBSize.y - oTextureSize.y * fPixelRatio));
 
-			ImVec2 oCursorRealPos = ImGui::GetMousePos();
-			ImVec2 oCursorPos = oCursorRealPos - oBB.Min - oDiff / 2.f;
-			ImVec2 oCursorCoord = (oCursorPos - m_oOffset) / oZoomPixelRatio;
-			ImVec2 oCursorMipCoord = (oCursorPos - m_oOffset) / oZoomMipPixelRatio;
+			double fZoomPixelRatio = (fPixelRatio * m_fZoom);
 
 			ImVec2 oOffset = m_oOffset;
-			ImVec2 oTextureMin = (ImVec2(0.f, 0.f) - m_oOffset - oDiff / 2.f) / oZoomPixelRatio;
-			ImVec2 oTextureMax = (oBBSize - m_oOffset - oDiff / 2.f) / oZoomPixelRatio;
+			ImVec2 oTextureMin = (ImVec2(0.f, 0.f) - m_oOffset - oDiff / 2.f) / fZoomPixelRatio;
+			ImVec2 oTextureMax = (oBBSize - m_oOffset - oDiff / 2.f) / fZoomPixelRatio;
 
 			ImVec2 oImageStart = oBB.Min;
 			ImVec2 oImageEnd = oBB.Max;
@@ -307,6 +311,14 @@ namespace Windows
 				}
 			}
 
+			float fTest = fPixelRatio * oTextureSize.x / oTextureMipSize.x;
+			double fMipPixelSize[2] = { fPixelRatio * oTextureSize.x / oTextureMipSize.x, fPixelRatio * oTextureSize.y / oTextureMipSize.y };
+			ImVec2 oZoomMipPixelRatio = ImVec2((float)(fMipPixelSize[0] * m_fZoom), (float)(fMipPixelSize[1] * m_fZoom));
+
+			ImVec2 oCursorRealPos = ImGui::GetMousePos();
+			ImVec2 oCursorPos = oCursorRealPos - oBB.Min - oDiff / 2.f;
+			ImVec2 oCursorMipCoord = (oCursorPos - m_oOffset) / oZoomMipPixelRatio;
+
 			if (!pWindow->SkipItems)
 			{
 				pDrawList->AddRectFilled(oImageStart, oImageEnd, ImGui::GetColorU32(ImVec4(1.f, 1.f, 1.f, 1.f)));
@@ -331,7 +343,8 @@ namespace Windows
 				ImGuiUtils::PopPixelShaderConstantBuffer();
 				ImGuiUtils::PopPixelShader();
 
-				if (oDisplayOptions.bShowPixelGrid && (fMipPixelRatio[0] * m_fCurrentZoom) > 10.0)
+				//Draw pixel grid
+				if (oDisplayOptions.bShowPixelGrid && (Math::Min(fMipPixelSize[0], fMipPixelSize[1]) * m_fCurrentZoom) > 10.0)
 				{
 					double fStepX = fMipPixelRatio[0] * m_fCurrentZoom;
 					double fStepY = fMipPixelRatio[1] * m_fCurrentZoom;
@@ -388,13 +401,13 @@ namespace Windows
 							//m_fZoom *= 1.2f;
 						}
 
-						if (fPixelRatio[0] * m_fZoom > 500)
+						if (fPixelRatio * m_fZoom > 500)
 						{
-							m_fZoom = 500 / fPixelRatio[0];
+							m_fZoom = 500 / fPixelRatio;
 						}
-						else if (fPixelRatio[0] * m_fZoom < 0.0001)
+						else if (fPixelRatio * m_fZoom < 0.0001)
 						{
-							m_fZoom = 0.0001 / fPixelRatio[0];
+							m_fZoom = 0.0001 / fPixelRatio;
 						}
 
 						m_oOffset = oCursorPos - oNew * (float)m_fZoom;
@@ -407,7 +420,6 @@ namespace Windows
 					const int c_iPixelAroundCount = 4;
 
 					int oHoveredPixel[2] = { (int)roundf(oCursorMipCoord.x - 0.5f), (int)roundf(oCursorMipCoord.y - 0.5f) };
-
 
 					if (oDisplayOptions.bTiling || (oHoveredPixel[0] >= 0.f && oHoveredPixel[0] <= oTextureSize.x &&
 						oHoveredPixel[1] >= 0.f && oHoveredPixel[1] <= oTextureSize.y))
