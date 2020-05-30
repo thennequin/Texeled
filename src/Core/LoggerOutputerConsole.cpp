@@ -64,28 +64,33 @@ namespace Core
 
 		WORD iColor;
 		const char* pCategory;
+		const char* pSpace;
 		switch (eCategory)
 		{
 		case Logger::Category::Debug:
 			pCategory = "Debug";
+			pSpace = "  ";
 			iColor = FOREGROUND_INTENSITY;
 			break;
 		default:
 		case Logger::Category::Info:
 			pCategory = "Info";
+			pSpace = "   ";
 			iColor = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 			break;
 		case Logger::Category::Warning:
 			pCategory = "Warning";
+			pSpace = "";
 			iColor = FOREGROUND_RED | FOREGROUND_GREEN;
 			break;
 		case Logger::Category::Error:
 			pCategory = "Error";
+			pSpace = "  ";
 			iColor = FOREGROUND_RED;
 			break;
 		}
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, iColor);
-		printf("%s [%s] %s : %s\n", pDateBuffer, pCategory, pName, pFormattedMessage);
+		printf("%s [%s]%s %s : %s\n", pDateBuffer, pCategory, pSpace, pName, pFormattedMessage);
 	};
 }
