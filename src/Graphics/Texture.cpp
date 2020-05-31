@@ -1,11 +1,6 @@
 #include "Graphics/Texture.h"
 
-#include "IO/FileStream.h"
-
-#include <stdlib.h> //malloc/free/NULL
-#include <string.h> //memcpy/memset
-#include <assert.h> //asert
-#include <algorithm> //std::swap
+#include "Math/Arithmetic.h"
 
 using namespace Graphics;
 
@@ -13,126 +8,112 @@ using namespace Graphics;
 // Enums
 ////////////////////////////////////////////////////////////////
 
-const char* const Texture::EFace_string[_E_FACE_COUNT] = {
+const char* const Texture::Face_string[FaceFlag::_MAX_VALUE] = {
+	NULL,
 	"PosX",
 	"NegX",
+	NULL,
 	"PosY",
+	NULL, NULL, NULL,
 	"NegY",
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 	"PosZ",
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 	"NegZ",
 };
 
-////////////////////////////////////////////////////////////////
-// Texture::FaceData
-////////////////////////////////////////////////////////////////
-
-Texture::TextureFaceData::TextureFaceData()
+Texture::FaceFlag Texture::GetFace(FaceFlags iFaces, int iIndex)
 {
-	pData = CORE_PTR_NULL;
-	iSize = 0;
-	iPitch = 0;
-	iWidth = 0;
-	iHeight = 0;
+	if ((iFaces & (1 << iIndex)) != 0)
+		return (FaceFlag)(1 << iIndex);
+	return FaceFlag::NONE;
 }
 
 ////////////////////////////////////////////////////////////////
-// Texture::TextureData::Desc
+// Texture::MipData
 ////////////////////////////////////////////////////////////////
 
-Texture::TextureData::Desc::Desc()
+Texture::SliceData Texture::MipData::GetSlice(uint16_t iSlice) const
 {
-	ePixelFormat = PixelFormatEnum::_NONE;
-	iWidth = 0;
-	iHeight = 0;
-	iMipCount = 1;
-	iFaceCount = 1;
+	CORE_ASSERT(iSlice >= 0 && iSlice < iSliceCount);
+
+	Texture::SliceData oData;
+
+	oData.ePixelFormat	= ePixelFormat;
+	oData.iWidth		= iWidth;
+	oData.iHeight		= iHeight;
+	oData.eFace			= GetFace(eFaces, iSlice);
+
+	uint32_t iBlockCountX, iBlockCountY;
+	PixelFormat::GetBlockCount(ePixelFormat, oData.iWidth, oData.iHeight, &iBlockCountX, &iBlockCountY);
+
+	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
+
+	size_t iSlicePitch	= iBlockCountX * oInfos.iBlockSize;
+	size_t iSliceSize	= iSlicePitch * iBlockCountY;
+	size_t iSliceOffset	= iSliceSize * iSlice;
+
+	oData.iPitch		= iSlicePitch;
+	oData.iSize			= iSliceSize;
+	oData.pData			= CORE_PTR_CAST(char, pData) + iSliceOffset;
+
+	return oData;
 }
 
 ////////////////////////////////////////////////////////////////
-// Texture::TextureData
+// Texture::LayerData
 ////////////////////////////////////////////////////////////////
 
-Texture::TextureData::TextureData()
+Texture::MipData Texture::LayerData::GetMip(uint8_t iMip) const
 {
-	m_pData = CORE_PTR_NULL;
-	m_iSize = 0;
+	CORE_ASSERT(iMip >= 0 && iMip < iMipCount);
+
+	Texture::MipData oData;
+
+	oData.ePixelFormat	= ePixelFormat;
+	oData.iWidth		= Math::Max<uint16_t>(1, iWidth >> iMip);
+	oData.iHeight		= Math::Max<uint16_t>(1, iHeight >> iMip);
+	oData.iSliceCount	= iSliceCount;
+	oData.eFaces		= eFaces;
+
+	size_t iMipSize, iMipOffset;
+	GetMipSizeAndOffset(ePixelFormat, iWidth, iHeight, iSliceCount, iMip, &iMipSize, &iMipOffset);
+
+	oData.iSize			= iMipSize;
+	oData.pData			= CORE_PTR_CAST(char, pData) + iMipOffset;
+
+	return oData;
 }
 
-Texture::TextureData::~TextureData()
+Texture::SliceData Texture::LayerData::GetSlice(uint8_t iMip, uint16_t iSlice) const
 {
-	Destroy();
-}
+	CORE_ASSERT(iMip >= 0 && iMip < iMipCount);
+	CORE_ASSERT(iSlice >= 0 && iSlice < iSliceCount);
 
-ErrorCode Texture::TextureData::Create(Desc& oDesc)
-{
-	Destroy();
+	Texture::SliceData oData;
 
-	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
+	oData.ePixelFormat	= ePixelFormat;
+	oData.iWidth		= Math::Max<uint16_t>(1, iWidth >> iMip);
+	oData.iHeight		= Math::Max<uint16_t>(1, iHeight >> iMip);
+	oData.eFace			= GetFace(eFaces, iSlice);
 
-	size_t iOffset = 0;
-	size_t iOffsets[_E_FACE_COUNT][c_iMaxMip];
-	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
-	{
-		uint32_t iMipWidth = oDesc.iWidth >> iMipIndex;
-		iMipWidth = iMipWidth > 0 ? iMipWidth : 1;
-		uint32_t iMipHeight = oDesc.iHeight >> iMipIndex;
-		iMipHeight = iMipHeight > 0 ? iMipHeight : 1;
+	size_t iMipOffset;
+	GetMipSizeAndOffset(ePixelFormat, iWidth, iHeight, iSliceCount, iMip, NULL, &iMipOffset);
 
-		uint32_t iBlockCountX, iBlockCountY;
-		PixelFormat::GetBlockCount(oDesc.ePixelFormat, iMipWidth, iMipHeight, &iBlockCountX, &iBlockCountY);
+	uint32_t iBlockCountX, iBlockCountY;
+	PixelFormat::GetBlockCount(ePixelFormat, oData.iWidth, oData.iHeight, &iBlockCountX, &iBlockCountY);
 
-		for (int iFaceIndex = 0; iFaceIndex < oDesc.iFaceCount; ++iFaceIndex)
-		{
-			size_t iSize = (size_t)iBlockCountX * iBlockCountY * oInfos.iBlockSize;
+	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
 
-			m_oFaceData[iFaceIndex][iMipIndex].iWidth = (int)iMipWidth;
-			m_oFaceData[iFaceIndex][iMipIndex].iHeight = (int)iMipHeight;
-			m_oFaceData[iFaceIndex][iMipIndex].iSize = iSize;
-			m_oFaceData[iFaceIndex][iMipIndex].iPitch = (size_t)iBlockCountX * oInfos.iBlockSize;
-			iOffsets[iFaceIndex][iMipIndex] = iOffset;
-			iOffset += iSize;
-		}
-	}
-	m_iSize = iOffset;
+	size_t iSlicePitch	= iBlockCountX * oInfos.iBlockSize;
+	size_t iSliceSize	= iSlicePitch * iBlockCountY;
+	size_t iSliceOffset	= iSliceSize * iSlice;
 
-	if (iOffset == 0 || (m_pData = Core::Malloc(iOffset)) == NULL)
-	{
-		Destroy();
-		return ErrorCode::Fail;
-	}
+	oData.iPitch		= iSlicePitch;
+	oData.iSize			= iSliceSize;
+	oData.pData			= CORE_PTR_CAST(char, pData) + iMipOffset + iSliceOffset;
 
-	for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
-	{
-		for (int iFaceIndex = 0; iFaceIndex < oDesc.iFaceCount; ++iFaceIndex)
-		{
-			CORE_PTR(char) pDataChar = (CORE_PTR(char))m_pData;
-			m_oFaceData[iFaceIndex][iMipIndex].pData = (pDataChar + iOffsets[iFaceIndex][iMipIndex]);
-		}
-	}
-
-	return ErrorCode::Ok;
-}
-
-void Texture::TextureData::Destroy()
-{
-	if (m_pData != NULL)
-	{
-		Core::Free(m_pData);
-		m_pData = CORE_PTR_NULL;
-		m_iSize = 0;
-		for (int iFaceIndex = 0; iFaceIndex < _E_FACE_COUNT; ++iFaceIndex)
-		{
-			for (int iMipIndex = 0; iMipIndex < c_iMaxMip; ++iMipIndex)
-			{
-				m_oFaceData[iFaceIndex][iMipIndex] = TextureFaceData();
-			}
-		}
-	}
-}
-
-bool Texture::TextureData::IsValid() const
-{
-	return m_pData != NULL;
+	return oData;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -141,27 +122,38 @@ bool Texture::TextureData::IsValid() const
 
 Texture::Desc::Desc()
 {
-	for (int iFaceIndex = 0; iFaceIndex < _E_FACE_COUNT; ++iFaceIndex)
-	{
-		const void** pDataFace = pData[iFaceIndex];
-		for (int iMipIndex = 0; iMipIndex < c_iMaxMip; ++iMipIndex)
-		{
-			pDataFace[iMipIndex] = NULL;
-		}
-	}
+	ePixelFormat	= PixelFormatEnum::_NONE;
+	iWidth			= 0;
+	iHeight			= 0;
+	iLayerCount		= 1;
+	iMipCount		= 1;
+	iSliceCount		= 1;
+	eFaces			= FaceFlag::NONE;
+}
+
+Texture::Desc::Desc(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t iLayerCount, uint8_t iMipCount, uint16_t iSliceCount, FaceFlags eFaces)
+{
+	this->iWidth		= iWidth;
+	this->iHeight		= iHeight;
+	this->ePixelFormat	= ePixelFormat;
+	this->iLayerCount	= iLayerCount;
+	this->iMipCount		= iMipCount;
+	this->iSliceCount	= iSliceCount;
+	this->eFaces		= eFaces;
 }
 
 /////////////////////////////////////////////////////////////////
 // Texture
 ////////////////////////////////////////////////////////////////
 
+const Texture::Desc Texture::DescNull(PixelFormatEnum::_NONE, 0, 0, 0, 0, 0, FaceFlag::NONE);
+
 Texture::Texture()
-	: m_ePixelFormat(PixelFormatEnum::_NONE)
-	, m_iWidth(0)
-	, m_iHeight(0)
-	, m_iMipCount(0)
-	, m_iFaceCount(0)
+	: m_pData(CORE_PTR_NULL)
+	, m_iSize(0)
+	, m_iLayerSize(0)
 {
+	m_oDesc = DescNull;
 }
 
 Texture::~Texture()
@@ -171,7 +163,7 @@ Texture::~Texture()
 
 bool Texture::IsValid() const
 {
-	return m_oData.IsValid();
+	return m_pData != NULL;
 }
 
 ErrorCode Texture::Create(Desc& oDesc)
@@ -179,13 +171,15 @@ ErrorCode Texture::Create(Desc& oDesc)
 	if (!(oDesc.ePixelFormat != PixelFormatEnum::_NONE
 		&& oDesc.iWidth > 0 && oDesc.iWidth <= c_iMaxSize
 		&& oDesc.iHeight > 0 && oDesc.iHeight <= c_iMaxSize
-		&& oDesc.iMipCount > 0 && oDesc.iMipCount <= c_iMaxMip))
+		&& oDesc.iLayerCount > 0 && oDesc.iLayerCount <= c_iMaxSize
+		&& oDesc.iMipCount > 0 && oDesc.iMipCount <= c_iMaxMip
+		&& oDesc.iSliceCount > 0 && oDesc.iSliceCount <= c_iMaxSize))
 	{
 		//Invalid desc
 		return ErrorCode(1, "Invalid desc");
 	}
 
-	if (m_iMipCount > 1
+	if (m_oDesc.iMipCount > 1
 		&& !(oDesc.iWidth && !(oDesc.iWidth & (oDesc.iWidth - 1)))
 		&& !(oDesc.iHeight && !(oDesc.iHeight & (oDesc.iHeight - 1))))
 	{
@@ -193,85 +187,144 @@ ErrorCode Texture::Create(Desc& oDesc)
 		return ErrorCode(1, "Need to be power of 2");
 	}
 
+	uint8_t iFaceCount = Math::HighBitCount(oDesc.eFaces);
+
+	if (iFaceCount > 0 && oDesc.iSliceCount != iFaceCount)
+	{
+		// When eFaces setted, iSliceCount must be identical to eFaces count
+		return ErrorCode(1, "Slice count must be identical to eFaces count");
+	}
+
 	Destroy() == ErrorCode::Ok;
 
-	if (m_oData.Create(oDesc) != ErrorCode::Ok)
 	{
-		return ErrorCode(1, "Can't alloc memory");
-	}
+		const PixelFormatInfos& oInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
 
-	m_ePixelFormat = oDesc.ePixelFormat;
-	m_iWidth = oDesc.iWidth;
-	m_iHeight = oDesc.iHeight;
-	m_iFaceCount = oDesc.iFaceCount;
-	m_iMipCount = oDesc.iMipCount;
-
-	if (oDesc.pData[0][0] != NULL)
-	{
-		for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
+		size_t iSize = 0;
+		for (int iMipIndex = 0; iMipIndex < oDesc.iMipCount; ++iMipIndex)
 		{
-			for (int iFace = 0; iFace < _E_FACE_COUNT; ++iFace)
-			{
-				const TextureFaceData& oFaceData = m_oData.GetFaceData(iMip, iFace);
-				memcpy(oFaceData.pData, oDesc.pData[iMip][iFace], oFaceData.iSize);
-			}
+			size_t iMipSize;
+			GetMipSizeAndOffset(oDesc.ePixelFormat, oDesc.iWidth, oDesc.iHeight, oDesc.iSliceCount, iMipIndex, &iMipSize, NULL);
+			iSize += iMipSize;
+		}
+		m_iSize = iSize * oDesc.iLayerCount;
+
+		if (iSize == 0 || (m_pData = Core::Malloc(iSize)) == NULL)
+		{
+			Destroy();
+			return ErrorCode(1, "Can't alloc memory");
 		}
 	}
-	else
-	{
-		memset(m_oData.GetData(), 0, m_oData.GetDataSize());
-	}
+
+	m_oDesc = oDesc;
+
+	Core::MemZero(m_pData, m_iSize);
 
 	return ErrorCode::Ok;
 }
 
-ErrorCode Texture::Destroy()
+void Texture::GetMipSizeAndOffset(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t iSliceCount, uint8_t iMip, size_t* pOutMipSize, size_t* pOutMipOffset)
 {
-	if (m_oData.IsValid())
+	CORE_ASSERT(pOutMipSize != NULL || pOutMipOffset != NULL);
+
+	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
+
+	size_t iMipOffset = 0;
+	size_t iMipSize = 0;
+	for (int iMipIndex = 0; iMipIndex <= iMip; ++iMipIndex)
 	{
-		m_oData.Destroy();
-		m_ePixelFormat = PixelFormatEnum::_NONE;
-		m_iWidth = 0;
-		m_iHeight = 0;
-		m_iMipCount = 0;
-		return ErrorCode::Ok;
+		uint32_t iMipWidth = Math::Max(1, iWidth >> iMipIndex);
+		uint32_t iMipHeight = Math::Max(1, iHeight >> iMipIndex);
+
+		uint32_t iBlockCountX, iBlockCountY;
+		PixelFormat::GetBlockCount(ePixelFormat, iMipWidth, iMipHeight, &iBlockCountX, &iBlockCountY);
+
+		iMipSize = iSliceCount * iBlockCountX * iBlockCountY * oInfos.iBlockSize;
+
+		if (iMipIndex < iMip)
+			iMipOffset += iMipSize;
 	}
 
-	return ErrorCode::Fail;
+	if (pOutMipSize != NULL)
+		*pOutMipSize = iMipSize;
+	if (pOutMipOffset != NULL)
+		*pOutMipOffset = iMipOffset;
 }
 
-Texture::Desc Texture::GetDesc() const
+const Texture::LayerData Texture::GetLayerData(uint16_t iLayer) const
 {
-	Desc oDesc;
-	oDesc.ePixelFormat	= m_ePixelFormat;
-	oDesc.iMipCount		= m_iMipCount;
-	oDesc.iWidth		= m_iWidth;
-	oDesc.iHeight		= m_iHeight;
-	oDesc.iFaceCount	= m_iFaceCount;
-	return oDesc;
+	CORE_ASSERT(iLayer >= 0 && iLayer < m_oDesc.iLayerCount);
+
+	Texture::LayerData oData;
+
+	oData.ePixelFormat	= m_oDesc.ePixelFormat;
+	oData.iWidth		= m_oDesc.iWidth;
+	oData.iHeight		= m_oDesc.iHeight;
+	oData.iMipCount		= m_oDesc.iMipCount;
+	oData.iSliceCount	= m_oDesc.iSliceCount;
+	oData.eFaces		= m_oDesc.eFaces;
+
+	size_t iLayerOffset = m_iLayerSize * iLayer;
+
+	oData.iSize			= m_iLayerSize;
+	oData.pData			= CORE_PTR_CAST(char, m_pData) + iLayerOffset;
+
+	return oData;
+}
+
+const Texture::MipData Texture::GetMipData(uint16_t iLayer, uint8_t iMip) const
+{
+	return GetLayerData(iLayer).GetMip(iMip);
+}
+
+const Texture::SliceData Texture::GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const
+{
+	return GetLayerData(iLayer).GetMip(iMip).GetSlice(iSlice);
+}
+
+ErrorCode Texture::Destroy()
+{
+	m_oDesc = DescNull;
+
+	if (m_pData != NULL)
+	{
+		Core::Free(m_pData);
+		m_pData = CORE_PTR_NULL;
+	}
+
+	m_iSize			= 0;
+	m_iLayerSize	= 0;
+
+	return ErrorCode::Ok;
 }
 
 void Texture::Swap(Texture& oOtherTexture)
 {
-	std::swap(m_iWidth, oOtherTexture.m_iWidth);
-	std::swap(m_iHeight, oOtherTexture.m_iHeight);
-	std::swap(m_ePixelFormat, oOtherTexture.m_ePixelFormat);
-	std::swap(m_iFaceCount, oOtherTexture.m_iFaceCount);
-	std::swap(m_iMipCount, oOtherTexture.m_iMipCount);
-
-	std::swap(m_oData.m_pData, oOtherTexture.m_oData.m_pData);
-	std::swap(m_oData.m_iSize, oOtherTexture.m_oData.m_iSize);
-	for (int iFace = 0; iFace < _E_FACE_COUNT; ++iFace)
 	{
-		for (int iMip = 0; iMip < c_iMaxMip; ++iMip)
-		{
-			std::swap(m_oData.m_oFaceData[iFace][iMip], oOtherTexture.m_oData.m_oFaceData[iFace][iMip]);
-		}
+		Desc oTemp = oOtherTexture.m_oDesc;
+		oOtherTexture.m_oDesc = m_oDesc;
+		m_oDesc = oTemp;
+	}
+	{
+		CORE_PTR_VOID oTemp = oOtherTexture.m_pData;
+		oOtherTexture.m_pData = m_pData;
+		m_pData = oTemp;
+	}
+	{
+		size_t oTemp = oOtherTexture.m_iSize;
+		oOtherTexture.m_iSize = m_iSize;
+		m_iSize = oTemp;
 	}
 }
 
-Texture& Texture::operator=(const Texture& /*oTexture*/)
+Texture& Texture::operator=(const Texture& oTexture)
 {
-	CORE_NOT_IMPLEMENTED();
+	Destroy();
+	if (oTexture.IsValid())
+	{
+		Desc oDesc = oTexture.GetDesc();
+		CORE_VERIFY(Create(oDesc) == ErrorCode::Ok);
+		Core::MemCpy(m_pData, oTexture.m_pData, m_iSize);
+	}
 	return *this;
 }

@@ -2,14 +2,9 @@
 #define __GRAPHICS_TEXTURE_H__
 
 #include "Core/ErrorCode.h"
-#include "Core/Array.h"
 #include "Core/Memory.h"
 
-#include "IO/Stream.h"
-
 #include "Graphics/PixelFormat.h"
-
-#include <vector>
 
 namespace Graphics
 {
@@ -19,70 +14,84 @@ namespace Graphics
 		static const int c_iMaxSize = 32768;
 		static const int c_iMaxMip = 16;
 
-		enum EFace
+		struct _FaceFlag
 		{
-			E_FACE_POS_X = 0,
-			E_FACE_NEG_X,
-			E_FACE_POS_Y,
-			E_FACE_NEG_Y,
-			E_FACE_POS_Z,
-			E_FACE_NEG_Z,
-
-			_E_FACE_COUNT
-		};
-		static const char* const EFace_string[_E_FACE_COUNT];
-
-		struct TextureFaceData
-		{
-			TextureFaceData();
-			CORE_PTR_VOID				pData;
-			size_t						iSize;
-			size_t						iPitch;
-			int							iWidth;
-			int							iHeight;
-		};
-
-		struct TextureData
-		{
-			friend class Texture;
-		public:
-			struct Desc
+			enum Enum
 			{
-				Desc();
-				int						iWidth;
-				int						iHeight;
-				PixelFormatEnum			ePixelFormat;
-				int						iFaceCount;
-				int						iMipCount;
+				NONE = 0,
+				POS_X = (1 << 0),
+				NEG_X = (1 << 1),
+				POS_Y = (1 << 2),
+				NEG_Y = (1 << 3),
+				POS_Z = (1 << 4),
+				NEG_Z = (1 << 5),
+
+				ALL = (POS_X | NEG_X | POS_Y | NEG_Y | POS_Z | NEG_Z),
+
+				_MAX_VALUE = NEG_Z + 1,
+				_COUNT = 6
 			};
-			TextureData();
-			~TextureData();
+		};
+		typedef _FaceFlag::Enum FaceFlag;
+		typedef uint8_t FaceFlags;
+		static const char* const Face_string[FaceFlag::_MAX_VALUE];
+		static FaceFlag GetFace(FaceFlags iFaces, int iIndex);
 
-			ErrorCode					Create(Desc& oDesc);
-			void						Destroy();
-			bool						IsValid() const;
+		struct SliceData
+		{
+			PixelFormatEnum				ePixelFormat;
+			uint16_t					iWidth;
+			uint16_t					iHeight;
+			FaceFlag					eFace;
 
-			const TextureFaceData&		GetFaceData(int iMip, int iFace) const { return m_oFaceData[iFace][iMip]; }
-			CORE_PTR_VOID				GetData() const { return m_pData; }
-			size_t						GetDataSize() const { return m_iSize; }
-		protected:
-			/* Data layout
-			for each mip
-				for each face
-					for each line (y)
-						for each column (x)
-			*/
-			CORE_PTR_VOID				m_pData;
-			size_t						m_iSize;
-
-			TextureFaceData				m_oFaceData[_E_FACE_COUNT][c_iMaxMip];
+			size_t						iPitch;
+			size_t						iSize;
+			CORE_PTR_VOID				pData;
 		};
 
-		struct Desc : TextureData::Desc
+		struct MipData
+		{
+			PixelFormatEnum				ePixelFormat;
+			uint16_t					iWidth;
+			uint16_t					iHeight;
+			uint16_t					iSliceCount;
+			FaceFlags					eFaces;
+
+			size_t						iSize;
+			CORE_PTR_VOID				pData;
+
+			SliceData					GetSlice(uint16_t iSlice) const;
+		};
+
+		struct LayerData
+		{
+			PixelFormatEnum				ePixelFormat;
+			uint16_t					iWidth;
+			uint16_t					iHeight;
+			uint8_t						iMipCount;
+			uint16_t					iSliceCount;
+			FaceFlags					eFaces;
+
+			size_t						iSize;
+			CORE_PTR_VOID				pData;
+
+			MipData						GetMip(uint8_t iMip) const;
+			SliceData					GetSlice(uint8_t iMip, uint16_t iSlice) const;
+		};
+
+		struct Desc
 		{
 			Desc();
-			const void*					pData[_E_FACE_COUNT][c_iMaxMip];
+			Desc(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t iLayerCount, uint8_t iMipCount, uint16_t iSliceCount, FaceFlags eFaces );
+			PixelFormatEnum				ePixelFormat;
+			uint16_t					iWidth;
+			uint16_t					iHeight;
+			uint16_t					iLayerCount;
+			uint8_t						iMipCount;
+			uint16_t					iSliceCount; // depth / faces
+			FaceFlags					eFaces; // If eFaces not equal FaceFlag::None, faces count should be equal to iSliceCount
 		};
+		static const Desc				DescNull;
 	public:
 		Texture();
 		~Texture();
@@ -92,26 +101,40 @@ namespace Graphics
 		ErrorCode						Create(Desc& oDesc);
 		ErrorCode 						Destroy();
 
-		Desc							GetDesc() const;
+		Desc							GetDesc() const					{ return m_oDesc; }
 
-		int								GetWidth() const { return m_iWidth; }
-		int								GetHeight() const { return m_iHeight; }
-		PixelFormatEnum					GetPixelFormat() const { return m_ePixelFormat; }
-		int								GetFaceCount() const { return m_iFaceCount; }
-		int								GetMipCount() const { return m_iMipCount; }
+		uint16_t						GetWidth() const				{ return m_oDesc.iWidth; }
+		uint16_t						GetHeight() const				{ return m_oDesc.iHeight; }
+		PixelFormatEnum					GetPixelFormat() const			{ return m_oDesc.ePixelFormat; }
+		uint16_t						GetLayerCount() const			{ return m_oDesc.iLayerCount; }
+		uint8_t							GetMipCount() const				{ return m_oDesc.iMipCount; }
+		uint16_t						GetSliceCount() const			{ return m_oDesc.iSliceCount; }
 
-		const TextureData&				GetData() const { return m_oData; }
+		size_t							GetDataSize() const				{ return m_iSize; }
+		size_t							GetLayerDataSize() const		{ return m_iLayerSize; }
+
+		const LayerData					GetLayerData(uint16_t iLayer) const;
+		const MipData					GetMipData(uint16_t iLayer, uint8_t iMip) const;
+		const SliceData					GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const;
 
 		void							Swap(Texture& oOtherTexture);
 
 		Texture&						operator=(const Texture& oTexture);
+
+		static void						GetMipSizeAndOffset(PixelFormatEnum ePixelFormat, uint16_t  iWidth, uint16_t  iHeight, uint16_t iSliceCount, uint8_t iMip, size_t* pOutMipSize, size_t* pOutMipOffset);
 	protected:
-		int								m_iWidth;
-		int								m_iHeight;
-		PixelFormatEnum					m_ePixelFormat;
-		int								m_iFaceCount;
-		int								m_iMipCount;
-		TextureData						m_oData;
+		/* Data layout :
+			for each layer
+				for each mip
+					for each slice (depth/face)
+						for each line (y)
+							for each column (x)
+		*/
+		Desc							m_oDesc;
+
+		CORE_PTR_VOID					m_pData;
+		size_t							m_iSize;
+		size_t							m_iLayerSize;
 	};
 } // namespace Graphics
 
