@@ -20,6 +20,7 @@
 #include "Resources/Icons/Resize_16_png.h"
 #include "Resources/Icons/MipMap_16_png.h"
 #include "Resources/Icons/MissingMipMap_16_png.h"
+#include "Resources/Icons/Cut_16_png.h"
 #include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
 
@@ -35,6 +36,7 @@ Menus::Menus()
 	, m_pIconResize(NULL)
 	, m_pIconMipMap(NULL)
 	, m_pIconMissingMipMap(NULL)
+	, m_pIconCut(NULL)
 	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
 {
@@ -96,6 +98,15 @@ Menus::Menus()
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconMissingMipMap));
 		}
 	}
+	// Cut
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Cut_16_png::Data, Resources::Icons::Cut_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconCut));
+		}
+	}
 	// Log
 	{
 		IO::MemoryStream oMemStream(Resources::Icons::Log_16_png::Data, Resources::Icons::Log_16_png::Size);
@@ -153,6 +164,12 @@ Menus::~Menus()
 	{
 		delete m_pIconMissingMipMap;
 		m_pIconMissingMipMap = NULL;
+	}
+
+	if (m_pIconCut != NULL)
+	{
+		delete m_pIconCut;
+		m_pIconCut = NULL;
 	}
 
 	if (m_pIconLog != NULL)
@@ -264,6 +281,8 @@ void Menus::OnMenu()
 			ImGui::SetTooltip("Resize not supported for this pixel format");
 		}
 
+		ImGui::Separator();
+
 		if (ImGuiUtils::MenuItemPlus("Generate all mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMipMap->GetTextureView()))
 		{
 			if (Graphics::GenerateMips(&oTexture, &oTexture) == ErrorCode::Ok)
@@ -278,6 +297,35 @@ void Menus::OnMenu()
 
 			if (Graphics::GenerateMips(&oTexture, &oTexture, iMissingMipsMask) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
+		}
+
+		if (ImGuiUtils::MenuItemPlus("Delete mips after current mip", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconCut->GetTextureView()))
+		{
+			Graphics::Texture::Desc oDesc = oTexture.GetDesc();
+			oDesc.iMipCount = pProgram->GetDisplayOptions().iMip + 1;
+			Graphics::Texture oNewTexture;
+			if (oNewTexture.Create(oDesc) == ErrorCode::Ok)
+			{
+				for (uint16_t iLayer = 0; iLayer < oDesc.iLayerCount; ++iLayer)
+				{
+					const Graphics::Texture::LayerData oSrcLayerData = oTexture.GetLayerData(iLayer);
+					const Graphics::Texture::LayerData oDstLayerData = oNewTexture.GetLayerData(iLayer);
+					for (uint16_t iMip = 0; iMip < oDesc.iMipCount; ++iMip)
+					{
+						const Graphics::Texture::MipData oSrcMipData = oSrcLayerData.GetMipData(iMip);
+						const Graphics::Texture::MipData oDstMipData = oDstLayerData.GetMipData(iMip);
+						for (uint16_t iSlice = 0; iSlice < oDesc.iSliceCount; ++iSlice)
+						{
+							const Graphics::Texture::SliceData oSrcSliceData = oSrcMipData.GetSliceData(iSlice);
+							const Graphics::Texture::SliceData oDstSliceData = oDstMipData.GetSliceData(iSlice);
+
+							Core::MemCpy(oDstSliceData.pData, oSrcSliceData.pData, oSrcSliceData.iSize);
+						}
+					}
+				}
+				oTexture.Swap(oNewTexture);
+				Program::GetInstance()->UpdateTexture2DRes();
+			}
 		}
 
 		ImGui::EndMenu();
