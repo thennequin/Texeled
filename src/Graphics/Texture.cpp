@@ -8,7 +8,7 @@ using namespace Graphics;
 // Enums
 ////////////////////////////////////////////////////////////////
 
-const char* const Texture::Face_string[FaceFlag::_MAX_VALUE] = {
+const char* const Texture::FaceFlagString[FaceFlag::_MAX_VALUE] = {
 	NULL,
 	"PosX",
 	"NegX",

@@ -34,7 +34,7 @@ namespace Graphics
 		};
 		typedef _FaceFlag::Enum FaceFlag;
 		typedef uint8_t FaceFlags;
-		static const char* const Face_string[FaceFlag::_MAX_VALUE];
+		static const char* const FaceFlagString[FaceFlag::_MAX_VALUE];
 		static FaceFlag GetFace(FaceFlags iFaces, int iIndex);
 
 		struct SliceData
