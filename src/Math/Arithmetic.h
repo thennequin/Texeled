@@ -50,6 +50,15 @@ namespace Math
 	//                              |...|
 	//                              5   3
 	uint64_t HighBitFill(uint8_t iBitCount, uint8_t iFirstBit);
+
+	// Return next high bit
+	// if iCurrentBit == 0, return first bit
+	// Return 0 if no next bit
+	// Example : HighBitNext of 0 and 11010 => 2
+	//                                ...|.
+	// Example : HighBitNext of 2 and 11010 => 4
+	//                                .|.^.
+	uint8_t HighBitNext(uint8_t iCurrentBit, uint64_t iBits);
 }
 
 #endif //__MATH_ARITHMETIC_H__

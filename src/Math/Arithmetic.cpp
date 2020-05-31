@@ -69,4 +69,18 @@ namespace Math
 
 		return iValue;
 	}
+
+	uint8_t HighBitNext(uint8_t iCurrentBit, uint64_t iBits)
+	{
+		for (uint8_t iBit = iCurrentBit; iBit < 64; ++iBit)
+		{
+			uint64_t iMask = ((uint64_t)1) << iBit;
+			if ((iMask & iBits) != 0)
+			{
+				return iBit + 1;
+			}
+		}
+
+		return 0;
+	}
 }
