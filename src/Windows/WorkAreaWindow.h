@@ -25,7 +25,7 @@ namespace Windows
 			float				fChannelsMix[4][4];
 			float				fChannelsAdd[4];
 			int					iMip;
-			int					iFace;
+			int					iSlice;
 			float				fRange[2];
 			float				fGamma;
 
