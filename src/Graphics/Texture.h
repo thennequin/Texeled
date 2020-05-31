@@ -61,7 +61,7 @@ namespace Graphics
 			size_t						iSize;
 			CORE_PTR_VOID				pData;
 
-			SliceData					GetSlice(uint16_t iSlice) const;
+			SliceData					GetSliceData(uint16_t iSlice) const;
 		};
 
 		struct LayerData
@@ -76,8 +76,8 @@ namespace Graphics
 			size_t						iSize;
 			CORE_PTR_VOID				pData;
 
-			MipData						GetMip(uint8_t iMip) const;
-			SliceData					GetSlice(uint8_t iMip, uint16_t iSlice) const;
+			MipData						GetMipData(uint8_t iMip) const;
+			SliceData					GetSliceData(uint8_t iMip, uint16_t iSlice) const;
 		};
 
 		struct Desc

@@ -47,7 +47,7 @@ uint16_t Texture::GetFaceIndex(FaceFlags iFaces, FaceFlag eFace)
 // Texture::MipData
 ////////////////////////////////////////////////////////////////
 
-Texture::SliceData Texture::MipData::GetSlice(uint16_t iSlice) const
+Texture::SliceData Texture::MipData::GetSliceData(uint16_t iSlice) const
 {
 	CORE_ASSERT(iSlice >= 0 && iSlice < iSliceCount);
 
@@ -78,7 +78,7 @@ Texture::SliceData Texture::MipData::GetSlice(uint16_t iSlice) const
 // Texture::LayerData
 ////////////////////////////////////////////////////////////////
 
-Texture::MipData Texture::LayerData::GetMip(uint8_t iMip) const
+Texture::MipData Texture::LayerData::GetMipData(uint8_t iMip) const
 {
 	CORE_ASSERT(iMip >= 0 && iMip < iMipCount);
 
@@ -99,7 +99,7 @@ Texture::MipData Texture::LayerData::GetMip(uint8_t iMip) const
 	return oData;
 }
 
-Texture::SliceData Texture::LayerData::GetSlice(uint8_t iMip, uint16_t iSlice) const
+Texture::SliceData Texture::LayerData::GetSliceData(uint8_t iMip, uint16_t iSlice) const
 {
 	CORE_ASSERT(iMip >= 0 && iMip < iMipCount);
 	CORE_ASSERT(iSlice >= 0 && iSlice < iSliceCount);
@@ -288,12 +288,12 @@ const Texture::LayerData Texture::GetLayerData(uint16_t iLayer) const
 
 const Texture::MipData Texture::GetMipData(uint16_t iLayer, uint8_t iMip) const
 {
-	return GetLayerData(iLayer).GetMip(iMip);
+	return GetLayerData(iLayer).GetMipData(iMip);
 }
 
 const Texture::SliceData Texture::GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const
 {
-	return GetLayerData(iLayer).GetMip(iMip).GetSlice(iSlice);
+	return GetLayerData(iLayer).GetMipData(iMip).GetSliceData(iSlice);
 }
 
 ErrorCode Texture::Destroy()
