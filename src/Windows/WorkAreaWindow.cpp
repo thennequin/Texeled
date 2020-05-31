@@ -178,7 +178,7 @@ namespace Windows
 		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
 		m_eCurrentShowChannels = oDisplayOptions.eShowChannels;
 		m_oBufferData.iMip = oDisplayOptions.iMip;
-		m_oBufferData.iFace = oDisplayOptions.iFace;
+		m_oBufferData.iSlice = oDisplayOptions.iSlice;
 		m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
 		m_oBufferData.fRange[0] = oDisplayOptions.fRange[0];
 		m_oBufferData.fRange[1] = oDisplayOptions.fRange[1];
@@ -200,7 +200,7 @@ namespace Windows
 		DisplayOptions& oDisplayOptions = Program::GetInstance()->GetDisplayOptions();
 
 		if (m_oBufferData.iMip != oDisplayOptions.iMip
-			|| m_oBufferData.iFace != oDisplayOptions.iFace
+			|| m_oBufferData.iSlice != oDisplayOptions.iSlice
 			|| m_eCurrentShowChannels != oDisplayOptions.eShowChannels
 			|| m_oBufferData.fRange[0] != oDisplayOptions.fRange[0]
 			|| m_oBufferData.fRange[1] != oDisplayOptions.fRange[1]
@@ -208,7 +208,7 @@ namespace Windows
 		{
 			m_eCurrentShowChannels = oDisplayOptions.eShowChannels;
 			m_oBufferData.iMip = oDisplayOptions.iMip;
-			m_oBufferData.iFace = oDisplayOptions.iFace;
+			m_oBufferData.iSlice = oDisplayOptions.iSlice;
 			m_oBufferData.BuildChannelMix(m_eCurrentShowChannels);
 			m_oBufferData.fRange[0] = oDisplayOptions.fRange[0];
 			m_oBufferData.fRange[1] = oDisplayOptions.fRange[1];

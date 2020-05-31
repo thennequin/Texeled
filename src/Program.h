@@ -91,7 +91,7 @@ struct DisplayOptions
 	float fGamma;
 
 	int iMip;
-	int iFace;
+	int iSlice;
 };
 
 struct Log

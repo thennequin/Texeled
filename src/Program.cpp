@@ -83,7 +83,7 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oDisplayOptions.bTiling = false;
 	m_oDisplayOptions.eShowChannels = ChannelFlag::RED | ChannelFlag::GREEN | ChannelFlag::BLUE | ChannelFlag::ALPHA;
 	m_oDisplayOptions.iMip = 0;
-	m_oDisplayOptions.iFace = 0;
+	m_oDisplayOptions.iSlice = 0;
 	m_oDisplayOptions.fRange[0] = 0.f;
 	m_oDisplayOptions.fRange[1] = 1.f;
 	m_oDisplayOptions.fGamma = 1.f;
@@ -225,9 +225,9 @@ bool Program::Run()
 		m_oDisplayOptions.iMip = m_oTexture.GetMipCount() - 1;
 	}
 
-	if (m_oTexture.IsValid() && m_oDisplayOptions.iFace >= m_oTexture.GetSliceCount())
+	if (m_oTexture.IsValid() && m_oDisplayOptions.iSlice >= m_oTexture.GetSliceCount())
 	{
-		m_oDisplayOptions.iFace = m_oTexture.GetSliceCount() - 1;
+		m_oDisplayOptions.iSlice = m_oTexture.GetSliceCount() - 1;
 	}
 
 	return m_bRun && m_oImWindowMgr.Run(false) && m_oImWindowMgr.Run(true);
