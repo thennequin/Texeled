@@ -101,7 +101,7 @@ namespace Graphics
 		ErrorCode						Create(Desc& oDesc);
 		ErrorCode 						Destroy();
 
-		Desc							GetDesc() const					{ return m_oDesc; }
+		const Desc&						GetDesc() const					{ return m_oDesc; }
 
 		uint16_t						GetWidth() const				{ return m_oDesc.iWidth; }
 		uint16_t						GetHeight() const				{ return m_oDesc.iHeight; }
@@ -109,6 +109,7 @@ namespace Graphics
 		uint16_t						GetLayerCount() const			{ return m_oDesc.iLayerCount; }
 		uint8_t							GetMipCount() const				{ return m_oDesc.iMipCount; }
 		uint16_t						GetSliceCount() const			{ return m_oDesc.iSliceCount; }
+		FaceFlags						GetFaces() const				{ return m_oDesc.eFaces; }
 
 		size_t							GetDataSize() const				{ return m_iSize; }
 		size_t							GetLayerDataSize() const		{ return m_iLayerSize; }
