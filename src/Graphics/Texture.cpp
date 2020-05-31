@@ -29,6 +29,20 @@ Texture::FaceFlag Texture::GetFace(FaceFlags iFaces, int iIndex)
 	return FaceFlag::NONE;
 }
 
+uint16_t Texture::GetFaceIndex(FaceFlags iFaces, FaceFlag eFace)
+{
+	uint16_t iIndex = 0;
+	uint8_t iFaceBit = 0;
+	while ((iFaceBit = Math::HighBitNext(iFaceBit, iFaces)) != 0)
+	{
+		if (((1 << (iFaceBit - 1)) & eFace) != 0)
+			return iIndex;
+
+		++iIndex;
+	}
+	return (uint16_t)-1;
+}
+
 ////////////////////////////////////////////////////////////////
 // Texture::MipData
 ////////////////////////////////////////////////////////////////
