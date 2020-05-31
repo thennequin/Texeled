@@ -16,6 +16,8 @@
 
 #include "Resources/Icons/Open_16_png.h"
 #include "Resources/Icons/Save_16_png.h"
+#include "Resources/Icons/Previous_16_png.h"
+#include "Resources/Icons/Next_16_png.h"
 #include "Resources/Icons/Exit_16_png.h"
 #include "Resources/Icons/Resize_16_png.h"
 #include "Resources/Icons/MipMap_16_png.h"
@@ -32,6 +34,8 @@ Menus::Menus()
 	, m_fResizeRatio(0.f)
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
+	, m_pIconPrevious(NULL)
+	, m_pIconNext(NULL)
 	, m_pIconExit(NULL)
 	, m_pIconResize(NULL)
 	, m_pIconMipMap(NULL)
@@ -60,6 +64,24 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconSave));
+		}
+	}
+	// Previous
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Previous_16_png::Data, Resources::Icons::Previous_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconPrevious));
+		}
+	}
+	// Next
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Next_16_png::Data, Resources::Icons::Next_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconNext));
 		}
 	}
 	// Exit
@@ -142,6 +164,18 @@ Menus::~Menus()
 		m_pIconSave = NULL;
 	}
 
+	if (m_pIconPrevious != NULL)
+	{
+		delete m_pIconPrevious;
+		m_pIconPrevious = NULL;
+	}
+
+	if (m_pIconNext != NULL)
+	{
+		delete m_pIconNext;
+		m_pIconNext = NULL;
+	}
+
 	if (m_pIconExit != NULL)
 	{
 		delete m_pIconExit;
@@ -207,11 +241,11 @@ void Menus::OnMenu()
 			pProgram->SaveAs();
 		}
 		ImGui::Separator();
-		if (ImGuiUtils::MenuItemPlus("Open previous file", NULL, oShortkeys.pOpenPreviousFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath().empty() == false))
+		if (ImGuiUtils::MenuItemPlus("Open previous file", NULL, oShortkeys.pOpenPreviousFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath().empty() == false, (ImTextureID)m_pIconPrevious->GetTextureView()))
 		{
 			pProgram->OpenPreviousFile();
 		}
-		if (ImGuiUtils::MenuItemPlus("Open next file", NULL, oShortkeys.pOpenNextFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath().empty() == false))
+		if (ImGuiUtils::MenuItemPlus("Open next file", NULL, oShortkeys.pOpenNextFile->m_sShortKey.c_str(), oFonts.pFontConsolas, false, pProgram->GetTextureFilePath().empty() == false, (ImTextureID)m_pIconNext->GetTextureView()))
 		{
 			pProgram->OpenNextFile();
 		}
