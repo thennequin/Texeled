@@ -51,6 +51,15 @@ namespace Math
 	//                              5   3
 	uint64_t HighBitFill(uint8_t iBitCount, uint8_t iFirstBit);
 
+	// Return previous high bit
+	// if iCurrentBit == 0, return last bit
+	// Return 0 if no previous bit
+	// Example : HighBitPrevious(0, 10110) => 5
+	//                              |....
+	// Example : HighBitPrevious(5, 10110) => 3
+	//                              ^.|..
+	uint8_t HighBitPrevious(uint8_t iCurrentBit, uint64_t iBits);
+
 	// Return next high bit
 	// if iCurrentBit == 0, return first bit
 	// Return 0 if no next bit

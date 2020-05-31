@@ -70,14 +70,30 @@ namespace Math
 		return iValue;
 	}
 
-	uint8_t HighBitNext(uint8_t iCurrentBit, uint64_t iBits)
+	uint8_t HighBitPrevious(uint8_t iCurrentBit, uint64_t iBits)
 	{
-		for (uint8_t iBit = iCurrentBit; iBit < 64; ++iBit)
+		if (iCurrentBit == 0)
+			iCurrentBit = 65;
+		for (--iCurrentBit; iCurrentBit > 0; --iCurrentBit)
 		{
-			uint64_t iMask = ((uint64_t)1) << iBit;
+			uint64_t iMask = ((uint64_t)1) << (iCurrentBit - 1);
 			if ((iMask & iBits) != 0)
 			{
-				return iBit + 1;
+				return iCurrentBit;
+			}
+		}
+
+		return 0;
+	}
+
+	uint8_t HighBitNext(uint8_t iCurrentBit, uint64_t iBits)
+	{
+		for (; iCurrentBit < 64; ++iCurrentBit)
+		{
+			uint64_t iMask = ((uint64_t)1) << iCurrentBit;
+			if ((iMask & iBits) != 0)
+			{
+				return iCurrentBit + 1;
 			}
 		}
 
