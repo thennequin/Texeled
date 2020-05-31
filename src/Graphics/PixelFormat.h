@@ -122,11 +122,11 @@ namespace Graphics
 	typedef struct
 	{
 		PixelFormatEnum			eFormat;
-		int						iBitsPerPixel;
-		int						iBlockWidth;
-		int						iBlockHeight;
-		int						iBlockSize;
-		int						iComponentCount;
+		uint16_t				iBitsPerPixel;
+		uint8_t					iBlockWidth;
+		uint8_t					iBlockHeight;
+		uint8_t					iBlockSize;
+		uint8_t					iComponentCount;
 		ComponentFlags			iComponents;
 		ComponentEncodingEnum	eEncoding;
 		const char* const		pShortName;
@@ -162,8 +162,8 @@ namespace Graphics
 		int						BitPerPixel(PixelFormatEnum ePixelFormat);
 		int						BlockSize(PixelFormatEnum ePixelFormat);
 		int						ComponentCount(PixelFormatEnum ePixelFormat);
-		void					GetBlockCount(PixelFormatEnum ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY);
-		uint32_t				GetPitch(PixelFormatEnum ePixelFormat, uint32_t iWidth);
+		void					GetBlockCount(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t* pOutCountX, uint16_t* pOutCountY);
+		uint32_t				GetPitch(PixelFormatEnum ePixelFormat, uint16_t iWidth);
 
 #pragma pack(push,1)
 

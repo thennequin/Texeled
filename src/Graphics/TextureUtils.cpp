@@ -371,18 +371,18 @@ namespace Graphics
 					const PixelFormatInfos& oSrcPFInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
 					const PixelFormatInfos& oDstPFInfos = PixelFormatEnumInfos[eWantedPixelFormat];
 
-					uint32_t iSrcMipBlockX;
-					uint32_t iSrcMipBlockY;
+					uint16_t iSrcMipBlockX;
+					uint16_t iSrcMipBlockY;
 					PixelFormat::GetBlockCount(pTexture->GetPixelFormat(), oFaceData.iWidth, oFaceData.iHeight, &iSrcMipBlockX, &iSrcMipBlockY);
 
-					uint32_t iDstMipBlockX;
-					uint32_t iDstMipBlockY;
+					uint16_t iDstMipBlockX;
+					uint16_t iDstMipBlockY;
 					PixelFormat::GetBlockCount(eWantedPixelFormat, oNewFaceData.iWidth, oNewFaceData.iHeight, &iDstMipBlockX, &iDstMipBlockY);
 
-					uint32_t iMipWidth = Math::Min(iSrcMipBlockX * oSrcPFInfos.iBlockWidth, iDstMipBlockX * oDstPFInfos.iBlockWidth);
-					uint32_t iMipHeight = Math::Min(iSrcMipBlockY * oSrcPFInfos.iBlockHeight, iDstMipBlockY * oDstPFInfos.iBlockHeight);
-					uint32_t iPaddingX = Math::Max(oSrcPFInfos.iBlockWidth , oDstPFInfos.iBlockWidth);
-					uint32_t iPaddingY = Math::Max(oSrcPFInfos.iBlockHeight, oDstPFInfos.iBlockHeight);
+					uint16_t iMipWidth = Math::Min<uint16_t>(iSrcMipBlockX * oSrcPFInfos.iBlockWidth, iDstMipBlockX * oDstPFInfos.iBlockWidth);
+					uint16_t iMipHeight = Math::Min<uint16_t>(iSrcMipBlockY * oSrcPFInfos.iBlockHeight, iDstMipBlockY * oDstPFInfos.iBlockHeight);
+					uint8_t iPaddingX = Math::Max<uint8_t>(oSrcPFInfos.iBlockWidth , oDstPFInfos.iBlockWidth);
+					uint8_t iPaddingY = Math::Max<uint8_t>(oSrcPFInfos.iBlockHeight, oDstPFInfos.iBlockHeight);
 
 #ifndef DEBUG
 #pragma omp parallel for
@@ -426,8 +426,8 @@ namespace Graphics
 								uint32_t iFuncPaddingX = Math::Max(iCurrentPaddingX, iNextPaddingX);
 								uint32_t iFuncPaddingY = Math::Max(iCurrentPaddingY, iNextPaddingY);
 
-								int iTW = Math::Min(iPaddingX, iMipWidth - iX);
-								int iTH = Math::Min(iPaddingY, iMipHeight - iY);
+								int iTW = Math::Min<int>(iPaddingX, iMipWidth - iX);
+								int iTH = Math::Min<int>(iPaddingY, iMipHeight - iY);
 
 								for (int iTY = 0; iTY < iTH; iTY += iFuncPaddingY)
 								{

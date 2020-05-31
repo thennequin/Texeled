@@ -44,7 +44,7 @@ Texture::SliceData Texture::MipData::GetSlice(uint16_t iSlice) const
 	oData.iHeight		= iHeight;
 	oData.eFace			= GetFace(eFaces, iSlice);
 
-	uint32_t iBlockCountX, iBlockCountY;
+	uint16_t iBlockCountX, iBlockCountY;
 	PixelFormat::GetBlockCount(ePixelFormat, oData.iWidth, oData.iHeight, &iBlockCountX, &iBlockCountY);
 
 	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
@@ -100,7 +100,7 @@ Texture::SliceData Texture::LayerData::GetSlice(uint8_t iMip, uint16_t iSlice) c
 	size_t iMipOffset;
 	GetMipSizeAndOffset(ePixelFormat, iWidth, iHeight, iSliceCount, iMip, NULL, &iMipOffset);
 
-	uint32_t iBlockCountX, iBlockCountY;
+	uint16_t iBlockCountX, iBlockCountY;
 	PixelFormat::GetBlockCount(ePixelFormat, oData.iWidth, oData.iHeight, &iBlockCountX, &iBlockCountY);
 
 	const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
@@ -233,10 +233,10 @@ void Texture::GetMipSizeAndOffset(PixelFormatEnum ePixelFormat, uint16_t iWidth,
 	size_t iMipSize = 0;
 	for (int iMipIndex = 0; iMipIndex <= iMip; ++iMipIndex)
 	{
-		uint32_t iMipWidth = Math::Max(1, iWidth >> iMipIndex);
-		uint32_t iMipHeight = Math::Max(1, iHeight >> iMipIndex);
+		uint16_t iMipWidth = Math::Max<uint16_t>(1, iWidth >> iMipIndex);
+		uint16_t iMipHeight = Math::Max<uint16_t>(1, iHeight >> iMipIndex);
 
-		uint32_t iBlockCountX, iBlockCountY;
+		uint16_t iBlockCountX, iBlockCountY;
 		PixelFormat::GetBlockCount(ePixelFormat, iMipWidth, iMipHeight, &iBlockCountX, &iBlockCountY);
 
 		iMipSize = iSliceCount * iBlockCountX * iBlockCountY * oInfos.iBlockSize;

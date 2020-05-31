@@ -5,6 +5,8 @@
 #include "Graphics/PixelFormatConverters.h"
 #include "Graphics/PixelFormatConvertersCompressed.h"
 
+#include <string.h> // memset
+
 namespace Graphics
 {
 	extern const char* const ComponentFlagString[ComponentFlag::_MAX] = {
@@ -157,7 +159,7 @@ namespace Graphics
 			return PixelFormatEnumInfos[ePixelFormat].iComponentCount;
 		}
 
-		void GetBlockCount(PixelFormatEnum ePixelFormat, uint32_t iWidth, uint32_t iHeight, uint32_t* pOutCountX, uint32_t* pOutCountY)
+		void GetBlockCount(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t* pOutCountX, uint16_t* pOutCountY)
 		{
 			if (pOutCountX != NULL)
 			{
@@ -178,7 +180,7 @@ namespace Graphics
 			}
 		}
 
-		uint32_t GetPitch(PixelFormatEnum ePixelFormat, uint32_t iWidth)
+		uint32_t GetPitch(PixelFormatEnum ePixelFormat, uint16_t iWidth)
 		{
 			const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
 			uint32_t iBlockCount = ((iWidth + (oInfos.iBlockWidth - 1)) / oInfos.iBlockWidth);
