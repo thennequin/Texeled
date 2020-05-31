@@ -9,23 +9,33 @@ namespace Graphics
 	{
 		enum Flag
 		{
-			_NONE = 0,
+			_NONE		= 0,
 
-			RED = 1,
-			GREEN = 2,
-			BLUE = 4,
-			ALPHA = 8,
+			RED			= 1 << 0,
+			GREEN		= 1 << 1,
+			BLUE		= 1 << 2,
+			ALPHA		= 1 << 3,
 
-			DEPTH = 16,
+			DEPTH		= 1 << 4,
 
+			LUMINANCE	= 1 << 5,
 
-			RG = RED | GREEN,
-			RGB = RED | GREEN | BLUE,
-			RGBA = RED | GREEN | BLUE | ALPHA,
+			// Shortcuts
+			R			= RED,
+			RG			= RED | GREEN,
+			RGB			= RED | GREEN | BLUE,
+			RGBA		= RED | GREEN | BLUE | ALPHA,
+
+			LA			= LUMINANCE | ALPHA,
+
+			_MAX		= (1 << 5) + 1,
+			_COUNT		= 6
 		};
 	};
 	typedef _Component::Flag ComponentFlag;
 	typedef uint8_t ComponentFlags;
+	extern const char* const ComponentFlagString[ComponentFlag::_MAX];
+	extern const char* const ComponentFlagStringShort[ComponentFlag::_MAX];
 
 	struct _ComponentEncodingEnum
 	{
@@ -55,6 +65,7 @@ namespace Graphics
 			R8_UNORM,
 
 			RG8_UNORM,
+			LA8_UNORM,
 
 			RGB8_UNORM,
 			BGR8_UNORM,
@@ -64,6 +75,10 @@ namespace Graphics
 
 			R5G6B5_UNORM,
 			B5G6BR_UNORM,
+
+			R16_UNORM,
+
+			RG16_UNORM,
 
 			RGB16_UNORM,
 			RGB16_FLOAT,
@@ -98,8 +113,8 @@ namespace Graphics
 
 	typedef struct
 	{
-		uint8_t					iMantixBits;
-		uint8_t					iMantixShift;
+		uint8_t					iMantisBits;
+		uint8_t					iMantisShift;
 		uint8_t					iExpBits;
 		uint8_t					iExpShift;
 	} ComponentMask;
@@ -116,10 +131,7 @@ namespace Graphics
 		ComponentEncodingEnum	eEncoding;
 		const char* const		pShortName;
 		const char* const		pName;
-		ComponentMask			iMaskRed;
-		ComponentMask			iMaskGreen;
-		ComponentMask			iMaskBlue;
-		ComponentMask			iMaskAlpha;
+		ComponentMask			iMasks[ComponentFlag::_COUNT]; //RGBADL
 	} PixelFormatInfos;
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];

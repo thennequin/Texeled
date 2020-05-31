@@ -7,6 +7,34 @@
 
 namespace Graphics
 {
+	extern const char* const ComponentFlagString[ComponentFlag::_MAX] = {
+		"None",
+		"Red",
+		"Green",
+		NULL,
+		"Blue",
+		NULL, NULL, NULL,
+		"Alpha",
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		"Depth",
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		"Luminance"
+	};
+
+	extern const char* const ComponentFlagStringShort[ComponentFlag::_MAX] = {
+		"N",
+		"R",
+		"G",
+		NULL,
+		"B",
+		NULL, NULL, NULL,
+		"A",
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		"D",
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		"L"
+	};
+
 	extern const char* const ComponentEncodingEnumString[ComponentEncodingEnum::_COUNT] = {
 		"None",
 
@@ -23,73 +51,82 @@ namespace Graphics
 
 	const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT] =
 	{
-		// .---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- eFormat
+		// .-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- eFormat
 		// |
-		// |                                       .------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ iBitsPerPixel
+		// |                                       .---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBitsPerPixel
 		// |                                       |
-		// |                                       |    .------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBlockWidth
+		// |                                       |    .----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBlockWidth
 		// |                                       |    |
-		// |                                       |    |    .-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBlockHeight
+		// |                                       |    |    .------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ iBlockHeight
 		// |                                       |    |    |
-		// |                                       |    |    |    .--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBlockSize (bytes)
+		// |                                       |    |    |    .------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iBlockSize (bytes)
 		// |                                       |    |    |    |
-		// |                                       |    |    |    |    .---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iComponentCount
+		// |                                       |    |    |    |    .-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iComponentCount
 		// |                                       |    |    |    |    |
-		// |                                       |    |    |    |    |    .----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iComponents
+		// |                                       |    |    |    |    |    .--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- iComponents
 		// |                                       |    |    |    |    |    |
-		// |                                       |    |    |    |    |    |                       .----------------------------------------------------------------------------------------------------------------------------------------------------------------------- eEncoding
+		// |                                       |    |    |    |    |    |                       .--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- eEncoding
 		// |                                       |    |    |    |    |    |                       |
-		// |                                       |    |    |    |    |    |                       |                              .---------------------------------------------------------------------------------------------------------------------------------------- pShortName
+		// |                                       |    |    |    |    |    |                       |                              .-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- pShortName
 		// |                                       |    |    |    |    |    |                       |                              |
-		// |                                       |    |    |    |    |    |                       |                              |                .----------------------------------------------------------------------------------------------------------------------- pName
+		// |                                       |    |    |    |    |    |                       |                              |                .--------------------------------------------------------------------------------------------------------------------------------------------------------- pName
 		// |                                       |    |    |    |    |    |                       |                              |                |
-		// |                                       |    |    |    |    |    |                       |                              |                |                               .--------------------------------------------------------------------------------------- iMaskRed
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       .--------------------------------------------------------------- iMaskGreen
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       |
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       |                        .-------------------------------------- iMaskBlue
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       |                        |
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       |                        |                        .------------- iMaskAlpha
-		// |                                       |    |    |    |    |    |                       |                              |                |                               |                       |                        |                        |
-		{  PixelFormatEnum::_NONE,                 0,   0,   0,   0,   0,   ComponentFlag::_NONE,   ComponentEncodingEnum::_NONE,  "None",          "None",                         MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
+		// |                                       |    |    |    |    |    |                       |                              |                |                                .------------------------------------------------------------------------------------------------------------------------ iMasks[0] (Red)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       .------------------------------------------------------------------------------------------------ iMasks[1] (Green)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        .----------------------------------------------------------------------- iMasks[2] (Blue)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        .---------------------------------------------- iMasks[3] (Alpha)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        |
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        |                .----------------------------- iMasks[4] (Depth)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        |                |
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        |                |               .------------- iMasks[5] (Luminance)
+		// |                                       |    |    |    |    |    |                       |                              |                |                                |                       |                        |                        |                |               |
+		{  PixelFormatEnum::_NONE,                 0,   0,   0,   0,   0,   ComponentFlag::_NONE,   ComponentEncodingEnum::_NONE,  "None",          "None",                        { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::R8_UNORM,              8,   1,   1,   1,   1,   ComponentFlag::RED,     ComponentEncodingEnum::UNORM,  "R8",            "R8 UNorm",                     MASK(8, 0),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
+		{  PixelFormatEnum::R8_UNORM,              8,   1,   1,   1,   1,   ComponentFlag::R,       ComponentEncodingEnum::UNORM,  "R8",            "R8 UNorm",                    { MASK(8, 0),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "RG8",           "RG8 UNorm",                    MASK(8, 0),             MASK(8, 8),              MASKZERO(),              MASKZERO()    },
+		{  PixelFormatEnum::RG8_UNORM,            16,   1,   1,   2,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "RG8",           "RG8 UNorm",                   { MASK(8, 0),             MASK(8, 8),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::LA8_UNORM,            16,   1,   1,   2,   2,   ComponentFlag::LA,      ComponentEncodingEnum::UNORM,  "LA8",           "Luminance8 Alpha8 UNorm",     { MASKZERO(),             MASK(8, 8),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASK(8, 0) } },
 
-		{  PixelFormatEnum::RGB8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB8",          "RGB8 UNorm",                   MASK(8, 0),             MASK(8, 8),              MASK(8, 16),             MASKZERO()    },
-		{  PixelFormatEnum::BGR8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BGR8",          "BGR8 UNorm",                   MASK(8, 16),            MASK(8, 8),              MASK(8, 0),              MASKZERO()    },
+		{  PixelFormatEnum::RGB8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB8",          "RGB8 UNorm",                  { MASK(8, 0),             MASK(8, 8),              MASK(8, 16),             MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BGR8_UNORM,           24,   1,   1,   3,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BGR8",          "BGR8 UNorm",                  { MASK(8, 16),            MASK(8, 8),              MASK(8, 0),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::RGBA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA8",         "RGBA8 UNorm",                  MASK(8, 0),             MASK(8, 8),              MASK(8, 16),             MASK(8, 24)   },
-		{  PixelFormatEnum::BGRA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BGRA8",         "BGRA8 UNorm",                  MASK(8, 16),            MASK(8, 8),              MASK(8, 0),              MASK(8, 24)   },
+		{  PixelFormatEnum::RGBA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA8",         "RGBA8 UNorm",                 { MASK(8, 0),             MASK(8, 8),              MASK(8, 16),             MASK(8, 24),     MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BGRA8_UNORM,          32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BGRA8",         "BGRA8 UNorm",                 { MASK(8, 16),            MASK(8, 8),              MASK(8, 0),              MASK(8, 24),     MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::R5G6B5_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "R5G6B5",        "R5G6B5 UNorm",                 MASK(5, 0),             MASK(6, 5),              MASK(5, 11),             MASKZERO()    },
-		{  PixelFormatEnum::B5G6BR_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "B5G6R5",        "B5G6R5 UNorm",                 MASK(5, 11),            MASK(6, 5),              MASK(5, 0),              MASKZERO()    },
+		{  PixelFormatEnum::R5G6B5_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "R5G6B5",        "R5G6B5 UNorm",                { MASK(5, 0),             MASK(6, 5),              MASK(5, 11),             MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::B5G6BR_UNORM,         16,   1,   1,   2,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "B5G6R5",        "B5G6R5 UNorm",                { MASK(5, 11),            MASK(6, 5),              MASK(5, 0),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::RGB16_UNORM,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB16",         "RGB16 UNorm",                  MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASKZERO()    },
-		{  PixelFormatEnum::RGB16_FLOAT,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB16",         "RGB16 Float",                  MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASKZERO()    },
+		{  PixelFormatEnum::R16_UNORM,            16,   1,   1,   2,   1,   ComponentFlag::R,       ComponentEncodingEnum::UNORM,  "R16",           "R16 UNorm",                   { MASK(16, 0),            MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm",                 MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASK(16, 48)  },
-		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float",                 MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASK(16, 48)  },
+		{  PixelFormatEnum::RG16_UNORM,           32,   1,   1,   4,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "RG16",          "RG16 UNorm",                  { MASK(16, 0),            MASK(16, 16),            MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::R32_FLOAT,            32,   1,   1,   4,   1,   ComponentFlag::RED,     ComponentEncodingEnum::FLOAT,  "R32F",          "R32 Float",                    MASK(32, 0),            MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::RG32_FLOAT,           64,   1,   1,   8,   2,   ComponentFlag::RG,      ComponentEncodingEnum::FLOAT,  "RG32F",         "RG32 Float",                   MASK(32, 0),            MASK(32, 32),            MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::RGB32_FLOAT,          96,   1,   1,  12,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB32F",        "RGB32 Float",                  MASK(32, 0),            MASK(32, 32),            MASK(32, 64),            MASKZERO()    },
-		{  PixelFormatEnum::RGBA32_FLOAT,        128,   1,   1,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA32F",       "RGBA32 Float",                 MASK(32, 0),            MASK(32, 32),            MASK(32, 64),            MASK(32, 96)  },
+		{  PixelFormatEnum::RGB16_UNORM,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "RGB16",         "RGB16 UNorm",                 { MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::RGB16_FLOAT,          48,   1,   1,   6,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB16",         "RGB16 Float",                 { MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::R10G10B10A2_UNORM,    32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "R10G10B10A2",   "R10G10B10A2 UNorm",            MASKEXP(10, 0, 2, 30),  MASKEXP(10, 10, 2, 30),  MASKEXP(10, 20, 2, 30),  MASKZERO()    },
+		{  PixelFormatEnum::RGBA16_UNORM,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "RGBA16",        "RGBA16 UNorm",                { MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASK(16, 48),    MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::RGBA16_FLOAT,         64,   1,   1,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA16F",       "RGBA16 Float",                { MASK(16, 0),            MASK(16, 16),            MASK(16, 32),            MASK(16, 48),    MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::R9G9B9E5_SHAREDEXP,   32,   1,   1,   4,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "R9G9B9E5F",     "R9G9B9E5 Float (shared exp)",  MASKEXP(9, 0, 5, 27),   MASKEXP(9, 9, 5, 27),    MASKEXP(9, 18, 5, 27),   MASKZERO()    },
+		{  PixelFormatEnum::R32_FLOAT,            32,   1,   1,   4,   1,   ComponentFlag::R,       ComponentEncodingEnum::FLOAT,  "R32F",          "R32 Float",                   { MASK(32, 0),            MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::RG32_FLOAT,           64,   1,   1,   8,   2,   ComponentFlag::RG,      ComponentEncodingEnum::FLOAT,  "RG32F",         "RG32 Float",                  { MASK(32, 0),            MASK(32, 32),            MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::RGB32_FLOAT,          96,   1,   1,  12,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "RGB32F",        "RGB32 Float",                 { MASK(32, 0),            MASK(32, 32),            MASK(32, 64),            MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::RGBA32_FLOAT,        128,   1,   1,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::FLOAT,  "RGBA32F",       "RGBA32 Float",                { MASK(32, 0),            MASK(32, 32),            MASK(32, 64),            MASK(32, 96),    MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::D16_UNORM,            16,   1,   1,   2,   1,   ComponentFlag::DEPTH,   ComponentEncodingEnum::UNORM,  "D16",           "D16 UNorm",                    MASK(16, 0),            MASKZERO(),              MASKZERO(),              MASKZERO()   },
+		{  PixelFormatEnum::R10G10B10A2_UNORM,    32,   1,   1,   4,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "R10G10B10A2",   "R10G10B10A2 UNorm",           { MASKEXP(10, 0, 2, 30),  MASKEXP(10, 10, 2, 30),  MASKEXP(10, 20, 2, 30),  MASKZERO(),      MASKZERO(),     MASKZERO() } },
 
-		{  PixelFormatEnum::BC1,                   4,   4,   4,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC1",           "BC1 (DXT1)",                   MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC2,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC2",           "BC2 (DXT2/3)",                 MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC3,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC3",           "BC3 (DXT4/5)",                 MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC4,                   4,   4,   4,   8,   1,   ComponentFlag::RED,     ComponentEncodingEnum::UNORM,  "BC4",           "BC4",                          MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC5,                   8,   4,   4,  16,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "BC5",           "BC5",                          MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC6H,                  8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "BC6H",          "BC6H",                         MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    },
-		{  PixelFormatEnum::BC7,                   8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BC7",           "BC7",                          MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO()    }
+		{  PixelFormatEnum::R9G9B9E5_SHAREDEXP,   32,   1,   1,   4,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "R9G9B9E5F",     "R9G9B9E5 Float (shared exp)", { MASKEXP(9, 0, 5, 27),   MASKEXP(9, 9, 5, 27),    MASKEXP(9, 18, 5, 27),   MASKZERO(),      MASKZERO(),     MASKZERO() } },
+
+		{  PixelFormatEnum::D16_UNORM,            16,   1,   1,   2,   1,   ComponentFlag::DEPTH,   ComponentEncodingEnum::UNORM,  "D16",           "D16 UNorm",                   { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASK(16, 0),    MASKZERO() } } ,
+
+		{  PixelFormatEnum::BC1,                   4,   4,   4,   8,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC1",           "BC1 (DXT1)",                  { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC2,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC2",           "BC2 (DXT2/3)",                { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC3,                   8,   4,   4,  16,   4,   ComponentFlag::RGBA,    ComponentEncodingEnum::UNORM,  "BC3",           "BC3 (DXT4/5)",                { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC4,                   4,   4,   4,   8,   1,   ComponentFlag::R,       ComponentEncodingEnum::UNORM,  "BC4",           "BC4",                         { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC5,                   8,   4,   4,  16,   2,   ComponentFlag::RG,      ComponentEncodingEnum::UNORM,  "BC5",           "BC5",                         { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC6H,                  8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::FLOAT,  "BC6H",          "BC6H",                        { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } },
+		{  PixelFormatEnum::BC7,                   8,   4,   4,  16,   3,   ComponentFlag::RGB,     ComponentEncodingEnum::UNORM,  "BC7",           "BC7",                         { MASKZERO(),             MASKZERO(),              MASKZERO(),              MASKZERO(),      MASKZERO(),     MASKZERO() } }
 	};
 
 #undef MASKZERO
