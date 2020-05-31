@@ -106,8 +106,63 @@ void Toolbar::OnToolBar()
 	ImGui::SameLine();
 	ImGui::SliderInt("##Mip", &oDisplay.iMip, 0, Math::Max(0, oTexture.GetMipCount() - 1), "Mip:%.0f");
 
+	if (ImGui::IsItemHovered())
+	{
+		ImGuiIO& oIO = ImGui::GetIO();
+
+		if (oIO.KeyCtrl && oIO.MouseWheel > 0)
+		{
+			if (oDisplay.iMip > 0)
+				oDisplay.iMip--;
+		}
+		else if (oIO.KeyCtrl && oIO.MouseWheel < 0)
+		{
+			if (oDisplay.iMip < (oTexture.GetMipCount() - 1))
+				oDisplay.iMip++;
+		}
+	}
+
 	ImGui::SameLine();
-	ImGui::SliderInt("##Face", &oDisplay.iFace, 0, Math::Max(0, oTexture.GetSliceCount() - 1), "Face/Slice:%.0f");
+	Graphics::Texture::FaceFlags iFaces = oTexture.GetFaces();
+	if (iFaces != Graphics::Texture::FaceFlag::NONE)
+	{
+		Graphics::Texture::FaceFlag eCurrentFace = Graphics::Texture::GetFace(iFaces, oDisplay.iSlice);
+		if (ImGui::BeginCombo("##Face", Graphics::Texture::FaceFlagString[eCurrentFace]))
+		{
+			uint8_t iNextBit = 0;
+			while ((iNextBit = Math::HighBitNext(iNextBit, iFaces)) != 0)
+			{
+				Graphics::Texture::FaceFlag eFace = (Graphics::Texture::FaceFlag)(1 << (iNextBit - 1));
+				if (ImGui::Selectable(Graphics::Texture::FaceFlagString[eFace], eFace == eCurrentFace))
+				{
+					oDisplay.iSlice = Graphics::Texture::GetFaceIndex(iFaces, eFace);
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		ImGui::SliderInt("##Slice", &oDisplay.iSlice, 0, Math::Max(0, oTexture.GetSliceCount() - 1), "Slice:%.0f");
+	}
+
+	if (ImGui::IsItemHovered())
+	{
+		ImGuiIO& oIO = ImGui::GetIO();
+
+		if (oIO.KeyCtrl && oIO.MouseWheel > 0)
+		{
+			if (oDisplay.iSlice > 0)
+				oDisplay.iSlice--;
+		}
+		else if (oIO.KeyCtrl && oIO.MouseWheel < 0)
+		{
+			if (oDisplay.iSlice < (oTexture.GetSliceCount() - 1))
+				oDisplay.iSlice++;
+		}
+	}
+
 	ImGui::PopItemWidth();
 
 	ImGui::Checkbox("Show pixel grid", &oDisplay.bShowPixelGrid);
@@ -130,6 +185,15 @@ void Toolbar::OnToolBar()
 		oDisplay.fRange[0] = fRange[0];
 	}
 
+	if (ImGui::IsItemClicked(1))
+	{
+		fRange[0] = 0.f;
+		if (fRange[0] >= (fRange[1]))
+			fRange[0] = fRange[1] - c_fEpsylon;
+
+		oDisplay.fRange[0] = fRange[0];
+	}
+
 	ImGui::SameLine();
 	if (ImGui::DragFloat("Max##ColorRange", &fRange[1], 0.005f, fRange[0] + c_fEpsylon, 999.f))
 	{
@@ -138,6 +202,16 @@ void Toolbar::OnToolBar()
 
 		oDisplay.fRange[1] = fRange[1];
 	}
+
+	if (ImGui::IsItemClicked(1))
+	{
+		fRange[1] = 1.f;
+		if (fRange[1] <= (fRange[0]))
+			fRange[1] = fRange[0] + c_fEpsylon;
+
+		oDisplay.fRange[1] = fRange[1];
+	}
+
 	ImGui::PopItemWidth();
 
 	char pFloatBuffer[65];
@@ -148,6 +222,10 @@ void Toolbar::OnToolBar()
 
 	ImGui::SameLine();
 	ImGui::PushItemWidth(100.f);
+
+	const float c_fGammaPresets[] = { 1.f, 1.4f, 1.8f, 2.2f, 2.6f };
+	int c_iGammaPresetCount = (sizeof(c_fGammaPresets) / sizeof(*c_fGammaPresets));
+
 	if (ImGui::BeginCombo("Gamma", pFloatBuffer))
 	{
 		float fValue = m_fBackupGamma != -1.f ? m_fBackupGamma : oDisplay.fGamma;
@@ -165,22 +243,21 @@ void Toolbar::OnToolBar()
 		}
 		ImGui::PopItemWidth();
 
-		const float c_fGammas[] = { 1.f, 1.4f, 1.8f, 2.2f, 2.6f };
-		for (int iGamma = 0; iGamma < (sizeof(c_fGammas) / sizeof(*c_fGammas)); ++iGamma)
+		for (int iGamma = 0; iGamma < c_iGammaPresetCount; ++iGamma)
 		{
-			sprintf_s(pFloatBuffer, sizeof(pFloatBuffer), "%.1f", c_fGammas[iGamma]);
-			if (ImGui::Selectable(pFloatBuffer, oDisplay.fGamma == c_fGammas[iGamma]))
+			sprintf_s(pFloatBuffer, sizeof(pFloatBuffer), "%.1f", c_fGammaPresets[iGamma]);
+			if (ImGui::Selectable(pFloatBuffer, oDisplay.fGamma == c_fGammaPresets[iGamma]))
 			{
-				fValue = c_fGammas[iGamma];
-				oDisplay.fGamma = c_fGammas[iGamma];
+				fValue = c_fGammaPresets[iGamma];
+				oDisplay.fGamma = c_fGammaPresets[iGamma];
 				if (m_fBackupGamma != -1.f)
-					m_fBackupGamma = c_fGammas[iGamma];
+					m_fBackupGamma = c_fGammaPresets[iGamma];
 			}
 
 			if (ImGui::IsItemHovered())
 			{
-				fHoverValue = c_fGammas[iGamma];
-				oDisplay.fGamma = c_fGammas[iGamma];
+				fHoverValue = c_fGammaPresets[iGamma];
+				oDisplay.fGamma = c_fGammaPresets[iGamma];
 			}
 		}
 
@@ -197,5 +274,35 @@ void Toolbar::OnToolBar()
 
 		ImGui::EndCombo();
 	}
+
+	if (ImGui::IsItemHovered())
+	{
+		ImGuiIO& oIO = ImGui::GetIO();
+
+		int iCurrentGammaPreset = -1;
+		for (int iGamma = 0; iGamma < c_iGammaPresetCount; ++iGamma)
+		{
+			if (oDisplay.fGamma == c_fGammaPresets[iGamma])
+			{
+				iCurrentGammaPreset = iGamma;
+				break;
+			}
+		}
+
+		if (iCurrentGammaPreset != -1)
+		{
+			if (oIO.KeyCtrl && oIO.MouseWheel > 0)
+			{
+				if (iCurrentGammaPreset > 0)
+					oDisplay.fGamma = c_fGammaPresets[iCurrentGammaPreset - 1];
+			}
+			else if (oIO.KeyCtrl && oIO.MouseWheel < 0)
+			{
+				if (iCurrentGammaPreset < (c_iGammaPresetCount - 1))
+					oDisplay.fGamma = c_fGammaPresets[iCurrentGammaPreset + 1];
+			}
+		}
+	}
+
 	ImGui::PopItemWidth();
 }
