@@ -43,11 +43,11 @@ namespace Texture
 			oDDSHeader.iWidth = pTexture->GetWidth();
 			oDDSHeader.iHeight = pTexture->GetHeight();
 			oDDSHeader.iMipMapCount = pTexture->GetMipCount();
-			if (pTexture->GetFaceCount() == 6)
+			if (pTexture->GetSliceCount() == 6)
 			{
 				oDDSHeader.iCubemapFlags = DDS_CUBEMAP_ALLFACES;
 			}
-			else if (pTexture->GetFaceCount() != 1)
+			else if (pTexture->GetSliceCount() != 1)
 			{
 				CORE_ASSERT(false, "Not supported");
 				return false;
@@ -162,15 +162,15 @@ namespace Texture
 					return false;
 			}
 
-			for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
+			for (int iFace = 0; iFace < pTexture->GetSliceCount(); ++iFace)
 			{
 				for (int iMip = 0; iMip < pTexture->GetMipCount(); ++iMip)
 				{
-					const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
-					uint32_t iPadMipWidth = oFaceData.iWidth;
-					uint32_t iPadMipHeight = oFaceData.iHeight;
+					const Graphics::Texture::SliceData oSliceData = pTexture->GetSliceData(0, iMip, iFace);
+					uint32_t iPadMipWidth = oSliceData.iWidth;
+					uint32_t iPadMipHeight = oSliceData.iHeight;
 
-					if (pStream->Write(oFaceData.pData, oFaceData.iSize) != oFaceData.iSize)
+					if (pStream->Write(oSliceData.pData, oSliceData.iSize) != oSliceData.iSize)
 						return false;
 				}
 			}

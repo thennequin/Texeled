@@ -123,13 +123,13 @@ namespace Windows
 		Graphics::Texture oCheckerboardTexture;
 		if (oCheckerboardTexture.Create(oCheckerboardDesc) == ErrorCode::Ok)
 		{
-			const Graphics::Texture::TextureFaceData& oFaceData = oCheckerboardTexture.GetData().GetFaceData(0, 0);
+			const Graphics::Texture::SliceData oSliceData = oCheckerboardTexture.GetSliceData(0, 0, 0);
 
 			int iHalfWidth = oCheckerboardDesc.iWidth >> 1;
 			int iHalfHeight = oCheckerboardDesc.iHeight >> 1;
 			for (int iY = 0; iY < oCheckerboardDesc.iHeight; ++iY)
 			{
-				unsigned char* pData = (unsigned char*)oFaceData.pData + iY * oCheckerboardDesc.iWidth * Graphics::PixelFormat::BitPerPixel(oCheckerboardDesc.ePixelFormat) / 8;
+				unsigned char* pData = (unsigned char*)oSliceData.pData + iY * oCheckerboardDesc.iWidth * Graphics::PixelFormat::BitPerPixel(oCheckerboardDesc.ePixelFormat) / 8;
 				for (int iX = 0; iX < oCheckerboardDesc.iWidth; ++iX)
 				{
 					unsigned char iColor = ((iX < iHalfWidth && iY < iHalfHeight) || (iX >= iHalfWidth && iY >= iHalfHeight)) ? 191 : 255;

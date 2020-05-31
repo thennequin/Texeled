@@ -225,9 +225,9 @@ bool Program::Run()
 		m_oDisplayOptions.iMip = m_oTexture.GetMipCount() - 1;
 	}
 
-	if (m_oTexture.IsValid() && m_oDisplayOptions.iFace >= m_oTexture.GetFaceCount())
+	if (m_oTexture.IsValid() && m_oDisplayOptions.iFace >= m_oTexture.GetSliceCount())
 	{
-		m_oDisplayOptions.iFace = m_oTexture.GetFaceCount() - 1;
+		m_oDisplayOptions.iFace = m_oTexture.GetSliceCount() - 1;
 	}
 
 	return m_bRun && m_oImWindowMgr.Run(false) && m_oImWindowMgr.Run(true);

@@ -11,7 +11,7 @@ namespace Texture
 	{
 		ESupportedWriter TextureWriterSupportedEXR(Graphics::Texture* pTexture)
 		{
-			if (pTexture->GetMipCount() != 1 || pTexture->GetFaceCount() != 1)
+			if (pTexture->GetMipCount() != 1 || pTexture->GetSliceCount() != 1)
 			{
 				return E_SUPPORTED_WRITER_PARTIAL;
 			}
@@ -82,7 +82,7 @@ namespace Texture
 				pTexture = &oNewTexture;
 			}
 
-			const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(0, 0);
+			const Graphics::Texture::SliceData oSliceData = pTexture->GetSliceData(0, 0, 0);
 
 			bool bHalf = (ePixelFormat == Graphics::PixelFormatEnum::RGB16_FLOAT) || (ePixelFormat == Graphics::PixelFormatEnum::RGBA16_FLOAT);
 			EXRHeader header;
@@ -107,8 +107,8 @@ namespace Texture
 			InitEXRImage(&image);
 
 			image.num_channels = iComp;
-			image.width = oFaceData.iWidth;
-			image.height = oFaceData.iHeight;
+			image.width = oSliceData.iWidth;
+			image.height = oSliceData.iHeight;
 
 			const int iRGBAtoBGRA[4] = { 2, 1, 0, 3 };
 			Core::Array<unsigned char> oChannels[4];
@@ -123,7 +123,7 @@ namespace Texture
 					for( int iX = 0; iX < image.width; ++iX )
 					{
 						unsigned char* pDest = pChannelsPtrs[i] + (iY * image.width + iX) * iChannelSize;
-						unsigned char* pSource = ( (unsigned char*)oFaceData.pData ) + ((iY * image.width + iX) * iComp + iRGBAtoBGRA[i]) * iChannelSize;
+						unsigned char* pSource = ( (unsigned char*)oSliceData.pData ) + ((iY * image.width + iX) * iComp + iRGBAtoBGRA[i]) * iChannelSize;
 						memcpy( pDest, pSource, iChannelSize );
 					}
 				}

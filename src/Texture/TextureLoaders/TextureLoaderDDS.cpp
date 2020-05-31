@@ -2,6 +2,8 @@
 
 #include "Core/Logger.h"
 
+#include "Math/Arithmetic.h"
+
 #include "Texture/DDS.h"
 #include "Texture/TextureLoader.h"
 
@@ -60,21 +62,26 @@ namespace Texture
 			oDesc.iHeight = oDDSHeader.iHeight;
 			oDesc.iMipCount = ((oDDSHeader.iSurfaceFlags & DDS_SURFACE_FLAGS_MIPMAP) && (oDDSHeader.iMipMapCount > 0)) ? oDDSHeader.iMipMapCount : 1;
 
-			int iCubemapFace = 0;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_POSITIVEX)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::POS_X;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_NEGATIVEX)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::NEG_X;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_POSITIVEY)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::POS_Y;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_NEGATIVEY)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::NEG_Y;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_POSITIVEZ)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::POS_Z;
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_NEGATIVEZ)
-				++iCubemapFace;
+				oDesc.eFaces |= Graphics::Texture::FaceFlag::NEG_Z;
 
-			oDesc.iFaceCount = iCubemapFace > 0 ? iCubemapFace : 1;
+			if (oDDSHeader.iDepth != 0 && oDesc.eFaces != Graphics::Texture::FaceFlag::NONE)
+			{
+				return ErrorCode(1, "Not supported or invalid DDS, contains depth and cubemap faces");
+			}
+
+			uint8_t iFaceCount = Math::HighBitCount(oDesc.eFaces);
+			oDesc.iSliceCount = iFaceCount > 0 ? iFaceCount : Math::Max((uint16_t)1, (uint16_t)oDDSHeader.iDepth);
 
 			if ((oDDSHeader.iHeaderFlags & DDS_FOURCC)
 				&& oDDSHeader.oPixelFormat.iFourCC == DDSPF_DX10.iFourCC
@@ -329,22 +336,22 @@ namespace Texture
 
 			const Graphics::PixelFormatInfos& oInfos = Graphics::PixelFormatEnumInfos[oDesc.ePixelFormat];
 
-			for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
+			for (int iFace = 0; iFace < oDesc.iSliceCount; ++iFace)
 			{
 				for (int iMip = 0; iMip < oDesc.iMipCount; ++iMip)
 				{
-					const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+					const Graphics::Texture::SliceData oSliceData = pTexture->GetSliceData(0, iMip, iFace);
 
-					uint32_t iBlockCountX, iBlockCountY;
-					Graphics::PixelFormat::GetBlockCount(oDesc.ePixelFormat, oFaceData.iWidth, oFaceData.iHeight, &iBlockCountX, &iBlockCountY);
+					uint16_t iBlockCountX, iBlockCountY;
+					Graphics::PixelFormat::GetBlockCount(oDesc.ePixelFormat, oSliceData.iWidth, oSliceData.iHeight, &iBlockCountX, &iBlockCountY);
 
 					int iBlockCount = iBlockCountX * iBlockCountY;
 
 					size_t iBlocksSize = iBlockCount * oInfos.iBlockSize;
 
-					void* pBlocks = oFaceData.pData;
+					void* pBlocks = oSliceData.pData;
 
-					if (oFaceData.iSize != iBlocksSize)
+					if (oSliceData.iSize != iBlocksSize)
 						return ErrorCode(2, "Internal : Invalid block size");
 
 					size_t iRowSize = iBlockCountX * oInfos.iBlockSize;
@@ -359,7 +366,7 @@ namespace Texture
 
 						size_t iDiff = iPitchSize - iRowSize;
 						size_t iRemainingPitch = iPitchSize;
-						for (int iLine = 0; iLine < iBlockCountY; ++iLine)
+						for (uint32_t iLine = 0; iLine < iBlockCountY; ++iLine)
 						{
 							if (iRowSize > iRemainingPitch)
 							{

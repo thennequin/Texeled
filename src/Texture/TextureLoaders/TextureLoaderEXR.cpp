@@ -100,14 +100,12 @@ namespace Texture
 			oDesc.ePixelFormat = (iChannels[3] != -1) ? Graphics::PixelFormatEnum::RGBA32_FLOAT : Graphics::PixelFormatEnum::RGB32_FLOAT;
 			oDesc.iWidth = oExrImage.width;
 			oDesc.iHeight = oExrImage.height;
-			oDesc.iFaceCount = 1;
-			oDesc.iMipCount = 1;
 
 			int iChannelCount = (iChannels[3] != -1) ? 4 : 3;
 			ErrorCode oErr = pTexture->Create(oDesc);
 			if (oErr == ErrorCode::Ok)
 			{
-				float* pData = (float*)pTexture->GetData().GetFaceData(0, 0).pData;
+				float* pData = (float*)pTexture->GetSliceData(0, 0, 0).pData;
 				float** pSource = (float**)oExrImage.images;
 
 				for (uint32_t i = 0; i < (uint32_t)oExrImage.width * (uint32_t)oExrImage.height; i++)

@@ -160,16 +160,16 @@ namespace GraphicResources
 		}
 
 		Core::Array<D3D11_SUBRESOURCE_DATA> oInitData;
-		oInitData.resize(pInputTexture->GetMipCount() * pInputTexture->GetFaceCount(), false);
+		oInitData.resize(pInputTexture->GetMipCount() * pInputTexture->GetSliceCount(), false);
 		for (int iMip = 0, iMipCount = pInputTexture->GetMipCount(); iMip < iMipCount; ++iMip)
 		{
-			for (int iFace = 0, iFaceCount = pInputTexture->GetFaceCount(); iFace < iFaceCount; ++iFace)
+			for (int iSlice = 0, iFaceCount = pInputTexture->GetSliceCount(); iSlice < iFaceCount; ++iSlice)
 			{
-				const Graphics::Texture::TextureFaceData& oFaceData = pInputTexture->GetData().GetFaceData(iMip, iFace);
-				int iIndex = iMip + iFace * iMipCount;
-				oInitData[iIndex].pSysMem = oFaceData.pData;
-				oInitData[iIndex].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oFaceData.iWidth);
-				oInitData[iIndex].SysMemSlicePitch = (UINT)oFaceData.iSize;
+				const Graphics::Texture::SliceData oSliceData = pInputTexture->GetSliceData(0, iMip, iSlice);
+				int iIndex = iMip + iSlice * iMipCount;
+				oInitData[iIndex].pSysMem = oSliceData.pData;
+				oInitData[iIndex].SysMemPitch = Graphics::PixelFormat::GetPitch(pInputTexture->GetPixelFormat(), oSliceData.iWidth);
+				oInitData[iIndex].SysMemSlicePitch = (UINT)oSliceData.iSize;
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace GraphicResources
 		desc.Width = pInputTexture->GetWidth();
 		desc.Height = pInputTexture->GetHeight();
 		desc.MipLevels = pInputTexture->GetMipCount();
-		desc.ArraySize = pInputTexture->GetFaceCount();
+		desc.ArraySize = pInputTexture->GetSliceCount();
 		desc.Format = eDXGIFormat;
 		desc.SampleDesc.Count = 1;
 		//desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -198,7 +198,7 @@ namespace GraphicResources
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2DArray.ArraySize = pTexture->GetFaceCount();
+		srvDesc.Texture2DArray.ArraySize = pTexture->GetSliceCount();
 		srvDesc.Texture2DArray.MipLevels = desc.MipLevels;
 		srvDesc.Texture2DArray.MostDetailedMip = 0;
 		hRes = Program::GetInstance()->GetDX11Device()->CreateShaderResourceView(pDX11Texture, &srvDesc, &pDX11TextureView);

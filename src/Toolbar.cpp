@@ -107,7 +107,7 @@ void Toolbar::OnToolBar()
 	ImGui::SliderInt("##Mip", &oDisplay.iMip, 0, Math::Max(0, oTexture.GetMipCount() - 1), "Mip:%.0f");
 
 	ImGui::SameLine();
-	ImGui::SliderInt("##Face", &oDisplay.iFace, 0, Math::Max(0, oTexture.GetFaceCount() - 1), "Face/Slice:%.0f");
+	ImGui::SliderInt("##Face", &oDisplay.iFace, 0, Math::Max(0, oTexture.GetSliceCount() - 1), "Face/Slice:%.0f");
 	ImGui::PopItemWidth();
 
 	ImGui::Checkbox("Show pixel grid", &oDisplay.bShowPixelGrid);

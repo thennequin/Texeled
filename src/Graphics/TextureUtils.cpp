@@ -67,17 +67,17 @@ namespace Graphics
 		return false;
 	}
 
-	bool GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::EFace eFace, int* pOutX, int* pOutY)
+	bool GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::FaceFlag eFace, int* pOutX, int* pOutY)
 	{
 		if (eFormat == E_CUBEMAPFORMAT_STRIP_VERTICAL)
 		{
 			*pOutX = 0;
-			*pOutY = (eFace - Texture::E_FACE_POS_X) * iWidth;
+			*pOutY = (eFace - Texture::FaceFlag::POS_X) * iWidth;
 			return true;
 		}
 		else if (eFormat == E_CUBEMAPFORMAT_STRIP_HORIZONTAL)
 		{
-			*pOutX = (eFace - Texture::E_FACE_POS_X) * iHeight;
+			*pOutX = (eFace - Texture::FaceFlag::POS_X) * iHeight;
 			*pOutY = 0;
 			return true;
 		}
@@ -85,32 +85,32 @@ namespace Graphics
 		{
 			int iFaceSize = iWidth / 4;
 			int iX, iY;
-			if (eFace == Texture::E_FACE_POS_X)
+			if (eFace == Texture::FaceFlag::POS_X)
 			{
 				iX = 2;
 				iY = 1;
 			}
-			else if (eFace == Texture::E_FACE_NEG_X)
+			else if (eFace == Texture::FaceFlag::NEG_X)
 			{
 				iX = 0;
 				iY = 1;
 			}
-			else if (eFace == Texture::E_FACE_POS_Y)
+			else if (eFace == Texture::FaceFlag::POS_Y)
 			{
 				iX = 1;
 				iY = 0;
 			}
-			else if (eFace == Texture::E_FACE_NEG_Y)
+			else if (eFace == Texture::FaceFlag::NEG_Y)
 			{
 				iX = 1;
 				iY = 2;
 			}
-			else if (eFace == Texture::E_FACE_POS_Z)
+			else if (eFace == Texture::FaceFlag::POS_Z)
 			{
 				iX = 1;
 				iY = 1;
 			}
-			else if (eFace == Texture::E_FACE_NEG_Z)
+			else if (eFace == Texture::FaceFlag::NEG_Z)
 			{
 				iX = 3;
 				iY = 1;
@@ -124,32 +124,32 @@ namespace Graphics
 		{
 			int iFaceSize = iHeight / 4;
 			int iX, iY;
-			if (eFace == Texture::E_FACE_POS_X)
+			if (eFace == Texture::FaceFlag::POS_X)
 			{
 				iX = 1;
 				iY = 1;
 			}
-			else if (eFace == Texture::E_FACE_NEG_X)
+			else if (eFace == Texture::FaceFlag::NEG_X)
 			{
 				iX = 1;
 				iY = 3;
 			}
-			else if (eFace == Texture::E_FACE_POS_Y)
+			else if (eFace == Texture::FaceFlag::POS_Y)
 			{
 				iX = 1;
 				iY = 0;
 			}
-			else if (eFace == Texture::E_FACE_NEG_Y)
+			else if (eFace == Texture::FaceFlag::NEG_Y)
 			{
 				iX = 1;
 				iY = 2;
 			}
-			else if (eFace == Texture::E_FACE_POS_Z)
+			else if (eFace == Texture::FaceFlag::POS_Z)
 			{
 				iX = 0;
 				iY = 1;
 			}
-			else if (eFace == Texture::E_FACE_NEG_Z)
+			else if (eFace == Texture::FaceFlag::NEG_Z)
 			{
 				iX = 2;
 				iY = 1;
@@ -174,7 +174,7 @@ namespace Graphics
 		ECubemapFormat eCubemapFormat;
 		int iFaceSize;
 
-		if (oTexture.GetFaceCount() != 1)
+		if (oTexture.GetSliceCount() != 1)
 		{
 			return ErrorCode(1, "Source texture need to have only one face data when bDataIsCubemap is true");
 		}
@@ -187,7 +187,8 @@ namespace Graphics
 		Texture::Desc oDesc;
 		oDesc.ePixelFormat = oTexture.GetPixelFormat();
 		oDesc.iWidth = oDesc.iHeight = iFaceSize;
-		oDesc.iFaceCount = 6;
+		oDesc.iSliceCount = 6;
+		oDesc.eFaces = Texture::FaceFlag::ALL;
 		oDesc.iMipCount = oTexture.GetMipCount();
 
 		size_t iBits = PixelFormat::BitPerPixel(oTexture.GetPixelFormat());
@@ -195,21 +196,21 @@ namespace Graphics
 		{
 			int iCubeMapSourceWidthMinusOne = iSourceWidth - 1;
 			int iCubeMapSourceHeighthMinusOne = iSourceHeight - 1;
-			for (int iFace = 0; iFace < Texture::_E_FACE_COUNT; ++iFace)
+			for (int iFace = 0; iFace < Texture::FaceFlag::_COUNT; ++iFace)
 			{
-				const Texture::TextureFaceData& oFaceData = pOutCubemap->GetData().GetFaceData(iMip, iFace);
+				const Texture::SliceData oSliceData = pOutCubemap->GetSliceData(0, iMip, iFace);
 
 				if (eCubemapFormat != E_CUBEMAPFORMAT_LATLONG)
 				{
 					int iX, iY;
-					if (GetCubemapFacePos(iSourceWidth, iSourceHeight, eCubemapFormat, (Texture::EFace)iFace, &iX, &iY) == false)
+					if (GetCubemapFacePos(iSourceWidth, iSourceHeight, eCubemapFormat, (Texture::FaceFlag)iFace, &iX, &iY) == false)
 					{
 						CORE_ASSERT(false);
 					}
 					for (int iLine = 0; iLine < iFaceSize; ++iLine)
 					{
-						char* pSource = (char*)oTexture.GetData().GetFaceData(iMip, 0).pData + (iX + (iY + iLine) * iSourceWidth) * iBits / 8;
-						char* pDest = (char*)oFaceData.pData + iLine * iFaceSize * iBits / 8;
+						char* pSource = (char*)oTexture.GetSliceData(0, iMip, 0).pData + (iX + (iY + iLine) * iSourceWidth) * iBits / 8;
+						char* pDest = (char*)oSliceData.pData + iLine * iFaceSize * iBits / 8;
 						memcpy(pDest, pSource, iFaceSize * iBits / 8);
 					}
 				}
@@ -350,8 +351,8 @@ namespace Graphics
 			oNewDesc.ePixelFormat = eWantedPixelFormat;
 			oNewDesc.iWidth = pTexture->GetWidth();
 			oNewDesc.iHeight = pTexture->GetHeight();
-			oNewDesc.iFaceCount = pTexture->GetFaceCount();
 			oNewDesc.iMipCount = pTexture->GetMipCount();
+			oNewDesc.iSliceCount = pTexture->GetSliceCount();
 			if (oNewTexture.Create(oNewDesc) != ErrorCode::Ok)
 			{
 				return ErrorCode(1, "Can't create new Texture");
@@ -360,10 +361,10 @@ namespace Graphics
 			size_t iTotalSize = 0;
 			for (int iMipIndex = 0, iMipCount = pTexture->GetMipCount(); iMipIndex < iMipCount; ++iMipIndex)
 			{
-				for (int iFaceIndex = 0, iFaceCount = oNewDesc.iFaceCount; iFaceIndex < iFaceCount; ++iFaceIndex)
+				for (int iFaceIndex = 0, iFaceCount = oNewDesc.iSliceCount; iFaceIndex < iFaceCount; ++iFaceIndex)
 				{
-					const Texture::TextureFaceData& oNewFaceData = oNewTexture.GetData().GetFaceData(iMipIndex, iFaceIndex);
-					const Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMipIndex, iFaceIndex);
+					const Texture::SliceData oNewSliceData = oNewTexture.GetSliceData(0, iMipIndex, iFaceIndex);
+					const Texture::SliceData oSliceData = pTexture->GetSliceData(0, iMipIndex, iFaceIndex);
 
 					int iSourceBits = PixelFormat::BitPerPixel(pTexture->GetPixelFormat());
 					int iDestBits = PixelFormat::BitPerPixel(eWantedPixelFormat);
@@ -373,11 +374,11 @@ namespace Graphics
 
 					uint16_t iSrcMipBlockX;
 					uint16_t iSrcMipBlockY;
-					PixelFormat::GetBlockCount(pTexture->GetPixelFormat(), oFaceData.iWidth, oFaceData.iHeight, &iSrcMipBlockX, &iSrcMipBlockY);
+					PixelFormat::GetBlockCount(pTexture->GetPixelFormat(), oSliceData.iWidth, oSliceData.iHeight, &iSrcMipBlockX, &iSrcMipBlockY);
 
 					uint16_t iDstMipBlockX;
 					uint16_t iDstMipBlockY;
-					PixelFormat::GetBlockCount(eWantedPixelFormat, oNewFaceData.iWidth, oNewFaceData.iHeight, &iDstMipBlockX, &iDstMipBlockY);
+					PixelFormat::GetBlockCount(eWantedPixelFormat, oNewSliceData.iWidth, oNewSliceData.iHeight, &iDstMipBlockX, &iDstMipBlockY);
 
 					uint16_t iMipWidth = Math::Min<uint16_t>(iSrcMipBlockX * oSrcPFInfos.iBlockWidth, iDstMipBlockX * oDstPFInfos.iBlockWidth);
 					uint16_t iMipHeight = Math::Min<uint16_t>(iSrcMipBlockY * oSrcPFInfos.iBlockHeight, iDstMipBlockY * oDstPFInfos.iBlockHeight);
@@ -395,8 +396,8 @@ namespace Graphics
 						for (int iX = 0; iX < iMipWidth; iX += iPaddingX)
 						{
 							PixelFormat::ConvertionTemporaryData oConvertionTempData[2];
-							void* pSourceData = (char*)oFaceData.pData + (size_t)(iY / oSrcPFInfos.iBlockHeight * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX / oSrcPFInfos.iBlockWidth * oSrcPFInfos.iBlockSize);
-							void* pNewData = (char*)oNewFaceData.pData + (size_t)(iY / oDstPFInfos.iBlockHeight * iDstMipBlockX * oDstPFInfos.iBlockSize + iX / oDstPFInfos.iBlockWidth * oDstPFInfos.iBlockSize);
+							void* pSourceData = (char*)oSliceData.pData + (size_t)(iY / oSrcPFInfos.iBlockHeight * iSrcMipBlockX * oSrcPFInfos.iBlockSize + iX / oSrcPFInfos.iBlockWidth * oSrcPFInfos.iBlockSize);
+							void* pNewData = (char*)oNewSliceData.pData + (size_t)(iY / oDstPFInfos.iBlockHeight * iDstMipBlockX * oDstPFInfos.iBlockSize + iX / oDstPFInfos.iBlockWidth * oDstPFInfos.iBlockSize);
 
 							PixelFormatEnum eCurrentFormat = pTexture->GetPixelFormat();
 							uint32_t iCurrentBits = PixelFormat::BitPerPixel(eCurrentFormat);
@@ -408,9 +409,9 @@ namespace Graphics
 							for (int iChain = 0; iChain < iConvertionChainLength; ++iChain)
 							{
 								void* pInputData = (iChain == 0) ? pSourceData : ((iChain % 2 == 0) ? &oConvertionTempData[0] : &oConvertionTempData[1]);
-								size_t iInputSize = (iChain == 0) ? (oFaceData.iSize - size_t((char*)pSourceData - (char*)oFaceData.pData)) : sizeof(PixelFormat::ConvertionTemporaryData);
+								size_t iInputSize = (iChain == 0) ? (oSliceData.iSize - size_t((char*)pSourceData - (char*)oSliceData.pData)) : sizeof(PixelFormat::ConvertionTemporaryData);
 								void* pOutputData = (iChain == (iConvertionChainLength - 1)) ? pNewData : ((iChain % 2 == 0) ? &oConvertionTempData[1] : &oConvertionTempData[0]);
-								size_t iOutputSize = (iChain == (iConvertionChainLength - 1)) ? ( oNewFaceData.iSize - size_t((char*)pNewData - (char*)oNewFaceData.pData )) : sizeof(PixelFormat::ConvertionTemporaryData);
+								size_t iOutputSize = (iChain == (iConvertionChainLength - 1)) ? (oNewSliceData.iSize - size_t((char*)pNewData - (char*)oNewSliceData.pData )) : sizeof(PixelFormat::ConvertionTemporaryData);
 
 								uint32_t iInputPitch = (iChain == 0) ? (iSrcMipBlockX * oSrcPFInfos.iBlockWidth) : iPaddingX;
 								uint32_t iOutputPitch = (iChain == (iConvertionChainLength - 1)) ? (iDstMipBlockX * oDstPFInfos.iBlockWidth) : iPaddingX;
@@ -493,32 +494,32 @@ namespace Graphics
 		oDesc.iWidth = iNewWidth;
 		oDesc.iHeight = iNewHeight;
 		oDesc.iMipCount = 1;
-		oDesc.iFaceCount = pTexture->GetFaceCount();
+		oDesc.iSliceCount = pTexture->GetSliceCount();
 		ErrorCode oErr = oTemp.Create(oDesc);
 		if (oErr != ErrorCode::Ok)
 			return oErr;
 
 		const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
 
-		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
+		for (int iFace = 0; iFace < pTexture->GetSliceCount(); ++iFace)
 		{
 			int iRes;
-			const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(0, iFace);
-			const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(0, iFace);
+			const Texture::SliceData oSrcSliceData = pTexture->GetSliceData(0, 0, iFace);
+			const Texture::SliceData oDstSliceData = oTemp.GetSliceData(0, 0, iFace);
 
 			if (oFormatInfos.eEncoding == ComponentEncodingEnum::UNORM)
 			{
 				iRes = stbir_resize_uint8(
-					(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
-					(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+					(unsigned char*)oSrcSliceData.pData, oSrcSliceData.iWidth, oSrcSliceData.iHeight, oSrcSliceData.iPitch,
+					(unsigned char*)oDstSliceData.pData, oDstSliceData.iWidth, oDstSliceData.iHeight, oDstSliceData.iPitch,
 					oFormatInfos.iComponentCount
 				);
 			}
 			else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
 			{
 				iRes = stbir_resize_float(
-					(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
-					(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+					(float*)oSrcSliceData.pData, oSrcSliceData.iWidth, oSrcSliceData.iHeight, oSrcSliceData.iPitch,
+					(float*)oDstSliceData.pData, oDstSliceData.iWidth, oDstSliceData.iHeight, oDstSliceData.iPitch,
 					oFormatInfos.iComponentCount
 				);
 			}
@@ -562,43 +563,43 @@ namespace Graphics
 		oDesc.iWidth = pTexture->GetWidth();
 		oDesc.iHeight = pTexture->GetHeight();
 		oDesc.iMipCount = iMipCount;
-		oDesc.iFaceCount = pTexture->GetFaceCount();
+		oDesc.iSliceCount = pTexture->GetSliceCount();
 		ErrorCode oErr = oTemp.Create(oDesc);
 		if (oErr != ErrorCode::Ok)
 			return oErr;
 
 		const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
 
-		for (int iFace = 0; iFace < pTexture->GetFaceCount(); ++iFace)
+		for (int iFace = 0; iFace < pTexture->GetSliceCount(); ++iFace)
 		{
 			for (int iMip = 0; iMip < iMipCount; ++iMip)
 			{
-				const Texture::TextureFaceData& oDstFaceData = oTemp.GetData().GetFaceData(iMip, iFace);
+				const Texture::SliceData oDstSliceData = oTemp.GetSliceData(0, iMip, iFace);
 
 				if (iMip == 0 || (((1 << iMip) & iMipsMask) == 0 && iMip < pTexture->GetMipCount()))
 				{
-					const Texture::TextureFaceData& oSrcFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
-					Core::MemCpy(oDstFaceData.pData, oSrcFaceData.pData, oSrcFaceData.iSize);
+					const Texture::SliceData oSrcSliceData = pTexture->GetSliceData(0, iMip, iFace);
+					Core::MemCpy(oDstSliceData.pData, oSrcSliceData.pData, oSrcSliceData.iSize);
 				}
 				else
 				{
-					const Texture::TextureFaceData& oSrcFaceData = oTemp.GetData().GetFaceData(iMip - 1, iFace);
+					const Texture::SliceData oSrcSliceData = oTemp.GetSliceData(0, iMip - 1, iFace);
 
 					int iRes;
 
 					if (oFormatInfos.eEncoding == ComponentEncodingEnum::UNORM)
 					{
 						iRes = stbir_resize_uint8(
-							(unsigned char*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
-							(unsigned char*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+							(unsigned char*)oSrcSliceData.pData, oSrcSliceData.iWidth, oSrcSliceData.iHeight, oSrcSliceData.iPitch,
+							(unsigned char*)oDstSliceData.pData, oDstSliceData.iWidth, oDstSliceData.iHeight, oDstSliceData.iPitch,
 							oFormatInfos.iComponentCount
 						);
 					}
 					else if (oFormatInfos.eEncoding == ComponentEncodingEnum::FLOAT)
 					{
 						iRes = stbir_resize_float(
-							(float*)oSrcFaceData.pData, oSrcFaceData.iWidth, oSrcFaceData.iHeight, oSrcFaceData.iPitch,
-							(float*)oDstFaceData.pData, oDstFaceData.iWidth, oDstFaceData.iHeight, oDstFaceData.iPitch,
+							(float*)oSrcSliceData.pData, oSrcSliceData.iWidth, oSrcSliceData.iHeight, oSrcSliceData.iPitch,
+							(float*)oDstSliceData.pData, oDstSliceData.iWidth, oDstSliceData.iHeight, oDstSliceData.iPitch,
 							oFormatInfos.iComponentCount
 						);
 					}

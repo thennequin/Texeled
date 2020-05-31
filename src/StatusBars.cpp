@@ -60,7 +60,7 @@ void StatusBars::OnStatusBar()
 		ImGui::PopFont();
 
 		//Face/Slice
-		if (oTexture.GetFaceCount() > 1)
+		if (oTexture.GetSliceCount() > 1)
 		{
 			ImGui::PushFont(oFonts.pFontConsolas);
 			ImGui::SameLine();
@@ -69,7 +69,7 @@ void StatusBars::OnStatusBar()
 
 			ImGui::PushFont(oFonts.pFontConsolasBold);
 			ImGui::SameLine(0, 0);
-			ImGui::Text("%d", oTexture.GetFaceCount());
+			ImGui::Text("%d", oTexture.GetSliceCount());
 			ImGui::PopFont();
 		}
 
@@ -116,7 +116,7 @@ void StatusBars::OnStatusBar()
 		ImGui::PopFont();
 
 		char pBuffer[128];
-		Core::StringUtils::GetReadableSize(oTexture.GetData().GetDataSize(), pBuffer, sizeof(pBuffer));
+		Core::StringUtils::GetReadableSize(oTexture.GetDataSize(), pBuffer, sizeof(pBuffer));
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
 		ImGui::TextUnformatted(pBuffer);

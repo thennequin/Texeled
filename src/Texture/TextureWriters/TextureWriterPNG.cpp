@@ -11,7 +11,7 @@ namespace Texture
 	{
 		ESupportedWriter TextureWriterSupportedPNG(Graphics::Texture* pTexture)
 		{
-			if (pTexture->GetMipCount() != 1 || pTexture->GetFaceCount() != 1)
+			if (pTexture->GetMipCount() != 1 || pTexture->GetSliceCount() != 1)
 			{
 				return E_SUPPORTED_WRITER_PARTIAL;
 			}
@@ -94,8 +94,8 @@ namespace Texture
 				pTexture = &oNewTexture;
 			}
 
-			const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(0, 0);
-			if (stbi_write_png_to_func(WriteToStream, pStream, pTexture->GetWidth(), pTexture->GetHeight(), iComp, (void*)oFaceData.pData, 0) == 1)
+			const Graphics::Texture::SliceData oSliceData = pTexture->GetSliceData(0, 0, 0);
+			if (stbi_write_png_to_func(WriteToStream, pStream, pTexture->GetWidth(), pTexture->GetHeight(), iComp, (void*)oSliceData.pData, 0) == 1)
 			{
 				return true;
 			}

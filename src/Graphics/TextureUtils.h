@@ -25,7 +25,7 @@ namespace Graphics
 	ErrorCode		GenerateMips(const Texture* pTexture, Texture* pOutTexture, uint16_t iMips = 0xFFFF);
 
 	bool			DetermineCubemapFormatFromImageSize(int iWidth, int iHeight, ECubemapFormat* pOutFormat, int* pOutFaceSize);
-	bool			GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::EFace eFace, int* pOutX, int* pOutY);
+	bool			GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::FaceFlag eFace, int* pOutX, int* pOutY);
 
 	ErrorCode		ConvertTextureToCubemap(const Graphics::Texture& oTexture, Graphics::Texture* pOutCubemap);
 }

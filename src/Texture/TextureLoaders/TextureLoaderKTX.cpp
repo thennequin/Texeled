@@ -156,8 +156,8 @@ namespace Texture
 			oDesc.ePixelFormat = ePixelFormat;
 			oDesc.iWidth = oHeader.iPixelWidth > 0 ? oHeader.iPixelWidth : 1;
 			oDesc.iHeight = oHeader.iPixelHeight > 0 ? oHeader.iPixelHeight : 1;
-			oDesc.iFaceCount = oHeader.iNumberOfFaces > 0 ? oHeader.iNumberOfFaces : 1;
 			oDesc.iMipCount = oHeader.iNumberOfMipmapLevels > 0 ? oHeader.iNumberOfMipmapLevels : 1;
+			oDesc.iSliceCount = oHeader.iNumberOfFaces > 0 ? oHeader.iNumberOfFaces : 1;
 
 			ErrorCode oErr = pTexture->Create(oDesc);
 			if (oErr != ErrorCode::Ok)
@@ -205,11 +205,11 @@ namespace Texture
 					return ErrorCode::Fail;
 				}
 
-				for (int iFace = 0; iFace < oDesc.iFaceCount; ++iFace)
+				for (int iFace = 0; iFace < oDesc.iSliceCount; ++iFace)
 				{
 					//TODO z_slice
 					{
-						const Graphics::Texture::TextureFaceData& oFaceData = pTexture->GetData().GetFaceData(iMip, iFace);
+						const Graphics::Texture::SliceData oFaceData = pTexture->GetSliceData(0, iMip, iFace);
 
 						int iBlock = 0;
 						for (int iY = 0; iY < oFaceData.iHeight; iY += oPixelFormatInfo.iBlockHeight )

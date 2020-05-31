@@ -122,7 +122,6 @@ namespace Texture
 			Graphics::Texture::Desc oDesc;
 			oDesc.iWidth = iWidth;
 			oDesc.iHeight = iHeight;
-			oDesc.pData[0][0] = pImage;
 			int iPixelSize;
 			switch (iNewiColorType)
 			{
@@ -181,6 +180,8 @@ namespace Texture
 			if (oDesc.ePixelFormat != Graphics::PixelFormatEnum::_NONE)
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
+
+				Core::MemCpy(pTexture->GetSliceData(0, 0, 0).pData, pImage, iPNGRowSize * iHeight);
 
 				if (oErr != ErrorCode::Ok)
 				{

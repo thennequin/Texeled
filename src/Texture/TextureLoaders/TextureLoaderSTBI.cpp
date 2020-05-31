@@ -43,6 +43,8 @@ namespace Texture
 
 			oDesc.iWidth = (uint16_t)iWidth;
 			oDesc.iHeight = (uint16_t)iHeight;
+
+			CORE_PTR_VOID pImageVoid = CORE_PTR_NULL;
 			if (pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN)
 				&& stbi_is_hdr_from_callbacks(&oCallbacks, pStream))
 			{
@@ -66,7 +68,7 @@ namespace Texture
 						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA32_FLOAT;
 						break;
 					}
-					oDesc.pData[0][0] = pImage;
+					pImageVoid = Core::ToPointer(pImage, oDesc.iWidth * oDesc.iHeight * iComponentCount * 4);
 				}
 			}
 			/*else if (pStream->Seek(0, IO::Stream::SeekModeEnum::BEGIN)
@@ -109,14 +111,19 @@ namespace Texture
 						oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 						break;
 					}
-					oDesc.pData[0][0] = pImage;
+					pImageVoid = Core::ToPointer(pImage, oDesc.iWidth * oDesc.iHeight * iComponentCount * 1);
 				}
 			}
 
-			if (oDesc.ePixelFormat != Graphics::PixelFormatEnum::_NONE && oDesc.pData[0][0] != NULL)
+			if (oDesc.ePixelFormat != Graphics::PixelFormatEnum::_NONE && pImageVoid != NULL)
 			{
 				ErrorCode oErr = pTexture->Create(oDesc);
-				stbi_image_free((void*)oDesc.pData[0][0]);
+				if (oErr == ErrorCode::Ok)
+				{
+					Graphics::Texture::SliceData oData = pTexture->GetSliceData(0, 0, 0);
+					Core::MemCpy(oData.pData, pImageVoid, oData.iSize);
+				}
+				stbi_image_free(pImageVoid);
 				return oErr;
 			}
 			const char* pError = stbi_failure_reason();
