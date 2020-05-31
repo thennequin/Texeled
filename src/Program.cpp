@@ -124,6 +124,12 @@ Program::Program(int iArgCount, char** pArgs)
 	style.Colors[ImGuiCol_Header]                = ImVec4(0.54f, 0.54f, 0.54f, 0.58f);
 	style.Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.64f, 0.65f, 0.65f, 0.50f);
 	style.Colors[ImGuiCol_HeaderActive]          = ImVec4(0.25f, 0.25f, 0.25f, 0.50f);
+	style.Colors[ImGuiCol_ModalWindowDarkening]  = ImVec4(0.12f, 0.12f, 0.12f, 0.85f);
+	style.Colors[ImGuiCol_TitleBg]               = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgActive]         = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgCollapsed]      = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
+
+	style.WindowRounding = 0.f;
 
 	m_pShortKeyManager = new ShortKeyManager();
 	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", EasyWindow::KEY_ALT, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_F4, new EasyWindow::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
