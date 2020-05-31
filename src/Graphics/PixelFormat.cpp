@@ -137,7 +137,8 @@ namespace Graphics
 	{
 		bool IsCompressed(PixelFormatEnum ePixelFormat)
 		{
-			return (ePixelFormat >= PixelFormatEnum::BC1 && ePixelFormat <= PixelFormatEnum::BC7);
+			const PixelFormatInfos& oInfos = PixelFormatEnumInfos[ePixelFormat];
+			return oInfos.iBlockWidth > 1 || oInfos.iBlockHeight > 1;
 		}
 
 		int BitPerPixel(PixelFormatEnum ePixelFormat)
