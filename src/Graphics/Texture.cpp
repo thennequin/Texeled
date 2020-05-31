@@ -240,6 +240,17 @@ ErrorCode Texture::Destroy()
 	return ErrorCode::Fail;
 }
 
+Texture::Desc Texture::GetDesc() const
+{
+	Desc oDesc;
+	oDesc.ePixelFormat	= m_ePixelFormat;
+	oDesc.iMipCount		= m_iMipCount;
+	oDesc.iWidth		= m_iWidth;
+	oDesc.iHeight		= m_iHeight;
+	oDesc.iFaceCount	= m_iFaceCount;
+	return oDesc;
+}
+
 void Texture::Swap(Texture& oOtherTexture)
 {
 	std::swap(m_iWidth, oOtherTexture.m_iWidth);

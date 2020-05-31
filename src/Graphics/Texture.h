@@ -92,6 +92,8 @@ namespace Graphics
 		ErrorCode						Create(Desc& oDesc);
 		ErrorCode 						Destroy();
 
+		Desc							GetDesc() const;
+
 		int								GetWidth() const { return m_iWidth; }
 		int								GetHeight() const { return m_iHeight; }
 		PixelFormatEnum					GetPixelFormat() const { return m_ePixelFormat; }
