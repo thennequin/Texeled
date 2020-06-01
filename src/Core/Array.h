@@ -1,7 +1,7 @@
 #ifndef __CORE_ARRAY_H__
 #define __CORE_ARRAY_H__
 
-#include <stdlib.h> // malloc/free
+#include <stdlib.h> // malloc / free / std::qsort
 #include <string.h> // memcpy
 #include <type_traits> // std::is_trivial
 #include <new> // new
@@ -53,6 +53,8 @@ namespace Core
 		const T&				operator[](size_t iIndex) const	{ CORE_ASSERT(iIndex < m_iSize); return m_pData[iIndex]; }
 
 		Array&					operator=(const Array& oRight);
+
+		void					Sort(int(*pComparer)(const T* pLeft, const T* pRight));
 
 	protected:
 		inline size_t			growCapacity(size_t iSize) const;
@@ -279,6 +281,12 @@ namespace Core
 		while (iNewCapacity < iSize)
 			iNewCapacity *= 2;
 		return iNewCapacity;
+	}
+
+	template <typename T, bool WithConstructor>
+	void Array<T, WithConstructor>::Sort(int(*pComparer)(const T* pLeft, const T* pRight))
+	{
+		std::qsort(m_pData, m_iSize, sizeof(T), (int(*)(const void*, const void*))(pComparer));
 	}
 } // namespace Core
 
