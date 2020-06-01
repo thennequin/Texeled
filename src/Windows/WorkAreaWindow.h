@@ -38,6 +38,8 @@ namespace Windows
 		virtual void			OnGui();
 		virtual void			OnDropFiles(int iCount, char** pFiles, const ImVec2& oPos) override;
 	protected:
+		static void				LoadTextures(Core::Array<Graphics::Texture>* pTextures, const Core::Array<Core::String>& oFiles);
+
 		double					m_fZoom;
 		ImVec2					m_oOffset;
 
@@ -54,6 +56,9 @@ namespace Windows
 		ID3D11Buffer*								m_pGlobalConstantBuffer;
 		BufferData									m_oBufferData;
 		ChannelFlags								m_eCurrentShowChannels;
+
+		Core::Array<Core::String>					m_oDropedFiles;
+		bool										m_bFilesJustDropped;
 	};
 }
 //namespace Windows

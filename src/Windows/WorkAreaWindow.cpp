@@ -6,6 +6,8 @@
 
 #include "Math/Arithmetic.h"
 
+#include "Graphics/TextureUtils.h"
+
 #include "GraphicResources/Texture2D.h"
 #include "GraphicResources/SamplerState.h"
 
@@ -112,6 +114,8 @@ namespace Windows
 
 		m_fZoom = 1.0;
 		m_oOffset = ImVec2(0.f, 0.f);
+
+		m_bFilesJustDropped = false;
 
 		m_fCurrentZoom = m_fZoom;
 		m_oCurrentOffset = m_oOffset;
@@ -560,14 +564,150 @@ namespace Windows
 			m_fCurrentZoom = m_fZoom;
 			m_oCurrentOffset = m_oOffset;
 		}
+
+		if (m_oDropedFiles.empty() == false)
+		{
+			if (m_bFilesJustDropped)
+			{
+				m_bFilesJustDropped = false;
+				ImGui::OpenPopup("DropFilesMenu");
+			}
+
+			if (ImGui::BeginPopup("DropFilesMenu"))
+			{
+				if (m_oDropedFiles.size() == 1)
+				{
+					ImGui::TextDisabled("%s", m_oDropedFiles[0].c_str());
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Open"))
+					{
+						Program::GetInstance()->LoadFile(m_oDropedFiles[0].c_str());
+						m_oDropedFiles.clear();
+					}
+				}
+
+				if (oTexture.IsValid())
+				{
+					if (ImGui::MenuItem("Import(s) as mip maps and regenerate intermediate mips"))
+					{
+						Core::Array<Graphics::Texture> oTextures;
+						oTextures.push_back(Graphics::Texture()); // Add empty texture in first
+						LoadTextures(&oTextures, m_oDropedFiles); // Load and sort texture, empty textures in first
+						oTexture.Swap(oTextures.front()); // Swap first empty texture with current Texture
+
+						Graphics::Texture oNewTexture;
+						ErrorCode oRes = Graphics::AssembleTextureMipmap(&oNewTexture, oTextures.data(), oTextures.size(), true);
+						if (oRes == ErrorCode::Ok)
+						{
+							oTexture.Swap(oNewTexture);
+							Program::GetInstance()->UpdateTexture2DRes();
+						}
+						else
+						{
+							Core::LogError("WorkAreaWindow", "%s", oRes.ToString());
+							oTexture.Swap(oTextures.front()); // Unswap current texture
+						}
+					}
+
+					if (ImGui::MenuItem("Import(s) as mip maps"))
+					{
+						Core::Array<Graphics::Texture> oTextures;
+						oTextures.push_back(Graphics::Texture()); // Add empty texture in first
+						LoadTextures(&oTextures, m_oDropedFiles); // Load and sort texture, empty textures in first
+						oTexture.Swap(oTextures.front()); // Swap first empty texture with current Texture
+
+						Graphics::Texture oNewTexture;
+						ErrorCode oRes = Graphics::AssembleTextureMipmap(&oNewTexture, oTextures.data(), oTextures.size(), false);
+						if (oRes == ErrorCode::Ok)
+						{
+							oTexture.Swap(oNewTexture);
+							Program::GetInstance()->UpdateTexture2DRes();
+						}
+						else
+						{
+							Core::LogError("WorkAreaWindow", "%s", oRes.ToString());
+							oTexture.Swap(oTextures.front()); // Unswap current texture
+						}
+					}
+
+				}
+
+				if (m_oDropedFiles.size() > 1)
+				{
+					if (oTexture.IsValid())
+						ImGui::Separator();
+
+					if (ImGui::MenuItem("Assemble as mip maps and generate intermediate mips to new texture"))
+					{
+						Core::Array<Graphics::Texture> oTextures;
+						LoadTextures(&oTextures, m_oDropedFiles);
+
+						Graphics::Texture oNewTexture;
+						ErrorCode oRes = Graphics::AssembleTextureMipmap(&oNewTexture, oTextures.data(), oTextures.size(), true);
+						if (oRes == ErrorCode::Ok)
+						{
+							oTexture.Swap(oNewTexture);
+							Program::GetInstance()->UpdateTexture2DRes();
+						}
+						else
+						{
+							Core::LogError("WorkAreaWindow", "%s", oRes.ToString());
+						}
+					}
+				}
+
+				ImGui::EndPopup();
+			}
+		}
 	}
 
 	void WorkAreaWindow::OnDropFiles(int iCount, char** pFiles, const ImVec2& /*oPos*/)
 	{
-		if (iCount == 1)
+		Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
+		if (oTexture.IsValid() == false && iCount == 1)
 		{
 			Program::GetInstance()->LoadFile(pFiles[0]);
 		}
+		else
+		{
+			m_oDropedFiles.resize(iCount);
+			for (int i = 0; i < iCount; ++i)
+			{
+				m_oDropedFiles[i] = pFiles[i];
+			}
+			m_bFilesJustDropped = true;
+		}
+	}
+
+	void WorkAreaWindow::LoadTextures(Core::Array<Graphics::Texture>* pTextures, const Core::Array<Core::String>& oFiles)
+	{
+		for (int i = 0; i < oFiles.size(); ++i)
+		{
+			Graphics::Texture oTemp;
+			if (Texture::LoadFromFile(&oTemp, oFiles[i].c_str()) != ErrorCode::Ok)
+			{
+				Core::LogError("WorkAreaWindow", "Input file '%s' is not a valid image file", oFiles[i].c_str());
+				continue;
+			}
+
+			pTextures->push_back(Graphics::Texture()); // Push empty texture
+			pTextures->back().Swap(oTemp); // Swap pushed texture with temporary texture
+		}
+
+		pTextures->Sort([](const Graphics::Texture* pLeftTex, const Graphics::Texture* pRightTex)
+		{
+			if (pLeftTex->IsValid() == false && pRightTex->IsValid())
+				return -1;
+			if (pRightTex->IsValid() == false && pLeftTex->IsValid())
+				return 1;
+
+			uint16_t iMaxSizeLeft = Math::Max(pLeftTex->GetWidth(), pLeftTex->GetHeight());
+			uint16_t iMaxSizeRight = Math::Max(pRightTex->GetWidth(), pRightTex->GetHeight());
+
+			return iMaxSizeRight - iMaxSizeLeft;
+
+		});
 	}
 }
 //namespace Windows
