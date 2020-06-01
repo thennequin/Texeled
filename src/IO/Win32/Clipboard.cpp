@@ -211,11 +211,11 @@ namespace IO
 
 				CORE_PTR_VOID pBitmapData = Core::ToPointer((LPSTR)pBitmapInfo + pBitmapInfo->bmiHeader.biSize, oTextureDesc.iHeight * oTextureDesc.iWidth * iInputPixelByteCount);
 
-				const Graphics::Texture::SliceData oSlideData = pOutTexture->GetSliceData(0, 0, 0);
+				const Graphics::Texture::SliceData oSliceData = pOutTexture->GetSliceData(0, 0, 0);
 				for (int iY = 0; iY < oTextureDesc.iHeight; ++iY)
 				{
 					CORE_PTR(char) pRowIn = CORE_PTR_CAST(char, pBitmapData) + iY * oTextureDesc.iWidth * iInputPixelByteCount;
-					CORE_PTR(char) pRowOut = CORE_PTR_CAST(char, oSlideData.pData) + (oTextureDesc.iHeight - iY - 1) * oSlideData.iPitch;
+					CORE_PTR(char) pRowOut = CORE_PTR_CAST(char, oSliceData.pData) + (oTextureDesc.iHeight - iY - 1) * oSliceData.iPitch;
 
 #ifndef DEBUG
 #pragma omp parallel for
