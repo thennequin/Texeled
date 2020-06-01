@@ -102,9 +102,10 @@ void Toolbar::OnToolBar()
 
 	Graphics::Texture& oTexture = Program::GetInstance()->GetTexture();
 
-	ImGui::PushItemWidth(200.f);
 	ImGui::SameLine();
+	ImGui::PushItemWidth(200.f);
 	ImGui::SliderInt("##Mip", &oDisplay.iMip, 0, Math::Max(0, oTexture.GetMipCount() - 1), "Mip:%.0f");
+	ImGui::PopItemWidth();
 
 	if (ImGui::IsItemHovered())
 	{
@@ -126,6 +127,7 @@ void Toolbar::OnToolBar()
 	Graphics::Texture::FaceFlags iFaces = oTexture.GetFaces();
 	if (iFaces != Graphics::Texture::FaceFlag::NONE)
 	{
+		ImGui::PushItemWidth(50.f);
 		Graphics::Texture::FaceFlag eCurrentFace = Graphics::Texture::GetFace(iFaces, oDisplay.iSlice);
 		if (ImGui::BeginCombo("##Face", Graphics::Texture::FaceFlagString[eCurrentFace]))
 		{
@@ -141,10 +143,13 @@ void Toolbar::OnToolBar()
 
 			ImGui::EndCombo();
 		}
+		ImGui::PopItemWidth();
 	}
 	else
 	{
+		ImGui::PushItemWidth(200.f);
 		ImGui::SliderInt("##Slice", &oDisplay.iSlice, 0, Math::Max(0, oTexture.GetSliceCount() - 1), "Slice:%.0f");
+		ImGui::PopItemWidth();
 	}
 
 	if (ImGui::IsItemHovered())
@@ -162,8 +167,6 @@ void Toolbar::OnToolBar()
 				oDisplay.iSlice++;
 		}
 	}
-
-	ImGui::PopItemWidth();
 
 	ImGui::Checkbox("Show pixel grid", &oDisplay.bShowPixelGrid);
 
