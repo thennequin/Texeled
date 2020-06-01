@@ -766,7 +766,7 @@ namespace Graphics
 			uint16_t iIntermediateMips = 0;
 			for (int i = 0; i < iTextureCount; ++i)
 			{
-				const Texture& oTexture = pTextures[i - 1];
+				const Texture& oTexture = pTextures[i];
 
 				if (oTexture.IsValid() == false)
 				{
