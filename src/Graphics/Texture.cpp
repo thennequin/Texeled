@@ -10,16 +10,16 @@ using namespace Graphics;
 
 const char* const Texture::FaceFlagString[FaceFlag::_MAX_VALUE] = {
 	NULL,
-	"PosX",
-	"NegX",
+	"+X",
+	"-X",
 	NULL,
-	"PosY",
+	"+Y",
 	NULL, NULL, NULL,
-	"NegY",
+	"-Y",
 	NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	"PosZ",
+	"+Z",
 	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	"NegZ",
+	"-Z",
 };
 
 Texture::FaceFlag Texture::GetFace(FaceFlags iFaces, int iIndex)
