@@ -353,9 +353,9 @@ void Menus::OnMenu()
 
 		if (ImGuiUtils::MenuItemPlus("Regenerate current mip map", NULL, NULL, NULL, false, bIsResizablePixelFormat && oDisplayOptions.iMip > 0, (ImTextureID)m_pIconCurrentMipMap->GetTextureView()))
 		{
-			uint16_t iMissingMipsMask = 1 << oDisplayOptions.iMip;
+			uint16_t iCurrentMipMask = 1 << oDisplayOptions.iMip;
 
-			if (Graphics::GenerateMips(&oTexture, &oTexture, iMissingMipsMask) == ErrorCode::Ok)
+			if (Graphics::GenerateMips(&oTexture, &oTexture, iCurrentMipMask) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
 		}
 
