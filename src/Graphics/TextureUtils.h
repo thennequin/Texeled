@@ -29,6 +29,8 @@ namespace Graphics
 	bool			GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::FaceFlag eFace, int* pOutX, int* pOutY);
 
 	ErrorCode		ConvertTextureToCubemap(const Graphics::Texture& oTexture, Graphics::Texture* pOutCubemap);
+
+	ErrorCode		AssembleTextureMipmap(Texture* pOutTexture, const Texture* pTextures, uint8_t iTextureCount, bool bRegenerateIntermediate);
 }
 
 #endif //__GRAPHICS_TEXTURE_UTILS_H__

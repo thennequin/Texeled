@@ -632,4 +632,169 @@ namespace Graphics
 
 		return GenerateMips(pTexture, pOutTexture, iMissingMipsMask);
 	}
+
+	int MipLevelDiff(int iWidthA, int iHeightA, int iWidthB, int iHeightB)
+	{
+		int iMipLevelA = Math::HighBitLast(Math::Max(iWidthA, iHeightA));
+		int iMipLevelB = Math::HighBitLast(Math::Max(iWidthB, iHeightB));
+
+		return iMipLevelA - iMipLevelB;
+	}
+
+	bool IsSizeRatioEqual(int iWidthA, int iHeightA, int iWidthB, int iHeightB)
+	{
+		int iMipLevelA = Math::HighBitLast(Math::Max(iWidthA, iHeightA));
+		int iMipLevelB = Math::HighBitLast(Math::Max(iWidthB, iHeightB));
+		if (iMipLevelA > iMipLevelB)
+		{
+			return Math::Max(1, (iWidthA >> (iMipLevelA - iMipLevelB))) == iWidthB
+				&& Math::Max(1, (iHeightA >> (iMipLevelA - iMipLevelB))) == iHeightB;
+		}
+		else
+		{
+			return Math::Max(1, (iWidthB >> (iMipLevelB - iMipLevelA))) == iWidthA
+				&& Math::Max(1, (iHeightB >> (iMipLevelB - iMipLevelA))) == iHeightA;
+		}
+	}
+
+	ErrorCode AssembleTextureMipmap(Texture* pOutTexture, const Texture* pTextures, uint8_t iTextureCount, bool bRegenerateIntermediate)
+	{
+		PixelFormatEnum ePixelFormat = PixelFormatEnum::_NONE;
+		uint32_t iWidth = 0;
+		uint32_t iHeight = 0;
+
+		uint8_t iMipLevelMin = Texture::c_iMaxMip;
+		uint8_t iMipLevelMax = 0;
+
+		// Check textures specs
+		for (int i = 0; i < iTextureCount; ++i)
+		{
+			const Texture& oTexture = pTextures[i];
+
+			if (oTexture.IsValid() == false)
+			{
+				//return ErrorCode(1, "Invalid Texture");
+				continue;
+			}
+
+			if (ePixelFormat == PixelFormatEnum::_NONE)
+			{
+				ePixelFormat = oTexture.GetPixelFormat();
+				iWidth = oTexture.GetWidth();
+				iHeight = oTexture.GetHeight();
+			}
+			else
+			{
+				if (ePixelFormat != oTexture.GetPixelFormat())
+				{
+					return ErrorCode(1, "Different pixel format");
+				}
+
+				if (iWidth < oTexture.GetWidth())
+					iWidth = oTexture.GetWidth();
+				if (iHeight < oTexture.GetHeight())
+					iHeight = oTexture.GetHeight();
+
+				if (IsSizeRatioEqual(iWidth, iHeight, oTexture.GetWidth(), oTexture.GetHeight()) == false)
+				{
+					return ErrorCode(1, "Different texture size");
+				}
+			}
+
+			uint8_t iTextureMipLevelMax = Math::HighBitLast(Math::Max(oTexture.GetWidth(), oTexture.GetHeight()));
+			uint8_t iTextureMipLevelMin = iTextureMipLevelMax - (oTexture.GetMipCount());
+
+			if (iMipLevelMax < iTextureMipLevelMax)
+				iMipLevelMax = iTextureMipLevelMax;
+			if (iMipLevelMin > iTextureMipLevelMin)
+				iMipLevelMin = iTextureMipLevelMin;
+		}
+
+		if (ePixelFormat == PixelFormatEnum::_NONE)
+		{
+			return ErrorCode(1, "No valid input texture");
+		}
+
+		const uint8_t iMaxMipCount = Math::HighBitLast(Math::Max(iWidth, iHeight));
+
+		Graphics::Texture oAssemblyTexture;
+		Graphics::Texture::Desc oDesc;
+		oDesc.ePixelFormat = ePixelFormat;
+		oDesc.iWidth = iWidth;
+		oDesc.iHeight = iHeight;
+		oDesc.iMipCount = iMipLevelMax - iMipLevelMin;
+		ErrorCode oErr = oAssemblyTexture.Create(oDesc);
+		if (oErr != ErrorCode::Ok)
+		{
+			return ErrorCode(1, "Can't create temp texture");
+		}
+
+		uint16_t iImportedMipsMask = 0;
+		for (int i = iTextureCount; i > 0; --i)
+		{
+			const Texture& oTexture = pTextures[i - 1];
+
+			if (oTexture.IsValid() == false)
+			{
+				continue;
+			}
+
+			int iMipDiff = MipLevelDiff(oTexture.GetWidth(), oTexture.GetHeight(), iWidth, iHeight);
+
+			for (int iMip = 0; iMip < oTexture.GetMipCount(); ++iMip)
+			{
+				uint8_t iDstMip = iMip - iMipDiff;
+				uint16_t iMipMask = 1 << iDstMip;
+
+				if ((iImportedMipsMask & iMipMask) != 0)
+				{
+					// Mip level already copied, skip it
+					continue;
+				}
+
+				iImportedMipsMask |= iMipMask;
+
+				Graphics::Texture::SliceData oDst = oAssemblyTexture.GetSliceData(0, iDstMip, 0);
+				Graphics::Texture::SliceData oSrc = oTexture.GetSliceData(0, iMip, 0);
+
+				Core::MemCpy(oDst.pData, oSrc.pData, oSrc.iSize);
+			}
+		}
+
+		if (bRegenerateIntermediate)
+		{
+			uint16_t iIntermediateMips = 0;
+			for (int i = 0; i < iTextureCount; ++i)
+			{
+				const Texture& oTexture = pTextures[i - 1];
+
+				if (oTexture.IsValid() == false)
+				{
+					continue;
+				}
+
+				int iMipDiff = MipLevelDiff(oTexture.GetWidth(), oTexture.GetHeight(), iWidth, iHeight);
+
+				int iMip = oTexture.GetMipCount() - 1;
+				uint8_t iDstMip = iMip - iMipDiff;
+				uint16_t iMipMask = 1 << (iDstMip);
+
+				iIntermediateMips |= Math::HighBitFill(Texture::c_iMaxMip, iDstMip + 1);
+				iIntermediateMips &= ~iMipMask;
+			}
+
+			iIntermediateMips &= Math::HighBitFill(oDesc.iMipCount, 0);
+
+			ErrorCode iRes = GenerateMips(&oAssemblyTexture, &oAssemblyTexture, iIntermediateMips);
+			if (iRes != ErrorCode::Ok)
+			{
+				pOutTexture->Swap(oAssemblyTexture);
+				return iRes;
+			}
+		}
+
+		pOutTexture->Swap(oAssemblyTexture);
+
+		return ErrorCode::Ok;
+	}
 }
