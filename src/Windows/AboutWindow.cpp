@@ -113,9 +113,9 @@ namespace Windows
 
 			ImGui::Dummy(vDummySize);
 
-			ImGui::Text("stb_image v2.23");
-			ImGui::Text("stb_image_write v1.13");
-			ImGui::Text("stb_image_resize v0.96");
+			ImGui::Text("stb_image v2.25");
+			ImGui::Text("stb_image_write v1.14");
+			ImGui::Text("stb_image_resize v0.97");
 			ImGuiUtils::Link("https://github.com/nothings/stb");
 
 			ImGui::Dummy(vDummySize);
