@@ -135,7 +135,7 @@ namespace Windows
 
 			ImGui::Dummy(vDummySize);
 
-			ImGui::Text("CMP_Core from Compressonator");
+			ImGui::Text("CMP_Core from Compressonator 4.0.4855");
 			ImGuiUtils::Link("https://github.com/GPUOpen-Tools/Compressonator");
 		}
 		ImGui::EndChild();
