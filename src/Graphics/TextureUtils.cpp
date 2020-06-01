@@ -690,15 +690,15 @@ namespace Graphics
 					return ErrorCode(1, "Different pixel format");
 				}
 
-				if (iWidth < oTexture.GetWidth())
-					iWidth = oTexture.GetWidth();
-				if (iHeight < oTexture.GetHeight())
-					iHeight = oTexture.GetHeight();
-
 				if (IsSizeRatioEqual(iWidth, iHeight, oTexture.GetWidth(), oTexture.GetHeight()) == false)
 				{
 					return ErrorCode(1, "Different texture size");
 				}
+
+				if (iWidth < oTexture.GetWidth())
+					iWidth = oTexture.GetWidth();
+				if (iHeight < oTexture.GetHeight())
+					iHeight = oTexture.GetHeight();
 			}
 
 			uint8_t iTextureMipLevelMax = Math::HighBitLast(Math::Max(oTexture.GetWidth(), oTexture.GetHeight()));
