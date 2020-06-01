@@ -22,6 +22,7 @@
 #include "Resources/Icons/Resize_16_png.h"
 #include "Resources/Icons/MipMap_16_png.h"
 #include "Resources/Icons/MissingMipMap_16_png.h"
+#include "Resources/Icons/CurrentMipMap_16_png.h"
 #include "Resources/Icons/Cut_16_png.h"
 #include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
@@ -40,6 +41,7 @@ Menus::Menus()
 	, m_pIconResize(NULL)
 	, m_pIconMipMap(NULL)
 	, m_pIconMissingMipMap(NULL)
+	, m_pIconCurrentMipMap(NULL)
 	, m_pIconCut(NULL)
 	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
@@ -118,6 +120,15 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconMissingMipMap));
+		}
+	}
+	// CurrentMipMap
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::CurrentMipMap_16_png::Data, Resources::Icons::CurrentMipMap_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconCurrentMipMap));
 		}
 	}
 	// Cut
@@ -200,6 +211,12 @@ Menus::~Menus()
 		m_pIconMissingMipMap = NULL;
 	}
 
+	if (m_pIconCurrentMipMap != NULL)
+	{
+		delete m_pIconCurrentMipMap;
+		m_pIconCurrentMipMap = NULL;
+	}
+
 	if (m_pIconCut != NULL)
 	{
 		delete m_pIconCut;
@@ -222,6 +239,7 @@ Menus::~Menus()
 void Menus::OnMenu()
 {
 	Program* pProgram = Program::GetInstance();
+	const DisplayOptions& oDisplayOptions = pProgram->GetDisplayOptions();
 	Graphics::Texture& oTexture = pProgram->GetTexture();
 	const Shortkeys& oShortkeys = pProgram->GetShortkeys();
 	const Fonts& oFonts = pProgram->GetFonts();
@@ -333,10 +351,18 @@ void Menus::OnMenu()
 				Program::GetInstance()->UpdateTexture2DRes();
 		}
 
-		if (ImGuiUtils::MenuItemPlus("Delete mips after current mip", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconCut->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Regenerate current mip map", NULL, NULL, NULL, false, bIsResizablePixelFormat && oDisplayOptions.iMip > 0, (ImTextureID)m_pIconCurrentMipMap->GetTextureView()))
+		{
+			uint16_t iMissingMipsMask = 1 << oDisplayOptions.iMip;
+
+			if (Graphics::GenerateMips(&oTexture, &oTexture, iMissingMipsMask) == ErrorCode::Ok)
+				Program::GetInstance()->UpdateTexture2DRes();
+		}
+
+		if (ImGuiUtils::MenuItemPlus("Delete mips after current mip", NULL, NULL, NULL, false, bIsResizablePixelFormat && oDisplayOptions.iMip < (oTexture.GetMipCount() - 1), (ImTextureID)m_pIconCut->GetTextureView()))
 		{
 			Graphics::Texture::Desc oDesc = oTexture.GetDesc();
-			oDesc.iMipCount = pProgram->GetDisplayOptions().iMip + 1;
+			oDesc.iMipCount = oDisplayOptions.iMip + 1;
 			Graphics::Texture oNewTexture;
 			if (oNewTexture.Create(oDesc) == ErrorCode::Ok)
 			{
