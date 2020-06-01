@@ -23,6 +23,7 @@ namespace Graphics
 	bool			IsPixelFormatResizable(PixelFormatEnum ePixelFormat);
 	ErrorCode		ResizeTexture(const Texture* pTexture, Texture* pOutTexture, int iNewWidth, int iNewHeight);
 	ErrorCode		GenerateMips(const Texture* pTexture, Texture* pOutTexture, uint16_t iMips = 0xFFFF);
+	ErrorCode		GenerateMissingMips(const Texture* pTexture, Texture* pOutTexture);
 
 	bool			DetermineCubemapFormatFromImageSize(int iWidth, int iHeight, ECubemapFormat* pOutFormat, int* pOutFaceSize);
 	bool			GetCubemapFacePos(int iWidth, int iHeight, ECubemapFormat eFormat, Texture::FaceFlag eFace, int* pOutX, int* pOutY);

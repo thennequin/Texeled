@@ -343,11 +343,7 @@ void Menus::OnMenu()
 
 		if (ImGuiUtils::MenuItemPlus("Generate missing mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMissingMipMap->GetTextureView()))
 		{
-			// Generate mip mask
-			uint16_t iMissingMipsMask = oTexture.GetMipCount();
-			iMissingMipsMask = (0xFFFF >> iMissingMipsMask) << iMissingMipsMask;
-
-			if (Graphics::GenerateMips(&oTexture, &oTexture, iMissingMipsMask) == ErrorCode::Ok)
+			if (Graphics::GenerateMissingMips(&oTexture, &oTexture) == ErrorCode::Ok)
 				Program::GetInstance()->UpdateTexture2DRes();
 		}
 

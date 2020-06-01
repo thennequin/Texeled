@@ -620,4 +620,16 @@ namespace Graphics
 
 		return ErrorCode::Ok;
 	}
+
+	ErrorCode GenerateMissingMips(const Texture* pTexture, Texture* pOutTexture)
+	{
+		if (pTexture == NULL || pOutTexture == NULL || pTexture->IsValid() == false)
+			return ErrorCode::InvalidArgument;
+
+		// Generate mip mask
+		uint16_t iMissingMipsMask = pTexture->GetMipCount();
+		iMissingMipsMask = (0xFFFF >> iMissingMipsMask) << iMissingMipsMask;
+
+		return GenerateMips(pTexture, pOutTexture, iMissingMipsMask);
+	}
 }
