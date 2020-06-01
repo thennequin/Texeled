@@ -788,7 +788,6 @@ namespace Graphics
 			ErrorCode iRes = GenerateMips(&oAssemblyTexture, &oAssemblyTexture, iIntermediateMips);
 			if (iRes != ErrorCode::Ok)
 			{
-				pOutTexture->Swap(oAssemblyTexture);
 				return iRes;
 			}
 		}
