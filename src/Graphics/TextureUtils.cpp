@@ -553,7 +553,7 @@ namespace Graphics
 
 		int iSize = Math::Max(pTexture->GetWidth(), pTexture->GetHeight());
 		int iMaxMipCount = Math::HighBitLast(iSize);
-		int iMipCount = Math::HighBitLast(iMipsMask);
+		int iMipCount = Math::Max(pOutTexture->GetMipCount(), Math::HighBitLast(iMipsMask));
 		if (iMipCount > iMaxMipCount)
 			iMipCount = iMaxMipCount;
 
