@@ -16,6 +16,7 @@
 
 #include "Resources/Icons/Open_16_png.h"
 #include "Resources/Icons/Save_16_png.h"
+#include "Resources/Icons/SaveAs_16_png.h"
 #include "Resources/Icons/Previous_16_png.h"
 #include "Resources/Icons/Next_16_png.h"
 #include "Resources/Icons/Exit_16_png.h"
@@ -35,6 +36,7 @@ Menus::Menus()
 	, m_fResizeRatio(0.f)
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
+	, m_pIconSaveAs( NULL )
 	, m_pIconPrevious(NULL)
 	, m_pIconNext(NULL)
 	, m_pIconExit(NULL)
@@ -66,6 +68,15 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconSave));
+		}
+	}
+	// SaveAs
+	{
+		IO::MemoryStream oMemStream( Resources::Icons::SaveAs_16_png::Data, Resources::Icons::SaveAs_16_png::Size );
+		CORE_VERIFY( Texture::LoadFromStream( &oTexture, &oMemStream ) == ErrorCode::Ok );
+		if( oTexture.IsValid() )
+		{
+			CORE_VERIFY_OK( GraphicResources::Texture2D::CreateFromTexture( &oTexture, &m_pIconSaveAs ) );
 		}
 	}
 	// Previous
@@ -175,6 +186,12 @@ Menus::~Menus()
 		m_pIconSave = NULL;
 	}
 
+	if( m_pIconSaveAs != NULL )
+	{
+		delete m_pIconSaveAs;
+		m_pIconSaveAs = NULL;
+	}
+
 	if (m_pIconPrevious != NULL)
 	{
 		delete m_pIconPrevious;
@@ -254,7 +271,7 @@ void Menus::OnMenu()
 		{
 			pProgram->Save();
 		}
-		if (ImGuiUtils::MenuItemPlus("Save as", NULL, oShortkeys.pSaveAs->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid()))
+		if (ImGuiUtils::MenuItemPlus("Save as", NULL, oShortkeys.pSaveAs->m_sShortKey.c_str(), oFonts.pFontConsolas, false, oTexture.IsValid(), (ImTextureID)m_pIconSaveAs->GetTextureView() ))
 		{
 			pProgram->SaveAs();
 		}
