@@ -26,12 +26,12 @@ namespace Math
 
 	uint8_t HighBitLast(uint64_t iNumber)
 	{
-		uint8_t iBit = 63;
+		int8_t iBit = 63;
 		do
 		{
 			if (((iNumber >> iBit) & 1) != 0)
 				return iBit + 1;
-		} while ((--iBit) > 0);
+		} while ((--iBit) >= 0);
 
 		return 0;
 	}
