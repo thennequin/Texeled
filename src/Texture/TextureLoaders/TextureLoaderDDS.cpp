@@ -75,7 +75,7 @@ namespace Texture
 			if (oDDSHeader.iCubemapFlags & DDS_CUBEMAP_NEGATIVEZ)
 				oDesc.eFaces |= Graphics::Texture::FaceFlag::NEG_Z;
 
-			if (oDDSHeader.iDepth != 0 && oDesc.eFaces != Graphics::Texture::FaceFlag::NONE)
+			if (oDDSHeader.iDepth > 1 && oDesc.eFaces != Graphics::Texture::FaceFlag::NONE)
 			{
 				return ErrorCode(1, "Not supported or invalid DDS, contains depth and cubemap faces");
 			}
