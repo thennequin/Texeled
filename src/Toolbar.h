@@ -10,6 +10,7 @@ public:
 	~Toolbar();
 	virtual void				OnToolBar();
 protected:
+	int							m_iBackupSlice;
 	float						m_fBackupGamma;
 };
 

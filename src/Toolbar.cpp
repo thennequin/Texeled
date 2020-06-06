@@ -7,7 +7,8 @@
 #include "ImGuiUtils.h"
 
 Toolbar::Toolbar()
-	: m_fBackupGamma(-1.f)
+	: m_iBackupSlice(-1)
+	, m_fBackupGamma(-1.f)
 {
 
 }
@@ -131,14 +132,31 @@ void Toolbar::OnToolBar()
 		Graphics::Texture::FaceFlag eCurrentFace = Graphics::Texture::GetFace(iFaces, oDisplay.iSlice);
 		if (ImGui::BeginCombo("##Face", Graphics::Texture::FaceFlagString[eCurrentFace]))
 		{
+			int iHoverValue = -1;
 			uint8_t iNextBit = 0;
 			while ((iNextBit = Math::HighBitNext(iNextBit, iFaces)) != 0)
 			{
 				Graphics::Texture::FaceFlag eFace = (Graphics::Texture::FaceFlag)(1 << (iNextBit - 1));
+				int iSlice = Graphics::Texture::GetFaceIndex(iFaces, eFace);
 				if (ImGui::Selectable(Graphics::Texture::FaceFlagString[eFace], eFace == eCurrentFace))
 				{
-					oDisplay.iSlice = Graphics::Texture::GetFaceIndex(iFaces, eFace);
+					oDisplay.iSlice = iSlice;
 				}
+
+				if (ImGui::IsItemHovered())
+				{
+					if (m_iBackupSlice == -1)
+						m_iBackupSlice = oDisplay.iSlice;
+
+					oDisplay.iSlice = iSlice;
+					iHoverValue = iSlice;
+				}
+			}
+
+			if (iHoverValue == -1 && m_iBackupSlice != -1)
+			{
+				oDisplay.iSlice = m_iBackupSlice;
+				m_iBackupSlice = -1;
 			}
 
 			ImGui::EndCombo();
