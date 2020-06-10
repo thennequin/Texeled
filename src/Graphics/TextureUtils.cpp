@@ -347,16 +347,11 @@ namespace Graphics
 			}
 
 			Texture oNewTexture;
-			Texture::Desc oNewDesc;
+			Texture::Desc oNewDesc = pTexture->GetDesc();
 			oNewDesc.ePixelFormat = eWantedPixelFormat;
-			oNewDesc.iWidth = pTexture->GetWidth();
-			oNewDesc.iHeight = pTexture->GetHeight();
-			oNewDesc.iMipCount = pTexture->GetMipCount();
-			oNewDesc.iSliceCount = pTexture->GetSliceCount();
-			if (oNewTexture.Create(oNewDesc) != ErrorCode::Ok)
-			{
-				return ErrorCode(1, "Can't create new Texture");
-			}
+			ErrorCode oErr = oNewTexture.Create(oNewDesc);
+			if (oErr != ErrorCode::Ok)
+				return oErr;
 
 			size_t iTotalSize = 0;
 			for (int iMipIndex = 0, iMipCount = pTexture->GetMipCount(); iMipIndex < iMipCount; ++iMipIndex)
@@ -558,12 +553,8 @@ namespace Graphics
 			iMipCount = iMaxMipCount;
 
 		Texture oTemp;
-		Texture::Desc oDesc;
-		oDesc.ePixelFormat = pTexture->GetPixelFormat();
-		oDesc.iWidth = pTexture->GetWidth();
-		oDesc.iHeight = pTexture->GetHeight();
+		Texture::Desc oDesc = pTexture->GetDesc();
 		oDesc.iMipCount = iMipCount;
-		oDesc.iSliceCount = pTexture->GetSliceCount();
 		ErrorCode oErr = oTemp.Create(oDesc);
 		if (oErr != ErrorCode::Ok)
 			return oErr;
