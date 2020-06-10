@@ -9,7 +9,7 @@ namespace Texture
 {
 	namespace TextureWriter
 	{
-		ESupportedWriter TextureWriterSupportedEXR(Graphics::Texture* pTexture)
+		ESupportedWriter TextureWriterSupportedEXR(const Graphics::Texture* pTexture)
 		{
 			if (pTexture->GetMipCount() != 1 || pTexture->GetSliceCount() != 1)
 			{
@@ -50,7 +50,7 @@ namespace Texture
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterEXR(Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
+		bool TextureWriterEXR(const Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
 		{
 			Graphics::Texture oNewTexture;
 

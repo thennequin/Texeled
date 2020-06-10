@@ -122,7 +122,7 @@ namespace Texture
 		return pSettings;
 	}
 
-	ErrorCode SaveToStream(Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToStream(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{
@@ -160,7 +160,7 @@ namespace Texture
 		return ErrorCode(1, "Invalid arguments");
 	}
 
-	ErrorCode SaveToFile(Graphics::Texture* pTexture, const void* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter)
+	ErrorCode SaveToFile(const Graphics::Texture* pTexture, const void* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter)
 	{
 		if (pTexture != NULL)
 		{

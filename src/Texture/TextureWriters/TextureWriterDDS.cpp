@@ -10,12 +10,12 @@ namespace Texture
 {
 	namespace TextureWriter
 	{
-		ESupportedWriter TextureWriterSupportedDDS(Graphics::Texture* pTexture)
+		ESupportedWriter TextureWriterSupportedDDS(const Graphics::Texture* pTexture)
 		{
 			return E_SUPPORTED_WRITER_FULL;
 		}
 
-		bool TextureWriterDDS(Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
+		bool TextureWriterDDS(const Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
 		{
 			uint32_t iDDSMagic = DDS_MAGIC;
 			DDS_HEADER oDDSHeader;

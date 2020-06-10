@@ -28,8 +28,8 @@ namespace Texture
 	};
 	typedef _SettingType::Enum SettingType;
 
-	typedef ESupportedWriter(*TextureWriterSupportedFunc)(Graphics::Texture* pTexture);
-	typedef bool(*TextureWriterFunc)(Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream);
+	typedef ESupportedWriter(*TextureWriterSupportedFunc)(const Graphics::Texture* pTexture);
+	typedef bool(*TextureWriterFunc)(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream);
 
 	typedef struct
 	{
@@ -86,8 +86,8 @@ namespace Texture
 
 	void*							CreateSettingsStruct(const TextureWriterInfo* pWriterInfo);
 
-	ErrorCode						SaveToStream(Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
-	ErrorCode						SaveToFile(Graphics::Texture* pTexture, const void* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToStream(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	ErrorCode						SaveToFile(const Graphics::Texture* pTexture, const void* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
 	void							GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount);
 }
 //namspace Texture

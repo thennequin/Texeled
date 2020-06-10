@@ -9,7 +9,7 @@ namespace Texture
 {
 	namespace TextureWriter
 	{
-		ESupportedWriter TextureWriterSupportedPNG(Graphics::Texture* pTexture)
+		ESupportedWriter TextureWriterSupportedPNG(const Graphics::Texture* pTexture)
 		{
 			if (pTexture->GetMipCount() != 1 || pTexture->GetSliceCount() != 1)
 			{
@@ -58,7 +58,7 @@ namespace Texture
 			CORE_VERIFY(pStream->Write(pData, iSize) == iSize);
 		}
 
-		bool TextureWriterPNG(Graphics::Texture* pTexture, const void* /*pSettings*/, IO::Stream* pStream)
+		bool TextureWriterPNG(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream)
 		{
 			Graphics::Texture oNewTexture;
 
