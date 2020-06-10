@@ -20,6 +20,7 @@
 #include "Resources/Icons/Previous_16_png.h"
 #include "Resources/Icons/Next_16_png.h"
 #include "Resources/Icons/Exit_16_png.h"
+#include "Resources/Icons/Convert_16_png.h"
 #include "Resources/Icons/Resize_16_png.h"
 #include "Resources/Icons/MipMap_16_png.h"
 #include "Resources/Icons/MissingMipMap_16_png.h"
@@ -40,6 +41,7 @@ Menus::Menus()
 	, m_pIconPrevious(NULL)
 	, m_pIconNext(NULL)
 	, m_pIconExit(NULL)
+	, m_pIconConvert(NULL)
 	, m_pIconResize(NULL)
 	, m_pIconMipMap(NULL)
 	, m_pIconMissingMipMap(NULL)
@@ -104,6 +106,15 @@ Menus::Menus()
 		if (oTexture.IsValid())
 		{
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconExit));
+		}
+	}
+	// Convert
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Convert_16_png::Data, Resources::Icons::Convert_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconConvert));
 		}
 	}
 	// Resize
@@ -210,6 +221,12 @@ Menus::~Menus()
 		m_pIconExit = NULL;
 	}
 
+	if (m_pIconConvert != NULL)
+	{
+		delete m_pIconConvert;
+		m_pIconConvert = NULL;
+	}
+
 	if (m_pIconResize != NULL)
 	{
 		delete m_pIconResize;
@@ -296,7 +313,7 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Edit"))
 	{
-		if (ImGuiUtils::BeginMenu("Convert pixel format to", oTexture.IsValid()))
+		if (ImGuiUtils::BeginMenu("Convert pixel format to", oTexture.IsValid(), (ImTextureID)m_pIconConvert->GetTextureView()))
 		{
 			static Graphics::PixelFormat::ConvertionInfoList s_oAvailableConvertionFormats;
 			static int s_iAvailableConvertionFormatCount = 0;
