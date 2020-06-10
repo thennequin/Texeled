@@ -255,9 +255,22 @@ namespace ImGuiUtils
 
 	const ImVec2 c_vMenuItemIconSize(16.f, 16.f);
 
-	bool BeginMenu(const char* pLabel, bool bEnabled)
+	bool BeginMenu(const char* pLabel, bool bEnabled, ImTextureID pIcon, ImVec4 vIconColor)
 	{
+		ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
+
 		ImGui::Dummy(c_vMenuItemIconSize);
+
+		if (pIcon != NULL)
+		{
+			ImVec2 vPos = ImGui::GetItemRectMin();
+			if (bEnabled == false)
+			{
+				vIconColor.w *= 0.5f;
+			}
+			pWindow->DrawList->AddImage(pIcon, vPos, vPos + c_vMenuItemIconSize, ImVec2(0.f, 0.f), ImVec2(1.f, 1.f), ImGui::GetColorU32(vIconColor));
+		}
+
 		ImGui::SameLine();
 		bool bOpen = ImGui::BeginMenu(pLabel, bEnabled);
 
