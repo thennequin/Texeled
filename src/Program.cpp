@@ -382,7 +382,10 @@ void Program::SaveAs()
 	char* pExts = oExts.Export();
 	if (PlatformUtils::SaveFileDialog("Save as", pExts, pBuffer, sizeof(pBuffer), &iSelectedIndex))
 	{
-		CORE_VERIFY_OK(Texture::SaveToFile(&m_oTexture, NULL, pBuffer, &pWriters[iSelectedIndex]));
+		const Texture::TextureWriterInfo& oWriter = pWriters[iSelectedIndex];
+
+		CORE_VERIFY_OK(Texture::SaveToFile(&m_oTexture, NULL, &oWriter, pBuffer));
+
 		LoadFile(pBuffer);
 	}
 	free(pExts);

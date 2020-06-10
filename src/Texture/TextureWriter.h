@@ -86,8 +86,9 @@ namespace Texture
 
 	void*							CreateSettingsStruct(const TextureWriterInfo* pWriterInfo);
 
-	ErrorCode						SaveToStream(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
-	ErrorCode						SaveToFile(const Graphics::Texture* pTexture, const void* pSettings, const char* pFilename, const TextureWriterInfo* pUseWriter = NULL);
+	const TextureWriterInfo*		RetrieveTextureWriterFromFilename(const char* pFilename);
+	ErrorCode						SaveToStream(const Graphics::Texture* pTexture, const void* pSettings, IO::Stream* pStream, const TextureWriterInfo* pWriter);
+	ErrorCode						SaveToFile(const Graphics::Texture* pTexture, const void* pSettings, const TextureWriterInfo* pWriter, const char* pFilename);
 	void							GetTextureWriters(const TextureWriterInfo** pOutWriters, int* pOutCount);
 }
 //namspace Texture
