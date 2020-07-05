@@ -4,7 +4,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3994ad06b426497191628431c945fa5e)](https://www.codacy.com/app/thennequin/Texeled?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=thennequin/Texeled&amp;utm_campaign=Badge_Grade)
 [![Code inspector](https://www.code-inspector.com/project/8737/score/svg)](https://frontend.code-inspector.com/project/8737/dashboard)
 
-[Download last Build](https://ci.appveyor.com/api/projects/thennequin/texeled/artifacts/.out/Texeled_x64.exe?branch=master&job=Configuration%3A%20Release;%20Platform%3A%20x64)
+[Download the latest development build](https://ci.appveyor.com/api/projects/thennequin/texeled/artifacts/.out/Texeled_x64.exe?branch=master&job=Configuration%3A%20Release;%20Platform%3A%20x64)
 
 Almost handmade simple texture viewer and editor for Windows written in C/C++
 
