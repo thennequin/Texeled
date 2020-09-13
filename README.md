@@ -3,6 +3,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4oxhg62kiwrglghb/branch/master?svg=true)](https://ci.appveyor.com/project/thennequin/texeled/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3994ad06b426497191628431c945fa5e)](https://www.codacy.com/app/thennequin/Texeled?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=thennequin/Texeled&amp;utm_campaign=Badge_Grade)
 [![Code inspector](https://www.code-inspector.com/project/8737/score/svg)](https://frontend.code-inspector.com/project/8737/dashboard)
+[![CodeFactor](https://www.codefactor.io/repository/github/thennequin/texeled/badge/master)](https://www.codefactor.io/repository/github/thennequin/texeled/overview/master)
 
 [Download the latest development build](https://ci.appveyor.com/api/projects/thennequin/texeled/artifacts/.out/Texeled_x64.exe?branch=master&job=Configuration%3A%20Release;%20Platform%3A%20x64)
 
