@@ -29,7 +29,7 @@ Support:
   - [x] JPG (via **stb_image**)
   - [x] TGA (via **stb_image**)
   - [x] BMP (via **stb_image**)
-  - [x] EXT (via **tinyexr**)
+  - [x] EXR (via **tinyexr**)
     
 - Writing:
   - [x] DDS
