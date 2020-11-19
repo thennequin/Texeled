@@ -26,6 +26,8 @@
 #include "Resources/Icons/MissingMipMap_16_png.h"
 #include "Resources/Icons/CurrentMipMap_16_png.h"
 #include "Resources/Icons/Cut_16_png.h"
+#include "Resources/Icons/Copy_16_png.h"
+#include "Resources/Icons/Paste_16_png.h"
 #include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
 
@@ -47,6 +49,8 @@ Menus::Menus()
 	, m_pIconMissingMipMap(NULL)
 	, m_pIconCurrentMipMap(NULL)
 	, m_pIconCut(NULL)
+	, m_pIconCopy(NULL)
+	, m_pIconPaste(NULL)
 	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
 {
@@ -162,6 +166,24 @@ Menus::Menus()
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconCut));
 		}
 	}
+	// Copy
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Copy_16_png::Data, Resources::Icons::Copy_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconCopy));
+		}
+	}
+	// Paste
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Paste_16_png::Data, Resources::Icons::Paste_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconPaste));
+		}
+	}
 	// Log
 	{
 		IO::MemoryStream oMemStream(Resources::Icons::Log_16_png::Data, Resources::Icons::Log_16_png::Size);
@@ -255,6 +277,18 @@ Menus::~Menus()
 	{
 		delete m_pIconCut;
 		m_pIconCut = NULL;
+	}
+
+	if (m_pIconCopy != NULL)
+	{
+		delete m_pIconCopy;
+		m_pIconCopy = NULL;
+	}
+
+	if (m_pIconPaste != NULL)
+	{
+		delete m_pIconPaste;
+		m_pIconPaste = NULL;
 	}
 
 	if (m_pIconLog != NULL)
