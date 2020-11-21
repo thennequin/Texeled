@@ -33,25 +33,53 @@ namespace Windows
 
 		struct PS_INPUT
 		{
-			float4 pos : SV_POSITION;
-			float4 col : COLOR0;
-			float2 uv : TEXCOORD0;
+			float4 vPos : SV_POSITION;
+			float4 vColor : COLOR0;
+			float2 vUV : TEXCOORD0;
 		};
 
 		float4 main(PS_INPUT input) : SV_Target
 		{
-			float4 out_col = input.col * texture0.SampleLevel(sampler0, float3(input.uv, TextureIndex), Mip);
+			int iWidth, iHeight, iElements, iMips;
+			texture0.GetDimensions(0, iWidth, iHeight, iElements, iMips);
+			float2 vTextureSize = float2(iWidth, iHeight);
 
-			out_col = (pow(out_col, 1.0 / Gamma) - Range0) / (Range1 - Range0);
+			float2 fDx  = ddx(input.vUV * vTextureSize);
+			float2 fDy  = ddy(input.vUV * vTextureSize);
 
-			out_col =
-				out_col.r * RedChannel
-				+ out_col.g * GreenChannel
-				+ out_col.b * BlueChannel
-				+ out_col.a * AlphaChannel
+			float fDeltaMaxSqr = max(dot(fDx, fDx), dot(fDy, fDy));
+			float fMipLevel = 0.5f * log2(fDeltaMaxSqr);
+			fMipLevel = clamp(fMipLevel, 0, iMips);
+			float2 fDist = fMipLevel / vTextureSize;
+
+			float4 vOutColor = texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-1.0f, 0.0f), TextureIndex), Mip);
+
+			// Poisson sampling
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.326f, -0.406f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.840f, -0.074f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.696f,  0.457f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.203f,  0.621f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.962f, -0.195f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.473f, -0.480f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.519f,  0.767f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.185f, -0.893f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.507f,  0.064f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2( 0.896f,  0.412f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.322f, -0.933f), TextureIndex), Mip);
+			vOutColor += texture0.SampleLevel(sampler0, float3(input.vUV + fDist * float2(-0.792f, -0.598f), TextureIndex), Mip);
+			vOutColor /= 13.f;
+
+			vOutColor *= input.vColor;
+			vOutColor = (pow(vOutColor, 1.0 / Gamma) - Range0) / (Range1 - Range0);
+
+			vOutColor =
+				  vOutColor.r * RedChannel
+				+ vOutColor.g * GreenChannel
+				+ vOutColor.b * BlueChannel
+				+ vOutColor.a * AlphaChannel
 				+ AddChannel;
 
-			return out_col;
+			return vOutColor;
 		}
 	);
 
