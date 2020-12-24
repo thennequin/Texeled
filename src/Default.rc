@@ -68,8 +68,7 @@ CAPTION "About"
 FONT 8, "System"
 BEGIN
     ICON            IDI_DEFAULTAPP,IDC_ICON,14,9,16,16
-    LTEXT           "DefaultApp Version 1.0",IDC_STATIC,49,10,119,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2007",IDC_STATIC,49,20,119,8
+    LTEXT           "Texeled",IDC_STATIC,49,10,119,8,SS_NOPREFIX
     DEFPUSHBUTTON   "OK",IDOK,195,6,30,11,WS_GROUP
 END
 
@@ -108,7 +107,7 @@ END
 STRINGTABLE  
 BEGIN
    IDC_DEFAULTAPP   "DEFAULTAPP"
-   IDS_APP_TITLE    "Default Application"
+   IDS_APP_TITLE    "Texeled"
 END
 
 #endif
