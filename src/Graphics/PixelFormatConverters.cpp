@@ -248,10 +248,10 @@ namespace Graphics
 
 			void Convert_RGBA16_To_RGBA8(RGBA16* pIn, RGBA8* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
 			{
-				pOut->r = Math::Min(pIn->r / 256, 255);
-				pOut->g = Math::Min(pIn->g / 256, 255);
-				pOut->b = Math::Min(pIn->b / 256, 255);
-				pOut->a = Math::Min(pIn->a / 256, 255);
+				pOut->r = (uint8_t)Math::Min(pIn->r / 256, 255);
+				pOut->g = (uint8_t)Math::Min(pIn->g / 256, 255);
+				pOut->b = (uint8_t)Math::Min(pIn->b / 256, 255);
+				pOut->a = (uint8_t)Math::Min(pIn->a / 256, 255);
 			}
 
 			void Convert_RGB16_To_RGBA16(RGB16* pIn, RGBA16* pOut, size_t /*iPitchIn*/, size_t /*iPitchOut*/)
