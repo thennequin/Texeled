@@ -92,25 +92,4 @@ protected:
 	static ShortKeyManager*				s_pInstance;
 };
 
-
-class ShortKeyWindow : public ImWindow::ImwWindow
-{
-public:
-								ShortKeyWindow();
-	virtual						~ShortKeyWindow();
-
-	virtual void				OnGui();
-protected:
-	void						ResetKeys();
-
-	static int					InputTextCallback(ImGuiTextEditCallbackData *data);
-
-	int							m_iCurrentRecord;
-
-	bool						m_bHasSpecialPressed;
-	EasyWindow::EKey			m_iPressedPrimaryKey;
-	EasyWindow::EKey			m_iPressedModifierKeys[3];
-	bool						m_bDoublePressedModifierKeys[3];
-};
-
 #endif //__SHORT_KEY_MANAGER_H__
