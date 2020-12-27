@@ -1,13 +1,15 @@
-
 #ifndef __SHORT_KEY_MANAGER_H__
 #define __SHORT_KEY_MANAGER_H__
 
 #include <map>
 #include <string.h>
 
-#include <EasyWindow.h>
+#include "Callback.h"
 
-#include "ImwWindow.h"
+#include <EasyWindow.h> // EasyWindow::EKey
+
+// Forward declaration
+struct ImGuiIO;
 
 class ShortKeyManager
 {
@@ -24,8 +26,8 @@ public:
 			, EasyWindow::EKey eModifier1 = EasyWindow::KEY_NONE
 			, EasyWindow::EKey eModifier2 = EasyWindow::KEY_NONE
 			, EasyWindow::EKey eModifier3 = EasyWindow::KEY_NONE
-			, EasyWindow::Caller<void>* pCallback = NULL
-			, EasyWindow::Caller<void>* pCallbackUp = NULL
+			, Callback::Caller<void>* pCallback = NULL
+			, Callback::Caller<void>* pCallbackUp = NULL
 			, bool bSave = true
 			, bool bDeleteCallbacks = true);
 		ShortKey(const ShortKey& oCopy);
@@ -39,8 +41,8 @@ public:
 		void								SetShortkey(EasyWindow::EKey ePrimary, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3);
 
 		std::string							m_sShortKey;
-		EasyWindow::Caller<void>*			m_pCallback;
-		EasyWindow::Caller<void>*			m_pCallbackUp;
+		Callback::Caller<void>*				m_pCallback;
+		Callback::Caller<void>*				m_pCallbackUp;
 		bool								m_bDown;
 		bool								m_bDownActive;
 		bool								m_bSave;
@@ -61,8 +63,8 @@ public:
 	~ShortKeyManager();
 	bool								Manage(bool bCaptureKeyboard);
 
-	const ShortKey*						RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, bool bSave = true, bool bDeleteCallbacks = true);
-	const ShortKey*						RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave = true, bool bDeleteCallbacks = true);
+	const ShortKey*						RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, Callback::Caller<void>* pCallback, bool bSave = true, bool bDeleteCallbacks = true);
+	const ShortKey*						RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, Callback::Caller<void>* pCallback, Callback::Caller<void>* pCallbackUp, bool bSave = true, bool bDeleteCallbacks = true);
 	bool								UnregisterShortKey(const ShortKey* pShortkey);
 	bool								UnregisterShortKey(const char* pName);
 

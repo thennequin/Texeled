@@ -20,8 +20,8 @@ ShortKeyManager::ShortKey::ShortKey(
 	, EasyWindow::EKey eModifier1
 	, EasyWindow::EKey eModifier2
 	, EasyWindow::EKey eModifier3
-	, EasyWindow::Caller<void>* pCallback
-	, EasyWindow::Caller<void>* pCallbackUp
+	, Callback::Caller<void>* pCallback
+	, Callback::Caller<void>* pCallbackUp
 	, bool bSave
 	, bool bDeleteCallbacks)
 {
@@ -209,12 +209,12 @@ bool ShortKeyManager::Manage(bool bCaptureKeyboard)
 	return true;
 }
 
-const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, bool bSave, bool bDeleteCallbacks)
+const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKey(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, Callback::Caller<void>* pCallback, bool bSave, bool bDeleteCallbacks)
 {
 	return RegisterShortKeyUp(pName, eModifier1, eModifier2, eModifier3, ePrimary, pCallback, NULL, bSave, bDeleteCallbacks);
 }
 
-const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, EasyWindow::Caller<void>* pCallback, EasyWindow::Caller<void>* pCallbackUp, bool bSave, bool bDeleteCallbacks)
+const ShortKeyManager::ShortKey* ShortKeyManager::RegisterShortKeyUp(const char* pName, EasyWindow::EKey eModifier1, EasyWindow::EKey eModifier2, EasyWindow::EKey eModifier3, EasyWindow::EKey ePrimary, Callback::Caller<void>* pCallback, Callback::Caller<void>* pCallbackUp, bool bSave, bool bDeleteCallbacks)
 {
 	IM_ASSERT(eModifier1 == EasyWindow::KEY_NONE || EasyWindow::IsModifierKey(eModifier1));
 	IM_ASSERT(eModifier2 == EasyWindow::KEY_NONE || EasyWindow::IsModifierKey(eModifier2));

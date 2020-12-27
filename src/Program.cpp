@@ -132,15 +132,15 @@ Program::Program(int iArgCount, char** pArgs)
 	style.WindowRounding = 0.f;
 
 	m_pShortKeyManager = new ShortKeyManager();
-	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", EasyWindow::KEY_ALT, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_F4, new EasyWindow::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
-	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Escape", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_ESC, new EasyWindow::InstanceCaller<Program, void>( this, &Program::AskExit), false);
-	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_O, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Open), false);
-	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::Save), false);
-	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new EasyWindow::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
+	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Close", EasyWindow::KEY_ALT, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_F4, new Callback::InstanceCaller<Program, void>(this, &Program::CloseCurrentWindow), false);
+	m_oShortkeys.pClose = m_pShortKeyManager->RegisterShortKey("Escape", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_ESC, new Callback::InstanceCaller<Program, void>( this, &Program::AskExit), false);
+	m_oShortkeys.pOpen = m_pShortKeyManager->RegisterShortKey("Open", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_O, new Callback::InstanceCaller<Program, void>(this, &Program::Open), false);
+	m_oShortkeys.pSave = m_pShortKeyManager->RegisterShortKey("Save", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new Callback::InstanceCaller<Program, void>(this, &Program::Save), false);
+	m_oShortkeys.pSaveAs = m_pShortKeyManager->RegisterShortKey("Save As", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_S, new Callback::InstanceCaller<Program, void>(this, &Program::SaveAs), false);
 
-	m_oShortkeys.pReloadFile = m_pShortKeyManager->RegisterShortKey("Reload file", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_R, new EasyWindow::InstanceCaller<Program, void>(this, &Program::ReloadFile), false);
-	m_oShortkeys.pOpenPreviousFile = m_pShortKeyManager->RegisterShortKey("Open previous file", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEUP, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenPreviousFileCallback), false);
-	m_oShortkeys.pOpenNextFile = m_pShortKeyManager->RegisterShortKey("Open next", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEDOWN, new EasyWindow::InstanceCaller<Program, void>(this, &Program::OpenNextFileCallback), false);
+	m_oShortkeys.pReloadFile = m_pShortKeyManager->RegisterShortKey("Reload file", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_R, new Callback::InstanceCaller<Program, void>(this, &Program::ReloadFile), false);
+	m_oShortkeys.pOpenPreviousFile = m_pShortKeyManager->RegisterShortKey("Open previous file", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEUP, new Callback::InstanceCaller<Program, void>(this, &Program::OpenPreviousFileCallback), false);
+	m_oShortkeys.pOpenNextFile = m_pShortKeyManager->RegisterShortKey("Open next", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEDOWN, new Callback::InstanceCaller<Program, void>(this, &Program::OpenNextFileCallback), false);
 
 	m_pMenus = new Menus();
 	new StatusBars();
