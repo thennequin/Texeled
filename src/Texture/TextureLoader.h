@@ -24,6 +24,7 @@ namespace Texture
 	TextureLoaderHandle			RegisterTextureLoader(const char* pName, const char* pExts, TextureLoaderFunc pLoader);
 
 	const TextureLoaderInfo*	GetTextureLoader(TextureLoaderHandle hWriter);
+	const TextureLoaderInfo*	RetrieveTexturLoaderFromFilename(const char* pFilename);
 
 	ErrorCode					LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader = NULL);
 	ErrorCode					LoadFromFile(Graphics::Texture* pTexture, const char* pFilename, const TextureLoaderInfo* pUseLoader = NULL);

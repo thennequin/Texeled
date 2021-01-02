@@ -36,6 +36,28 @@ namespace Texture
 		return &s_oTextureLoaders[hLoader];
 	}
 
+	const TextureLoaderInfo* RetrieveTexturLoaderFromFilename(const char* pFilename)
+	{
+		if (pFilename == NULL)
+			return NULL;
+
+		for (Core::Array<TextureLoaderInfo>::iterator it = s_oTextureLoaders.begin(), itEnd = s_oTextureLoaders.end(); it != itEnd; ++it)
+		{
+			const char* pExts = it->pExts;
+			while (*pExts != 0)
+			{
+				if (Core::StringUtils::Wildcard(pExts, pFilename, false))
+				{
+					return &*it;
+				}
+
+				pExts += strlen(pExts) + 1;
+			}
+		}
+
+		return NULL;
+	}
+
 	ErrorCode LoadFromStream(Graphics::Texture* pTexture, IO::Stream* pStream, const TextureLoaderInfo* pUseLoader)
 	{
 		if (pTexture != NULL && pStream != NULL && pStream->IsReadable())
