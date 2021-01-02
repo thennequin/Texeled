@@ -346,6 +346,21 @@ void Program::Open()
 
 void Program::Save()
 {
+	if (m_sTexturePath.empty())
+	{
+		SaveAs();
+		return;
+	}
+
+	ErrorCode oErr = Texture::SaveToFile(&m_oTexture, NULL, NULL, m_sTexturePath.c_str());
+	if (oErr == ErrorCode::Ok)
+	{
+		Core::LogInfo("Program", "File saved '%s'", m_sTexturePath.c_str());
+	}
+	else
+	{
+		Core::LogError("Program", "Can't save file '%s' : %s", m_sTexturePath.c_str(), oErr.ToString());
+	}
 }
 
 void Program::SaveAs()
