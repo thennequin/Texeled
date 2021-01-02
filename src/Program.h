@@ -6,6 +6,7 @@
 #include "Core/Array.h"
 #include "Core/Logger.h"
 #include "Core/String.h"
+#include "Core/Clock.h"
 
 #include "Graphics/Texture.h"
 
@@ -147,6 +148,7 @@ public:
 	DisplayOptions&							GetDisplayOptions() { return m_oDisplayOptions; }
 
 	const Logs&								GetLogs() { return m_oLogs; }
+	const Core::Clock&						GetClock() { return m_oClock; }
 	void									ClearLogs();
 protected:
 	virtual void							Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage);
@@ -162,6 +164,7 @@ protected:
 	Logs									m_oLogs;
 
 	ImWindow::ImwWindowManagerCustom		m_oImWindowMgr;
+	Core::Clock								m_oClock;
 
 	Fonts									m_oFonts;
 

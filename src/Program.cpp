@@ -225,6 +225,7 @@ ID3D11DeviceContext* Program::GetDX11DeviceContext() const
 bool Program::Run()
 {
 	m_pShortKeyManager->Manage(false);
+	m_oClock.Manage();
 
 	if (m_oTexture.IsValid() && m_oDisplayOptions.iMip >= m_oTexture.GetMipCount())
 	{
