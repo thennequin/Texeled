@@ -1,14 +1,12 @@
 #include "Core/Clock.h"
 
 #include <windows.h> // GetTickCount
+#undef GetCurrentTime
 
 namespace Core
 {
-	namespace Clock
+	uint64_t Clock::GetCurrentTime()
 	{
-		uint64_t GetCurrent()
-		{
-			return GetTickCount64();
-		}
-	} // namespace Clock
+		return GetTickCount64();
+	}
 } // namespace Core
