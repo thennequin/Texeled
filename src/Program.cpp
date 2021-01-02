@@ -402,11 +402,18 @@ bool Program::OpenPreviousFile()
 		strcpy(pFile, m_sTexturePath.c_str());
 		while (IO::FileSystem::GetPreviousFile(pFile, pPreviousFile, sizeof(pBuffers[0])))
 		{
-			Core::LogDebug("Program", "Try loding file '%s'", pPreviousFile);
-			if (LoadFileInternal(pPreviousFile) == ErrorCode::Ok)
+			if (Texture::RetrieveTexturLoaderFromFilename(pPreviousFile) != NULL)
 			{
-				Core::LogDebug("Program", "File '%s' loaded", pPreviousFile);
-				return true;
+				ErrorCode oErr = LoadFileInternal(pPreviousFile);
+				if (oErr == ErrorCode::Ok)
+				{
+					Core::LogDebug("Program", "File '%s' loaded", pPreviousFile);
+					return true;
+				}
+				else
+				{
+					Core::LogError("Program", "Can't load file '%s' : %s", pPreviousFile, oErr.ToString());
+				}
 			}
 
 			pFile = pPreviousFile;
@@ -426,11 +433,18 @@ bool Program::OpenNextFile()
 		strcpy(pFile, m_sTexturePath.c_str());
 		while (IO::FileSystem::GetNextFile(pFile, pNextFile, sizeof(pBuffers[0])))
 		{
-			Core::LogDebug("Program", "Try loding file '%s'", pNextFile);
-			if (LoadFileInternal(pNextFile) == ErrorCode::Ok)
+			if (Texture::RetrieveTexturLoaderFromFilename(pNextFile) != NULL)
 			{
-				Core::LogDebug("Program", "File '%s' loaded", pNextFile);
-				return true;
+				ErrorCode oErr = LoadFileInternal(pNextFile);
+				if (oErr == ErrorCode::Ok)
+				{
+					Core::LogDebug("Program", "File '%s' loaded", pNextFile);
+					return true;
+				}
+				else
+				{
+					Core::LogError("Program", "Can't load file '%s' : %s", pNextFile, oErr.ToString());
+				}
 			}
 
 			pFile = pNextFile;
