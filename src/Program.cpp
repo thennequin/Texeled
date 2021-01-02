@@ -287,14 +287,14 @@ ErrorCode Program::LoadFileInternal(const char* pFile, const Texture::TextureLoa
 	ErrorCode oErr = Texture::LoadFromFile(&m_oTexture, pFile, pUseLoader);
 	if (oErr == ErrorCode::Ok)
 	{
-		Core::LogInfo("Program", "File loaded");
+		Core::LogInfo("Program", "File loaded '%s'", pFile);
 		m_sTexturePath = pFile;
 
 		UpdateTexture2DRes();
 		return ErrorCode::Ok;
 	}
 
-	Core::LogError("Program", "Can't load file : %s", oErr.ToString());
+	Core::LogError("Program", "Can't load file '%s' : %s", pFile, oErr.ToString());
 	return oErr;
 }
 
