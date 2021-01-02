@@ -6,24 +6,79 @@
 
 #include "Math/Arithmetic.h"
 
-StatusBars::StatusBars()
-{
+#include "IO/MemoryStream.h"
 
+#include "Graphics/TextureUtils.h"
+
+#include "Windows/LoggerWindow.h"
+
+#include "Resources/Icons/Log_16_png.h"
+
+StatusBars::StatusBars()
+	: m_iLastLogTime(0)
+	, m_eLastLogCategory(Core::Logger::Category::Info)
+	, m_fLastLogFade( 0.f )
+{
+	Core::Logger::RegisterLoggerOutputer(this);
+
+	// Load icon Log_16
+	{
+		Graphics::Texture oTexture;
+		IO::MemoryStream oMemStream(Resources::Icons::Log_16_png::Data, Resources::Icons::Log_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconLog));
+		}
+	}
 }
 
 StatusBars::~StatusBars()
 {
-
+	if (m_pIconLog != NULL)
+	{
+		delete m_pIconLog;
+		m_pIconLog = NULL;
+	}
 }
 
 void StatusBars::OnStatusBar()
 {
+	const uint64_t c_iLogDisplayTime = 5000;
+	const uint64_t c_iLogDisplayTransitionTime = 150;
+	const uint64_t c_iLogDisplayHighlightTime = 1000;
+
 	Program* pProgram = Program::GetInstance();
-	int iCurrentMip = pProgram->GetDisplayOptions().iMip;
-	Graphics::Texture& oTexture = pProgram->GetTexture();
+	const Core::Clock& oClock = pProgram->GetClock();
 	const Fonts& oFonts = pProgram->GetFonts();
-	if (oTexture.IsValid())
+
+	const uint64_t iDisplayTime = oClock.GetFrameTime() - m_iLastLogTime;
+
+	if (iDisplayTime <= (c_iLogDisplayTime - c_iLogDisplayTransitionTime) && m_fLastLogFade < 1.f)
 	{
+		m_fLastLogFade += oClock.GetDeltaTime() / (float)c_iLogDisplayTransitionTime;
+		if (m_fLastLogFade > 1.f)
+			m_fLastLogFade = 1.f;
+	}
+	else if (iDisplayTime > (c_iLogDisplayTime - c_iLogDisplayTransitionTime) && m_fLastLogFade > 0.f)
+	{
+		m_fLastLogFade -= oClock.GetDeltaTime() / (float)c_iLogDisplayTransitionTime;
+		if (m_fLastLogFade < 0.f)
+			m_fLastLogFade = 0.f;
+	}
+
+	const float fCursorY = ImGui::GetCursorPosY();
+	float fCursorOffset = ImGui::GetTextLineHeight() * 2.f;
+
+	float fCursorX = ImGui::GetCursorPosX();
+
+	ImGui::BeginGroup();
+	ImGui::SetCursorPosY(fCursorY - fCursorOffset * m_fLastLogFade);
+
+	{
+		const Graphics::Texture& oTexture = pProgram->GetTexture();
+		const int iCurrentMip = pProgram->GetDisplayOptions().iMip;
+
 		//Width
 		ImGui::PushFont(oFonts.pFontConsolas);
 		ImGui::TextUnformatted("Width:");
@@ -31,13 +86,21 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		if (iCurrentMip > 0)
+		if (oTexture.IsValid())
 		{
-			ImGui::Text("%d(%d)", oTexture.GetWidth(), Math::Max(1, oTexture.GetWidth() >> iCurrentMip));
+
+			if (iCurrentMip > 0)
+			{
+				ImGui::Text("%d(%d)", oTexture.GetWidth(), Math::Max(1, oTexture.GetWidth() >> iCurrentMip));
+			}
+			else
+			{
+				ImGui::Text("%d", oTexture.GetWidth());
+			}
 		}
 		else
 		{
-			ImGui::Text("%d", oTexture.GetWidth());
+			ImGui::Text("-");
 		}
 		ImGui::PopFont();
 
@@ -49,18 +112,25 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		if (iCurrentMip > 0)
+		if (oTexture.IsValid())
 		{
-			ImGui::Text("%d(%d)", oTexture.GetHeight(), Math::Max(1,oTexture.GetHeight() >> iCurrentMip));
+			if (iCurrentMip > 0)
+			{
+				ImGui::Text("%d(%d)", oTexture.GetHeight(), Math::Max(1, oTexture.GetHeight() >> iCurrentMip));
+			}
+			else
+			{
+				ImGui::Text("%d", oTexture.GetHeight());
+			}
 		}
 		else
 		{
-			ImGui::Text("%d", oTexture.GetHeight());
+			ImGui::Text("-");
 		}
 		ImGui::PopFont();
 
 		//Face/Slice
-		if (oTexture.GetSliceCount() > 1)
+		if (oTexture.IsValid() && oTexture.GetSliceCount() > 1)
 		{
 			ImGui::PushFont(oFonts.pFontConsolas);
 			ImGui::SameLine();
@@ -74,7 +144,7 @@ void StatusBars::OnStatusBar()
 		}
 
 		//Mips
-		if (oTexture.GetMipCount() > 1)
+		if (oTexture.IsValid() && oTexture.GetMipCount() > 1)
 		{
 			ImGui::PushFont(oFonts.pFontConsolas);
 			ImGui::SameLine();
@@ -95,7 +165,14 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%s", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].pName);
+		if (oTexture.IsValid())
+		{
+			ImGui::Text("%s", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].pName);
+		}
+		else
+		{
+			ImGui::Text("-");
+		}
 		ImGui::PopFont();
 
 		//Channels
@@ -106,7 +183,14 @@ void StatusBars::OnStatusBar()
 
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponentCount);
+		if (oTexture.IsValid())
+		{
+			ImGui::Text("%d", Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()].iComponentCount);
+		}
+		else
+		{
+			ImGui::Text("-");
+		}
 		ImGui::PopFont();
 
 		//Memory size
@@ -115,11 +199,67 @@ void StatusBars::OnStatusBar()
 		ImGui::TextUnformatted("Memory:");
 		ImGui::PopFont();
 
-		char pBuffer[128];
-		Core::StringUtils::GetReadableSize(oTexture.GetDataSize(), pBuffer, sizeof(pBuffer));
 		ImGui::PushFont(oFonts.pFontConsolasBold);
 		ImGui::SameLine(0, 0);
-		ImGui::TextUnformatted(pBuffer);
+		if (oTexture.IsValid())
+		{
+			char pBuffer[128];
+			Core::StringUtils::GetReadableSize(oTexture.GetDataSize(), pBuffer, sizeof(pBuffer));
+			ImGui::TextUnformatted(pBuffer);
+		}
+		else
+		{
+			ImGui::Text("-");
+		}
 		ImGui::PopFont();
 	}
+
+	if (iDisplayTime <= c_iLogDisplayTime)
+	{
+		ImGui::SameLine();
+		ImGui::SetCursorPos(ImVec2(fCursorX, fCursorY + fCursorOffset * (1.f - m_fLastLogFade)));
+
+		ImVec4 oColor;
+		switch (m_eLastLogCategory)
+		{
+		case Core::Logger::Category::Debug:
+			oColor = ImVec4(0.5f, 0.5f, 0.5f, 1.f);
+			break;
+		default:
+		case Core::Logger::Category::Info:
+			//oColor = ImVec4(0.8f, 0.8f, 0.8f, 1.f);
+			oColor = ImVec4(0.3f, 0.8f, 0.3f, 1.f);
+			break;
+		case Core::Logger::Category::Warning:
+			oColor = ImVec4(1.f, 0.5f, 0.f, 1.f);
+			break;
+		case Core::Logger::Category::Error:
+			oColor = ImVec4(0.8f, 0.22f, 0.f, 1.f);
+			break;
+		}
+
+		float fHighlight = (1.f - Math::Clamp(((float)iDisplayTime - (float)c_iLogDisplayTransitionTime) / (float)c_iLogDisplayHighlightTime, 0.f, 1.f));
+
+		oColor.x = Math::Clamp(oColor.x * (1.f + fHighlight) + fHighlight * 0.2f, 0.f, 1.f);
+		oColor.y = Math::Clamp(oColor.y * (1.f + fHighlight) + fHighlight * 0.2f, 0.f, 1.f);
+		oColor.z = Math::Clamp(oColor.z * (1.f + fHighlight) + fHighlight * 0.2f, 0.f, 1.f);
+
+		ImGui::PushStyleColor(ImGuiCol_Text, oColor);
+		ImGui::TextUnformatted(m_sLastLogMessage.c_str());
+		ImGui::PopStyleColor();
+	}
+
+	ImGui::EndGroup();
+}
+
+void StatusBars::Log(Core::Logger::Category eCategory, const char* /*pName*/, const char* pFormattedMessage)
+{
+#ifndef _DEBUG
+	if (eCategory == Core::Logger::Category::Debug)
+		return;
+#endif
+	uint64_t iCurrent = Core::Clock::GetCurrentTime();
+	m_iLastLogTime = iCurrent;
+	m_eLastLogCategory = eCategory;
+	m_sLastLogMessage = pFormattedMessage;
 }
