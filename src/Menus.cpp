@@ -369,9 +369,16 @@ void Menus::OnMenu()
 
 				if (ImGuiUtils::MenuItemPlus(oPixelFormatInfos.pName, NULL, NULL, NULL, false, bAvailable))
 				{
-					if (Graphics::ConvertPixelFormat(&oTexture, &oTexture, ePixelFormat) == ErrorCode::Ok)
+					const Graphics::PixelFormatInfos& oPreviousPixelFormatInfos = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
+					ErrorCode oErr = Graphics::ConvertPixelFormat(&oTexture, &oTexture, ePixelFormat);
+					if (oErr == ErrorCode::Ok)
 					{
 						Program::GetInstance()->UpdateTexture2DRes();
+						Core::LogInfo("Menus", "Pixel format converted from '%s' to '%s'", oPreviousPixelFormatInfos.pName, oPixelFormatInfos.pName);
+					}
+					else
+					{
+						Core::LogError("Menus", "Can't convet pixel format from '%s' to '%s' : %s", oPreviousPixelFormatInfos.pName, oPixelFormatInfos.pName, oErr.ToString());
 					}
 				}
 				if (bAvailable == false && ImGui::IsItemHovered())
@@ -405,22 +412,46 @@ void Menus::OnMenu()
 
 		if (ImGuiUtils::MenuItemPlus("Generate all mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMipMap->GetTextureView()))
 		{
-			if (Graphics::GenerateMips(&oTexture, &oTexture) == ErrorCode::Ok)
+			ErrorCode oErr = Graphics::GenerateMips(&oTexture, &oTexture);
+			if (oErr == ErrorCode::Ok)
+			{
 				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Generated all mips");
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't generate all mips : %s", oErr.ToString());
+			}
 		}
 
 		if (ImGuiUtils::MenuItemPlus("Generate missing mips", NULL, NULL, NULL, false, bIsResizablePixelFormat, (ImTextureID)m_pIconMissingMipMap->GetTextureView()))
 		{
-			if (Graphics::GenerateMissingMips(&oTexture, &oTexture) == ErrorCode::Ok)
+			ErrorCode oErr = Graphics::GenerateMissingMips(&oTexture, &oTexture);
+			if (oErr == ErrorCode::Ok)
+			{
 				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Generated missing mips");
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't generate missing mips : %s", oErr.ToString());
+			}
 		}
 
 		if (ImGuiUtils::MenuItemPlus("Regenerate current mip map", NULL, NULL, NULL, false, bIsResizablePixelFormat && oDisplayOptions.iMip > 0, (ImTextureID)m_pIconCurrentMipMap->GetTextureView()))
 		{
 			uint16_t iCurrentMipMask = 1 << oDisplayOptions.iMip;
 
-			if (Graphics::GenerateMips(&oTexture, &oTexture, iCurrentMipMask) == ErrorCode::Ok)
+			ErrorCode oErr = Graphics::GenerateMips(&oTexture, &oTexture, iCurrentMipMask);
+			if (oErr == ErrorCode::Ok)
+			{
 				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Regenerate mip map %d", oDisplayOptions.iMip);
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't generate mip map %d : %s", oDisplayOptions.iMip, oErr.ToString());
+			}
 		}
 
 		if (ImGuiUtils::MenuItemPlus("Delete mips after current mip", NULL, NULL, NULL, false, bIsResizablePixelFormat && oDisplayOptions.iMip < (oTexture.GetMipCount() - 1), (ImTextureID)m_pIconCut->GetTextureView()))
@@ -428,7 +459,8 @@ void Menus::OnMenu()
 			Graphics::Texture::Desc oDesc = oTexture.GetDesc();
 			oDesc.iMipCount = oDisplayOptions.iMip + 1;
 			Graphics::Texture oNewTexture;
-			if (oNewTexture.Create(oDesc) == ErrorCode::Ok)
+			ErrorCode oErr = oNewTexture.Create(oDesc);
+			if (oErr == ErrorCode::Ok)
 			{
 				for (uint16_t iLayer = 0; iLayer < oDesc.iLayerCount; ++iLayer)
 				{
@@ -449,6 +481,12 @@ void Menus::OnMenu()
 				}
 				oTexture.Swap(oNewTexture);
 				Program::GetInstance()->UpdateTexture2DRes();
+
+				Core::LogInfo("Menus", "Delete mips after mip %d", oDisplayOptions.iMip);
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't delete mips after mip map %d : %s", oDisplayOptions.iMip, oErr.ToString());
 			}
 		}
 
@@ -504,6 +542,11 @@ void Menus::OnMenu()
 			if (oErr == ErrorCode::Ok)
 			{
 				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Resized to %d x %d", m_iResizeNewWidth, m_iResizeNewHeight);
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't resize to %d x %d : %s", m_iResizeNewWidth, m_iResizeNewHeight, oErr.ToString());
 			}
 			ImGui::CloseCurrentPopup();
 		}
