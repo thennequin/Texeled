@@ -245,7 +245,7 @@ ErrorCode Texture::Create(Desc& oDesc)
 		}
 		m_iSize = iSize * oDesc.iLayerCount;
 
-		if (iSize == 0 || (m_pData = Core::Malloc(iSize)) == NULL)
+		if (m_iSize == 0 || (m_pData = Core::Malloc(m_iSize)) == NULL)
 		{
 			Destroy();
 			return ErrorCode(1, "Can't alloc memory");
