@@ -49,8 +49,9 @@ namespace Texture
 			}
 			else if (pTexture->GetSliceCount() != 1)
 			{
-				CORE_ASSERT(false, "Not supported");
-				return false;
+				oDDSHeader.iDepth = pTexture->GetSliceCount();
+				oDDSHeader.iHeaderFlags |= DDS_HEADER_FLAGS_DEPTH;
+				oDDSHeader.iSurfaceFlags |= DDS_SURFACE_FLAGS_VOLUME;
 			}
 
 			switch (pTexture->GetPixelFormat())

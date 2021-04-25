@@ -211,6 +211,7 @@ const uint32_t DDS_HEADER_FLAGS_TEXTURE               = 0x00001007; // DDSD_CAPS
 const uint32_t DDS_SURFACE_FLAGS_TEXTURE              = 0x00001000; // DDSCAPS_TEXTURE
 const uint32_t DDS_SURFACE_FLAGS_MIPMAP               = 0x00400008; // DDSCAPS_COMPLEX | DDSCAPS_MIPMAP
 const uint32_t DDS_SURFACE_FLAGS_CUBEMAP              = 0x00000008; // DDSCAPS_COMPLEX
+const uint32_t DDS_SURFACE_FLAGS_VOLUME               = 0x00200008; // DDSCAPS_COMPLEX | DDSCAPS2_VOLUME
 
 const uint32_t DDS_FOURCC                             = 0x00000004;  // DDPF_FOURCC
 const uint32_t DDS_RGB                                = 0x00000040;  // DDPF_RGB
