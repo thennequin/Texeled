@@ -84,6 +84,9 @@ namespace Graphics
 		{
 			Desc();
 			Desc(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHeight, uint16_t iLayerCount, uint8_t iMipCount, uint16_t iSliceCount, FaceFlags eFaces );
+
+			bool operator ==( const Desc& oRight );
+			bool operator !=( const Desc& oRight );
 			PixelFormatEnum				ePixelFormat;
 			uint16_t					iWidth;
 			uint16_t					iHeight;

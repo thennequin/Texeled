@@ -156,6 +156,28 @@ Texture::Desc::Desc(PixelFormatEnum ePixelFormat, uint16_t iWidth, uint16_t iHei
 	this->eFaces		= eFaces;
 }
 
+bool Texture::Desc::operator ==( const Desc& oRight )
+{
+	return ePixelFormat == oRight.ePixelFormat
+		&& iWidth == oRight.iWidth
+		&& iHeight == oRight.iHeight
+		&& iLayerCount == oRight.iLayerCount
+		&& iMipCount == oRight.iMipCount
+		&& iSliceCount == oRight.iSliceCount
+		&& eFaces == oRight.eFaces;
+}
+
+bool Texture::Desc::operator !=( const Desc& oRight )
+{
+	return ePixelFormat != oRight.ePixelFormat
+		|| iWidth != oRight.iWidth
+		|| iHeight != oRight.iHeight
+		|| iLayerCount != oRight.iLayerCount
+		|| iMipCount != oRight.iMipCount
+		|| iSliceCount != oRight.iSliceCount
+		|| eFaces != oRight.eFaces;
+}
+
 /////////////////////////////////////////////////////////////////
 // Texture
 ////////////////////////////////////////////////////////////////
