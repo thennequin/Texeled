@@ -188,7 +188,7 @@ namespace GraphicResources
 		if (hRes != S_OK)
 		{
 			char pErrorMsg[512];
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
 			return ErrorCode(1, "CreateTexture2D error: %s", pErrorMsg);
 		}
 
@@ -205,7 +205,7 @@ namespace GraphicResources
 		if (hRes != S_OK)
 		{
 			char pErrorMsg[512];
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hRes, MAKELANGID(LANG_ENGLISH, SUBLANG_DEFAULT), (LPSTR)&pErrorMsg, sizeof(pErrorMsg), NULL);
 			return ErrorCode(1, "CreateShaderResourceView error: %s", pErrorMsg);
 		}
 
