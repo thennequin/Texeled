@@ -6,7 +6,7 @@ namespace Windows
 {
 	LoggerWindow::LoggerWindow()
 	{
-		SetTitle("Log");
+		SetTitle("Logs");
 	}
 
 	LoggerWindow::~LoggerWindow()
