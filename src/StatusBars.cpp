@@ -244,6 +244,16 @@ void StatusBars::OnStatusBar()
 		oColor.y = Math::Clamp(oColor.y * (1.f + fHighlight) + fHighlight * 0.2f, 0.f, 1.f);
 		oColor.z = Math::Clamp(oColor.z * (1.f + fHighlight) + fHighlight * 0.2f, 0.f, 1.f);
 
+		if (ImGui::SmallButton("X") && iDisplayTime < (c_iLogDisplayTime - c_iLogDisplayTransitionTime))
+		{
+			m_iLastLogTime = Core::Clock::GetCurrentTime() - (c_iLogDisplayTime - c_iLogDisplayTransitionTime);
+		}
+
+		if(ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Hide log");
+		}
+		ImGui::SameLine();
 		ImGui::PushStyleColor(ImGuiCol_Text, oColor);
 		ImGui::TextUnformatted(m_sLastLogMessage.c_str());
 		ImGui::PopStyleColor();
