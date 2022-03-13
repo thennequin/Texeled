@@ -19,7 +19,7 @@ Support:
 - Features:
   - [x] Fast launch
   - [x] Small (less than 1 MB)
-  - [x] Conversion beetween pixel formats
+  - [x] Conversion between pixel formats
   - [x] Create simple mip maps
     
 - Loading:
@@ -34,6 +34,8 @@ Support:
 - Writing:
   - [x] DDS
   - [x] PNG (via **stb_image_write**)
+  - [x] TGA (via **stb_image_write**)
+  - [X] EXR (via **tinyexr**)
   
 - Pixel formats:
   - [x] R8 UNorm
