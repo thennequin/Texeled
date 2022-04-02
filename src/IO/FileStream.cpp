@@ -1,6 +1,6 @@
 #include "IO/FileStream.h"
 
-#include "Core/StringUtils.h"
+#include "Core/StringUtils.h" // Core::StringUtils::StrDup
 
 #include <stdio.h> //fopen/fread/fwrite/fclose/rename/unlink
 #include <time.h> //time
@@ -163,26 +163,28 @@ namespace IO
 	{
 		if (m_pFile != NULL)
 		{
-			int iOrigin;
+			fpos_t oPos;
 			switch (eSeekMode)
 			{
 			case SeekModeEnum::BEGIN:
-				iOrigin = SEEK_SET;
 				m_iPos = iPos;
 				break;
 			case SeekModeEnum::OFFSET:
-				iOrigin = SEEK_CUR;
 				m_iPos += iPos;
 				break;
 			case SeekModeEnum::END:
-				iOrigin = SEEK_END;
-				m_iPos = -iPos;
+				if (fseek((FILE*)m_pFile, 0, SEEK_END) != 0
+					|| fgetpos((FILE*)m_pFile, &oPos) != 0)
+					return false;
+
+				m_iPos = (size_t)oPos - iPos;
 				break;
 			default:
 				return false;
 			}
 
-			return _fseeki64((FILE*)m_pFile, iPos, iOrigin) == 0;
+			oPos = (fpos_t)m_iPos;
+			return fsetpos((FILE*)m_pFile, &oPos) == 0;
 		}
 		return false;
 	}
@@ -191,7 +193,9 @@ namespace IO
 	{
 		if (m_pFile != NULL)
 		{
-			return _ftelli64((FILE*)m_pFile);
+			fpos_t oPos;
+			int iRes = fgetpos((FILE*)m_pFile, &oPos);
+			return iRes == 0 ? (size_t)oPos : 0;
 		}
 		return 0;
 	}
