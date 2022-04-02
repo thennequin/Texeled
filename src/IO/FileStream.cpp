@@ -210,7 +210,7 @@ namespace IO
 		return 0;
 	}
 
-	size_t FileStream::Write(void* pBuffer, size_t iSize)
+	size_t FileStream::Write(const void* pBuffer, size_t iSize)
 	{
 		if (m_pFile != NULL)
 		{

@@ -99,7 +99,7 @@ namespace IO
 		return iReadSize;
 	}
 
-	size_t MemoryStream::Write(void* pBuffer, size_t iSize)
+	size_t MemoryStream::Write(const void* pBuffer, size_t iSize)
 	{
 		size_t iWriteSize = iSize;
 		if (iWriteSize > (m_iSize - m_iCursor))

@@ -21,7 +21,7 @@ namespace IO
 		virtual bool			Seek(size_t iPos, SeekModeEnum eSeekMode);
 		virtual size_t			Tell();
 		virtual size_t			Read(void* pBuffer, size_t iSize);
-		virtual size_t			Write(void* pBuffer, size_t iSize);
+		virtual size_t			Write(const void* pBuffer, size_t iSize);
 	protected:
 		void*					m_pMemory;
 		size_t					m_iSize;
