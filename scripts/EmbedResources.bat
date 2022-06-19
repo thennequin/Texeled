@@ -2,9 +2,9 @@
 
 if not exist "%~dp0\ResourceEmbedder_x64.exe" (
 	echo Downloading ResourceEmbedder...
-	powershell [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri "https://github.com/thennequin/UtilsCollection/releases/download/Build1/ResourceEmbedder_x64.exe" -OutFile '%~dp0\ResourceEmbedder_x64.exe'
+	powershell [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri "https://github.com/thennequin/UtilsCollection/releases/latest/download/ResourceEmbedder_x64.exe" -OutFile '%~dp0\ResourceEmbedder_x64.exe'
 )
 
 rmdir /S /Q "%~dp0..\src\Resources"
-"%~dp0\ResourceEmbedder_x64.exe" "%~dp0..\Resources" "%~dp0..\src\Resources"
+"%~dp0\ResourceEmbedder_x64.exe" "%~dp0..\Resources" "%~dp0..\src\Resources" -m=32
 echo "Finish"
