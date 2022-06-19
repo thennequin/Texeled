@@ -75,6 +75,11 @@ namespace Texture
 			png_byte iBitDepth = png_get_bit_depth(pPNG, pPNGInfo);
 			int iPassCount = png_set_interlace_handling(pPNG);
 
+			if (iBitDepth == 16)
+			{
+				png_set_swap(pPNG);
+			}
+
 			if (iColorType == PNG_COLOR_TYPE_GRAY || iColorType == PNG_COLOR_TYPE_GRAY_ALPHA)
 			{
 				// Convert 16 bits PNG_COLOR_TYPE_GRAY or PNG_COLOR_TYPE_GRAY_ALPHA to PNG_COLOR_TYPE_RGB or PNG_COLOR_TYPE_RGBA
