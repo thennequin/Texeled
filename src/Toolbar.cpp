@@ -253,11 +253,11 @@ void Toolbar::OnToolBar()
 		float fHoverValue = ImGui::IsWindowHovered() ? (int)oDisplay.fGamma : -1.f;
 
 		ImGui::PushItemWidth(75.f);
-		if (ImGui::InputFloat("Custom", &oDisplay.fGamma, 0.f, 0.f, 2))
+		if (ImGui::DragFloat("Custom", &oDisplay.fGamma, 0.01f, 0.01f, 100.f))
 		{
 			if (oDisplay.fGamma <= 0.f)
 			{
-				oDisplay.fGamma = 0.001f;
+				oDisplay.fGamma = 0.01f;
 			}
 			fValue = oDisplay.fGamma;
 			m_fBackupGamma = oDisplay.fGamma;
