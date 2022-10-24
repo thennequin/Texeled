@@ -11,6 +11,7 @@
 #include "Windows/LoggerWindow.h"
 
 #include "IO/MemoryStream.h"
+#include "IO/Clipboard.h"
 
 #include "ImGuiUtils.h"
 
@@ -347,6 +348,13 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Edit"))
 	{
+		if (ImGuiUtils::MenuItemPlus("Copy", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
+		{
+			IO::Clipboard::SetTexturePNG(oTexture);
+		}
+
+		ImGui::Separator();
+
 		if (ImGuiUtils::BeginMenu("Convert pixel format to", oTexture.IsValid(), (ImTextureID)m_pIconConvert->GetTextureView()))
 		{
 			static Graphics::PixelFormat::ConvertionInfoList s_oAvailableConvertionFormats;
