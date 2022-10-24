@@ -8,6 +8,9 @@
 #include "Texture/TextureLoader.h"
 #include "Texture/TextureLoaders/TextureLoaderPNG.h"
 
+#include "Texture/TextureWriter.h"
+#include "Texture/TextureWriters/TextureWriterPNG.h"
+
 #include <string.h> // memcpy
 
 #define WIN32_LEAN_AND_MEAN
@@ -298,10 +301,80 @@ namespace IO
 			return false;
 		}
 
-		bool SetTexture(const Graphics::Texture& /*oTexture*/)
+		bool SetTexturePNG(const Graphics::Texture& oTexture)
 		{
-			CORE_NOT_IMPLEMENTED();
-			return false;
+			if (oTexture.IsValid() == false)
+				return false;
+
+			Core::Array<uint8_t> aData;
+
+			const size_t iRequiredSize =
+				(
+					  8 // PNG signature bytes
+					+ 25 // IHDR chunk
+					+ 12 // IDAT chunk (assuming only one IDAT chunk)
+					+ oTexture.GetHeight() //pixels
+					* (1 // filter byte for each row
+						+ (
+							oTexture.GetWidth() // pixels
+							* 4 // Red, blue, green color samples
+							* 2 // 16 bits per color sample
+							)
+						)
+					+ 6 // zlib compression overhead
+					+ 2 // deflate overhead
+					+ 12 // IEND chunk
+				);
+
+			if (aData.resize(iRequiredSize) == false) // Original raw size should be enough
+				return false;
+
+			IO::MemoryStream oMemoryStream(aData.data(), aData.size());
+			if (Texture::SaveToStream(&oTexture, NULL, &oMemoryStream, Texture::TextureWriter::GetWriterPNG()) != ErrorCode::Ok)
+				return false;
+
+			size_t iPNGSize = oMemoryStream.Tell();
+
+			if (OpenClipboard(NULL) == FALSE)
+			{
+				return false;
+			}
+
+			UINT iPNGClipboardFormat = RegisterClipboardFormat("PNG");
+			if (iPNGClipboardFormat == 0)
+				return false;
+
+			HGLOBAL hClipboardData = GlobalAlloc(GMEM_MOVEABLE, (SIZE_T)(iPNGSize));
+			if (hClipboardData == NULL)
+			{
+				CloseClipboard();
+				return false;
+			}
+
+			void* pClipboardData = (char*)GlobalLock(hClipboardData);
+			if (pClipboardData == NULL)
+			{
+				GlobalUnlock(hClipboardData);
+				CloseClipboard();
+				return false;
+			}
+
+			memcpy(pClipboardData, aData.data(), iPNGSize);
+
+			GlobalUnlock(hClipboardData);
+
+			if (EmptyClipboard() == false)
+			{
+				GlobalFree(hClipboardData);
+				CloseClipboard();
+				return false;
+			}
+
+			SetClipboardData(iPNGClipboardFormat, hClipboardData);
+
+			CloseClipboard();
+
+			return true;
 		}
 	}
 }

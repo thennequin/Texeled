@@ -13,6 +13,7 @@ namespace IO
 		bool		SetText(const char* pText);
 
 		bool		GetTexture(Graphics::Texture* pOutTexture);
+		bool		SetTexturePNG(const Graphics::Texture& oTexture);
 	}
 }
 //namespace IO
