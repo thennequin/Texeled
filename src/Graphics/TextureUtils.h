@@ -31,6 +31,8 @@ namespace Graphics
 	ErrorCode		ConvertTextureToCubemap(const Graphics::Texture& oTexture, Graphics::Texture* pOutCubemap);
 
 	ErrorCode		AssembleTextureMipmap(Texture* pOutTexture, const Texture* pTextures, uint8_t iTextureCount, bool bRegenerateIntermediate);
+
+	ErrorCode		ExtractChannel(const Texture* pTexture, Texture* pOutTexture, ComponentFlag eChannel);
 }
 
 #endif //__GRAPHICS_TEXTURE_UTILS_H__

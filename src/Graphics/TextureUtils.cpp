@@ -787,4 +787,75 @@ namespace Graphics
 
 		return ErrorCode::Ok;
 	}
+
+	ErrorCode ExtractChannel(const Texture* pTexture, Texture* pOutTexture, ComponentFlag eChannel)
+	{
+		CORE_TEST_RETURN(pTexture != NULL, ErrorCode::InvalidArgument);
+		CORE_TEST_RETURN(pOutTexture != NULL, ErrorCode::InvalidArgument);
+		CORE_TEST_RETURN(pTexture->IsValid(), ErrorCode::InvalidArgument);
+
+		CORE_TEST_RETURN(PixelFormat::IsCompressed(pTexture->GetPixelFormat()) == false, ErrorCode::NotImplemented);
+
+		const PixelFormatInfos& oPixelFormatInfos = PixelFormatEnumInfos[pTexture->GetPixelFormat()];
+
+		if ((oPixelFormatInfos.iComponents & eChannel) == 0)
+			return ErrorCode::InvalidArgument;
+
+		// Searching best PixelFormat for pOutTexture
+		Graphics::Texture::Desc oDesc = pTexture->GetDesc();
+		oDesc.ePixelFormat = PixelFormatEnum::_NONE;
+
+		for (; oDesc.ePixelFormat != PixelFormatEnum::_COUNT; oDesc.ePixelFormat = (PixelFormatEnum)(oDesc.ePixelFormat + 1))
+		{
+			const PixelFormatInfos& oNewPixelFormatInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
+			if (PixelFormat::IsCompressed(oDesc.ePixelFormat))
+				continue;
+
+			if (oNewPixelFormatInfos.eEncoding != oPixelFormatInfos.eEncoding)
+				continue;
+
+			if (oNewPixelFormatInfos.iComponentCount != 1)
+				continue;
+
+			if ((eChannel & ComponentFlag::RGBA) != 0)
+			{
+				if (oNewPixelFormatInfos.iComponents != ComponentFlag::RED)
+					continue;
+			}
+			else
+			{
+				if (oNewPixelFormatInfos.iComponents != eChannel)
+					continue;
+			}
+
+			break;
+		}
+
+		if (oDesc.ePixelFormat == PixelFormatEnum::_COUNT)
+			return ErrorCode::Fail;
+
+		if (pOutTexture->Create(oDesc) != ErrorCode::Ok)
+			return ErrorCode::Fail;
+
+		const PixelFormatInfos& oNewPixelFormatInfos = PixelFormatEnumInfos[oDesc.ePixelFormat];
+
+		for (uint16_t iLayer = 0; iLayer < oDesc.iLayerCount; ++iLayer)
+		{
+			for (uint8_t iMip = 0; iMip < oDesc.iMipCount; ++iMip)
+			{
+				for (uint16_t iSlice = 0; iSlice < oDesc.iSliceCount; ++iSlice)
+				{
+					const Texture::SliceData oSourceSliceData = pTexture->GetSliceData(iLayer, iMip, iSlice);
+					Texture::SliceData oDestSlideData = pOutTexture->GetSliceData(iLayer, iMip, iSlice);
+
+					Texture::ComponentAccessor oSourceSlideComponent = oSourceSliceData.GetComponentAccesor(eChannel);
+					Texture::ComponentAccessor oDestSlideComponent = oDestSlideData.GetComponentAccesor((ComponentFlag)oNewPixelFormatInfos.iComponents);
+
+					CORE_TEST_RETURN(oSourceSlideComponent.CopyTo(oDestSlideComponent), ErrorCode::Fail);
+				}
+			}
+		}
+
+		return ErrorCode::Ok;
+	}
 }
