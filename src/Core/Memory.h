@@ -130,12 +130,28 @@ namespace Core
 			return oNewPtr;
 		}
 
+		Pointer<T>& operator+=(intptr_t iOffset)
+		{
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
+			CORE_ASSERT((m_iPos + iOffset * sizeof(T)) < m_iSize);
+			m_iPos += iOffset;
+			return *this;
+		}
+
 		Pointer<T> operator-(intptr_t iOffset)
 		{
 			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
 			CORE_ASSERT((m_iPos - iOffset * sizeof(T)) >= 0);
 			Pointer<T> oNewPtr((T*)m_iMemory, m_iSize, m_iPos - iOffset * sizeof(T));
 			return oNewPtr;
+		}
+
+		Pointer<T>& operator-=(intptr_t iOffset)
+		{
+			CORE_ASSERT(m_iMemory != -1, "Using an uninitialized Pointer");
+			CORE_ASSERT((m_iPos - iOffset * sizeof(T)) >= 0);
+			m_iPos -= iOffset;
+			return *this;
 		}
 
 		T& operator[](size_t iPos)
