@@ -348,9 +348,16 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Edit"))
 	{
-		if (ImGuiUtils::MenuItemPlus("Copy", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Copy current slice", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
 		{
-			IO::Clipboard::SetTexturePNG(oTexture);
+			if (IO::Clipboard::SetTexturePNG(oTexture, 0, oDisplayOptions.iMip, oDisplayOptions.iSlice) == ErrorCode::Ok)
+			{
+				Core::LogInfo("Menus", "Current Slice copied to clipboard");
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't copy current Slice to clipboard");
+			}
 		}
 
 		ImGui::Separator();
