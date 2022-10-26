@@ -277,7 +277,7 @@ namespace ImGuiUtils
 		return bOpen;
 	}
 
-	bool MenuItemPlus(const char* pLabel, ImFont* pLabelFont, const char* pShortcut, ImFont* pShortkeyFont, bool bSelected, bool bEnabled, ImTextureID pIcon, ImVec4 vIconColor)
+	bool MenuItemPlus(const char* pLabel, ImFont* pLabelFont, const char* pShortcut, ImFont* pShortkeyFont, bool bSelected, bool bEnabled, ImTextureID pIcon, ImVec4 vIconColor, ImVec2 oUVMin, ImVec2 oUVMax)
 	{
 		ImGuiWindow* pWindow = ImGui::GetCurrentWindow();
 		if (pWindow->SkipItems)
@@ -307,7 +307,7 @@ namespace ImGuiUtils
 			{
 				vIconColor.w *= 0.5f;
 			}
-			pWindow->DrawList->AddImage(pIcon, vPos, vPos + c_vMenuItemIconSize, ImVec2(0.f, 0.f), ImVec2(1.f, 1.f), ImGui::GetColorU32(vIconColor));
+			pWindow->DrawList->AddImage(pIcon, vPos, vPos + c_vMenuItemIconSize, oUVMin, oUVMax, ImGui::GetColorU32(vIconColor));
 		}
 
 		if (bEnabled == false)
