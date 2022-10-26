@@ -81,7 +81,7 @@ namespace Core
 	};
 
 	template<typename T>
-	class Pointer : protected PointerVoid
+	class Pointer : public PointerVoid
 	{
 		friend class PointerVoid;
 	public:
