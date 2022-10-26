@@ -68,6 +68,20 @@ namespace Math
 	// Example : HighBitNext of 2 and 11010 => 4
 	//                                .|.^.
 	uint8_t HighBitNext(uint8_t iCurrentBit, uint64_t iBits);
+
+	// Replace part of iDestValue by a part of iSourceValue
+	// Return replaced value
+	// Example :
+	//           iBitCount    = 4
+	//           iDestShift   = 2
+	//           iDestValue   = 1111 1011
+	//                            ^^ ^^
+	//           iSourceShift = 1
+	//           iSourceValue = 0000 0011
+	//                             ^ ^^^
+	//           Return       = 1100 0111
+	//                            ^^ ^^
+	uint64_t ReplaceBits(uint64_t iDestValue, uint64_t iSourceValue, uint8_t iBitCount, uint8_t iDestBit, uint8_t iSourceBit);
 }
 
 #endif //__MATH_ARITHMETIC_H__

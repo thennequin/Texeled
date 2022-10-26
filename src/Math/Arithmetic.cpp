@@ -99,4 +99,16 @@ namespace Math
 
 		return 0;
 	}
+
+	uint64_t ReplaceBits(uint64_t iDestValue, uint64_t iSourceValue, uint8_t iBitCount, uint8_t iDestBit, uint8_t iSourceBit)
+	{
+		// Clear source bits
+		iSourceValue = (iSourceValue >> iSourceBit) & Math::HighBitFill(iBitCount, 0);
+		// Clear destination bits
+		iDestValue = iDestValue & ~Math::HighBitFill(iBitCount, iDestBit);
+		//Copy bits
+		iDestValue |= iSourceValue << iDestBit;
+
+		return iDestValue;
+	}
 }
