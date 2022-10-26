@@ -19,5 +19,7 @@ namespace Core
 #define CORE_VERIFY(bCondition, ...) { if (Core::Assert((bCondition), CORE_ASSERT_STRINGIFY(bCondition), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__, "")) __debugbreak(); }
 #define CORE_VERIFY_OK(bCondition, ...) { ErrorCode oRes = (bCondition); if (Core::Assert(oRes == ErrorCode::Ok, CORE_ASSERT_STRINGIFY(bCondition), __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__, "%s", oRes.ToString())) __debugbreak(); }
 #define CORE_NOT_IMPLEMENTED() { if (Core::Assert(false, "Not implemented", __FILE__, __LINE__, __FUNCTION__, "Not implemented")) __debugbreak(); }
+#define CORE_TEST_ERRORCODE_RETURN(oErrorCode) { ErrorCode _oErrorCode = (oErrorCode); if (_oErrorCode != ErrorCode::Ok) return _oErrorCode; }
+#define CORE_TEST_RETURN(bCondition, oReturn) { if ((bCondition) != true) return (oReturn); }
 
 #endif //__CORE_ASSERT_H__
