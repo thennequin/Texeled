@@ -360,6 +360,38 @@ void Menus::OnMenu()
 			}
 		}
 
+		if (ImGuiUtils::BeginMenu("Copy component", oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
+		{
+			ImVec2 oWhitePixelUV = ImGui::GetFontTexUvWhitePixel();
+			ImTextureID hWhiteTexture = ImGui::GetIO().Fonts->TexID;
+
+			const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
+			
+			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+			{
+				if ((oPixelFormatInfos.iComponents & eComponent) == 0 || Graphics::ComponentFlagString[eComponent] == NULL)
+					continue;
+
+				const uint8_t* pColor = Graphics::ComponentFlagColor[eComponent];
+				if (ImGuiUtils::MenuItemPlus(Graphics::ComponentFlagString[eComponent], NULL, NULL, NULL, NULL, oTexture.IsValid(), hWhiteTexture, ImVec4(pColor[0] / 255.f, pColor[1] / 255.f, pColor[2] / 255.f, 1.f), oWhitePixelUV, oWhitePixelUV))
+				{
+					Graphics::Texture oNewTexture;
+					if (Graphics::ExtractChannel(&oTexture, &oNewTexture, eComponent) == ErrorCode::Ok
+						&& IO::Clipboard::SetTexturePNG(oNewTexture, 0, oDisplayOptions.iMip, oDisplayOptions.iSlice) == ErrorCode::Ok)
+					{
+						Core::LogInfo("Menus", "Current Slice component copied to clipboard");
+					}
+					else
+					{
+						Core::LogError("Menus", "Can't copy current Slice component to clipboard");
+					}
+				}
+			}
+			
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::Separator();
 
 		if (ImGuiUtils::BeginMenu("Convert pixel format to", oTexture.IsValid(), (ImTextureID)m_pIconConvert->GetTextureView()))
