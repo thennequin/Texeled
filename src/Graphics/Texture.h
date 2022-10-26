@@ -38,6 +38,8 @@ namespace Graphics
 		static FaceFlag GetFace(FaceFlags iFaces, int iIndex);
 		static uint16_t GetFaceIndex(FaceFlags iFaces, FaceFlag eFace);
 
+		class ComponentAccessor;
+
 		struct SliceData
 		{
 			PixelFormatEnum				ePixelFormat;
@@ -49,7 +51,20 @@ namespace Graphics
 			size_t						iSize;
 			CORE_PTR_VOID				pData;
 
-			ErrorCode					CopyTo(SliceData& oTo);
+			ErrorCode					CopyTo(SliceData& oDest);
+
+			ComponentAccessor			GetComponentAccesor(ComponentFlag eComponent) const { return ComponentAccessor(*this, eComponent); }
+		};
+
+		class ComponentAccessor
+		{
+			friend class SliceData;
+		public:
+			bool CopyTo(ComponentAccessor& oTo);
+		protected:
+			ComponentAccessor(SliceData oSliceData, ComponentFlag eComponent);
+			SliceData					oSliceData;
+			ComponentFlag				eComponent;
 		};
 
 		struct MipData

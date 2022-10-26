@@ -57,6 +57,93 @@ ErrorCode Texture::SliceData::CopyTo(SliceData& oTo)
 }
 
 ////////////////////////////////////////////////////////////////
+// Texture::ComponentAccessor
+////////////////////////////////////////////////////////////////
+
+Texture::ComponentAccessor::ComponentAccessor(SliceData oSliceData, ComponentFlag eComponent)
+	: oSliceData(oSliceData)
+	, eComponent(eComponent)
+{
+}
+
+bool Texture::ComponentAccessor::CopyTo(ComponentAccessor& oDest)
+{
+	CORE_TEST_RETURN(PixelFormat::IsCompressed(oSliceData.ePixelFormat) == false, false);
+	CORE_TEST_RETURN(PixelFormat::IsCompressed(oDest.oSliceData.ePixelFormat) == false, false);
+	CORE_TEST_RETURN(oSliceData.iWidth == oDest.oSliceData.iWidth, false);
+	CORE_TEST_RETURN(oSliceData.iHeight == oDest.oSliceData.iHeight, false);
+
+	const PixelFormatInfos& oSourceInfos = PixelFormatEnumInfos[oSliceData.ePixelFormat];
+	const PixelFormatInfos& oDestInfos = PixelFormatEnumInfos[oDest.oSliceData.ePixelFormat];
+
+	CORE_TEST_RETURN(oSourceInfos.eEncoding == oDestInfos.eEncoding, false);
+	CORE_TEST_RETURN((oSourceInfos.iComponents & eComponent) != 0, false);
+	CORE_TEST_RETURN((oDestInfos.iComponents & oDest.eComponent) != 0, false);
+
+	const uint8_t iSourceComponentIndex = Math::HighBitFirst(eComponent);
+	CORE_TEST_RETURN(iSourceComponentIndex != 0, false);
+
+	const uint8_t iDestComponentIndex = Math::HighBitFirst(oDest.eComponent);
+	CORE_TEST_RETURN(iDestComponentIndex != 0, false);
+
+	const ComponentMask& oSourceMask = oSourceInfos.iMasks[iSourceComponentIndex - 1];
+	const ComponentMask& oDestMask = oDestInfos.iMasks[iDestComponentIndex - 1];
+
+	switch (oSourceInfos.eEncoding)
+	{
+	case ComponentEncodingEnum::UNORM:
+	case ComponentEncodingEnum::INT:
+	case ComponentEncodingEnum::UINT:
+	case ComponentEncodingEnum::SNORM:
+		CORE_TEST_RETURN(oSourceMask.iExpBits == 0, false);
+		CORE_TEST_RETURN(oSourceMask.iMantisBits == oDestMask.iMantisBits, false);
+		CORE_TEST_RETURN(oSourceMask.iSignBit == oDestMask.iSignBit, false);
+		break;
+	case ComponentEncodingEnum::FLOAT:
+		CORE_TEST_RETURN(oSourceMask.iExpBits == 0, false);
+		CORE_TEST_RETURN(oSourceMask.iMantisBits == oDestMask.iMantisBits, false);
+		break;
+	}
+	
+	for (uint16_t iY = 0; iY < oSliceData.iHeight; ++iY)
+	{
+		for (uint16_t iX = 0; iX < oSliceData.iWidth; ++iX)
+		{
+			CORE_PTR(uint8_t) pSourceData = CORE_PTR_CAST(uint8_t, oSliceData.pData);
+			pSourceData += iY * oSliceData.iPitch + iX * oSourceInfos.iBlockSize;
+			
+			CORE_PTR(uint8_t) pDestData = CORE_PTR_CAST(uint8_t, oDest.oSliceData.pData);
+			pDestData += iY * oDest.oSliceData.iPitch + iX * (uint32_t)oDestInfos.iBlockSize;
+
+			uint64_t iSourceValue = 0;
+			CORE_PTR(uint64_t) pSourceValue = (CORE_PTR(uint64_t))Core::ToPointer(&iSourceValue, sizeof(iSourceValue));
+			Core::MemCpy(pSourceValue, pSourceData, oSourceInfos.iBlockSize);
+
+			uint64_t iDestValue = 0;
+			CORE_PTR(uint64_t) pDestValue = (CORE_PTR(uint64_t))Core::ToPointer(&iDestValue, sizeof(iDestValue));
+			Core::MemCpy(pDestValue, pDestData, oDestInfos.iBlockSize);
+
+			if (oDestMask.iMantisBits > 0)
+			{
+				iDestValue = Math::ReplaceBits(iDestValue, iSourceValue, oDestMask.iMantisBits, oDestMask.iMantisShift, oSourceMask.iMantisShift);
+			}
+			if (oDestMask.iExpBits > 0)
+			{
+				iDestValue = Math::ReplaceBits(iDestValue, iSourceValue, oDestMask.iExpBits, oDestMask.iExpShift, oSourceMask.iExpShift);
+			}
+			if (oDestMask.iSignBit > 0)
+			{
+				iDestValue = Math::ReplaceBits(iDestValue, iSourceValue, oDestMask.iExpBits, oDestMask.iSignBit - 1, oSourceMask.iSignBit - 1);
+			}
+
+			Core::MemCpy(pDestData, pDestValue, oDestInfos.iBlockSize);
+		}
+	}
+
+	return true;
+}
+
+////////////////////////////////////////////////////////////////
 // Texture::MipData
 ////////////////////////////////////////////////////////////////
 
