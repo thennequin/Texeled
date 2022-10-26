@@ -97,10 +97,9 @@ bool Texture::ComponentAccessor::CopyTo(ComponentAccessor& oDest)
 	case ComponentEncodingEnum::SNORM:
 		CORE_TEST_RETURN(oSourceMask.iExpBits == 0, false);
 		CORE_TEST_RETURN(oSourceMask.iMantisBits == oDestMask.iMantisBits, false);
-		CORE_TEST_RETURN(oSourceMask.iSignBit == oDestMask.iSignBit, false);
 		break;
 	case ComponentEncodingEnum::FLOAT:
-		CORE_TEST_RETURN(oSourceMask.iExpBits == 0, false);
+		CORE_TEST_RETURN(oSourceMask.iExpBits == oDestMask.iExpBits, false);
 		CORE_TEST_RETURN(oSourceMask.iMantisBits == oDestMask.iMantisBits, false);
 		break;
 	}
