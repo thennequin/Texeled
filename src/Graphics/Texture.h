@@ -48,6 +48,8 @@ namespace Graphics
 			size_t						iPitch;
 			size_t						iSize;
 			CORE_PTR_VOID				pData;
+
+			ErrorCode					CopyTo(SliceData& oTo);
 		};
 
 		struct MipData

@@ -44,6 +44,19 @@ uint16_t Texture::GetFaceIndex(FaceFlags iFaces, FaceFlag eFace)
 }
 
 ////////////////////////////////////////////////////////////////
+// Texture::SliceData
+////////////////////////////////////////////////////////////////
+
+ErrorCode Texture::SliceData::CopyTo(SliceData& oTo)
+{
+	CORE_TEST_RETURN(ePixelFormat == oTo.ePixelFormat, ErrorCode::InvalidArgument);
+	CORE_TEST_RETURN(iWidth == oTo.iWidth, ErrorCode::InvalidArgument);
+	CORE_TEST_RETURN(iHeight == oTo.iHeight, ErrorCode::InvalidArgument);
+	Core::MemCpy(oTo.pData, pData, iSize);
+	return ErrorCode::Ok;
+}
+
+////////////////////////////////////////////////////////////////
 // Texture::MipData
 ////////////////////////////////////////////////////////////////
 
