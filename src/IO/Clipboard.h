@@ -13,7 +13,7 @@ namespace IO
 		bool		SetText(const char* pText);
 
 		bool		GetTexture(Graphics::Texture* pOutTexture);
-		bool		SetTexturePNG(const Graphics::Texture& oTexture);
+		ErrorCode	SetTexturePNG(const Graphics::Texture& oTexture, uint16_t iLayer = 0, uint8_t iMip = 0, uint16_t iSlice = 0);
 	}
 }
 //namespace IO

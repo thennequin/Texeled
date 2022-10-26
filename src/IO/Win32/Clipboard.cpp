@@ -3,6 +3,8 @@
 #include "Core/Assert.h"
 #include "Core/StringUtils.h"
 
+#include "Math/Arithmetic.h"
+
 #include "IO/MemoryStream.h"
 
 #include "Texture/TextureLoader.h"
@@ -301,10 +303,22 @@ namespace IO
 			return false;
 		}
 
-		bool SetTexturePNG(const Graphics::Texture& oTexture)
+		ErrorCode SetTexturePNG(const Graphics::Texture& oTexture, uint16_t iLayer, uint8_t iMip, uint16_t iSlice)
 		{
-			if (oTexture.IsValid() == false)
-				return false;
+			CORE_TEST_RETURN(oTexture.IsValid(), ErrorCode::InvalidArgument);
+
+			Graphics::Texture::Desc oNewTextureDesc;
+			oNewTextureDesc.iWidth = Math::Max<uint16_t>(1, oTexture.GetWidth() >> iMip);
+			oNewTextureDesc.iHeight = Math::Max<uint16_t>(1, oTexture.GetHeight() >> iMip);
+			oNewTextureDesc.ePixelFormat = oTexture.GetPixelFormat();
+
+			Graphics::Texture oNewTexture;
+			CORE_TEST_ERRORCODE_RETURN(oNewTexture.Create(oNewTextureDesc));
+
+			Graphics::Texture::SliceData oSourceSlice = oTexture.GetSliceData(iLayer, iMip, iSlice);
+			Graphics::Texture::SliceData oDescSlice = oNewTexture.GetSliceData(0, 0, 0);
+
+			CORE_TEST_ERRORCODE_RETURN(oSourceSlice.CopyTo(oDescSlice));
 
 			Core::Array<uint8_t> aData;
 
@@ -313,10 +327,10 @@ namespace IO
 					  8 // PNG signature bytes
 					+ 25 // IHDR chunk
 					+ 12 // IDAT chunk (assuming only one IDAT chunk)
-					+ oTexture.GetHeight() //pixels
+					+ oNewTexture.GetHeight() //pixels
 					* (1 // filter byte for each row
 						+ (
-							oTexture.GetWidth() // pixels
+							oNewTexture.GetWidth() // pixels
 							* 4 // Red, blue, green color samples
 							* 2 // 16 bits per color sample
 							)
@@ -324,31 +338,30 @@ namespace IO
 					+ 6 // zlib compression overhead
 					+ 2 // deflate overhead
 					+ 12 // IEND chunk
-				);
+					);
 
 			if (aData.resize(iRequiredSize) == false) // Original raw size should be enough
-				return false;
+				return ErrorCode::Fail;
 
 			IO::MemoryStream oMemoryStream(aData.data(), aData.size());
-			if (Texture::SaveToStream(&oTexture, NULL, &oMemoryStream, Texture::TextureWriter::GetWriterPNG()) != ErrorCode::Ok)
-				return false;
+			CORE_TEST_ERRORCODE_RETURN(Texture::SaveToStream(&oNewTexture, NULL, &oMemoryStream, Texture::TextureWriter::GetWriterPNG()));
 
 			size_t iPNGSize = oMemoryStream.Tell();
 
 			if (OpenClipboard(NULL) == FALSE)
 			{
-				return false;
+				return ErrorCode::Fail;
 			}
 
 			UINT iPNGClipboardFormat = RegisterClipboardFormat("PNG");
 			if (iPNGClipboardFormat == 0)
-				return false;
+				return ErrorCode::Fail;
 
 			HGLOBAL hClipboardData = GlobalAlloc(GMEM_MOVEABLE, (SIZE_T)(iPNGSize));
 			if (hClipboardData == NULL)
 			{
 				CloseClipboard();
-				return false;
+				return ErrorCode::Fail;
 			}
 
 			void* pClipboardData = (char*)GlobalLock(hClipboardData);
@@ -356,7 +369,7 @@ namespace IO
 			{
 				GlobalUnlock(hClipboardData);
 				CloseClipboard();
-				return false;
+				return ErrorCode::Fail;
 			}
 
 			memcpy(pClipboardData, aData.data(), iPNGSize);
@@ -367,14 +380,14 @@ namespace IO
 			{
 				GlobalFree(hClipboardData);
 				CloseClipboard();
-				return false;
+				return ErrorCode::Fail;
 			}
 
 			SetClipboardData(iPNGClipboardFormat, hClipboardData);
 
 			CloseClipboard();
 
-			return true;
+			return ErrorCode::Ok;
 		}
 	}
 }
