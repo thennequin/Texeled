@@ -28,7 +28,9 @@ namespace Graphics
 
 			LA			= LUMINANCE | ALPHA,
 
-			_MAX		= (1 << 5) + 1,
+			_BEGIN		= RED,
+			_END		= LUMINANCE,
+			_MAX		= LUMINANCE + 1,
 			_COUNT		= 6
 		};
 	};
@@ -36,6 +38,7 @@ namespace Graphics
 	typedef uint8_t ComponentFlags;
 	extern const char* const ComponentFlagString[ComponentFlag::_MAX];
 	extern const char* const ComponentFlagStringShort[ComponentFlag::_MAX];
+	extern const uint8_t const ComponentFlagColor[ComponentFlag::_MAX][3];
 
 	struct _ComponentEncodingEnum
 	{

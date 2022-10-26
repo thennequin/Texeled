@@ -37,6 +37,20 @@ namespace Graphics
 		"L"
 	};
 
+	extern const uint8_t const ComponentFlagColor[ComponentFlag::_MAX][3] = {
+		{0, 0, 0}, // None
+		{255, 0, 0}, // Red
+		{0, 255, 0}, // Green
+		{},
+		{0, 0, 255}, // Blue
+		{}, {}, {},
+		{255, 255, 255}, // ALpha
+		{}, {}, {}, {}, {}, {}, {},
+		{128, 128, 128}, // Depth
+		{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		{255, 255, 255} // Luminance
+	};
+
 	extern const char* const ComponentEncodingEnumString[ComponentEncodingEnum::_COUNT] = {
 		"None",
 
