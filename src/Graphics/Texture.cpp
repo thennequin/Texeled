@@ -131,10 +131,6 @@ bool Texture::ComponentAccessor::CopyTo(ComponentAccessor& oDest)
 			{
 				iDestValue = Math::ReplaceBits(iDestValue, iSourceValue, oDestMask.iExpBits, oDestMask.iExpShift, oSourceMask.iExpShift);
 			}
-			if (oDestMask.iSignBit > 0)
-			{
-				iDestValue = Math::ReplaceBits(iDestValue, iSourceValue, oDestMask.iExpBits, oDestMask.iSignBit - 1, oSourceMask.iSignBit - 1);
-			}
 
 			Core::MemCpy(pDestData, pDestValue, oDestInfos.iBlockSize);
 		}
