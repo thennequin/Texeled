@@ -798,23 +798,17 @@ void Menus::OnMenu()
 	if (ImGui::BeginPopupModal("TextureResize", 0, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::Checkbox("Keep ratio", &m_bResizeKeepRatio);
-		if (ImGui::DragInt("Width", &m_iResizeNewWidth, 0.5f))
+		if (ImGui::DragInt("Width", &m_iResizeNewWidth, 0.5f, 1, Graphics::Texture::c_iMaxSize))
 		{
-			if (m_iResizeNewWidth < 1)
-				m_iResizeNewWidth = 1;
-			if (m_iResizeNewWidth > 65536)
-				m_iResizeNewWidth = 65536;
+			m_iResizeNewWidth = Math::Clamp(m_iResizeNewWidth, 1, Graphics::Texture::c_iMaxSize);
 
 			if (m_bResizeKeepRatio)
 				m_iResizeNewHeight = (int)(m_iResizeNewWidth / m_fResizeRatio);
 		}
 
-		if (ImGui::DragInt("Height", &m_iResizeNewHeight, 0.5f))
+		if (ImGui::DragInt("Height", &m_iResizeNewHeight, 0.5f, 1, Graphics::Texture::c_iMaxSize))
 		{
-			if (m_iResizeNewHeight < 1)
-				m_iResizeNewHeight = 1;
-			if (m_iResizeNewHeight > 16384)
-				m_iResizeNewHeight = 16384;
+			m_iResizeNewHeight = Math::Clamp(m_iResizeNewHeight, 1, Graphics::Texture::c_iMaxSize);
 
 			if (m_bResizeKeepRatio)
 				m_iResizeNewWidth = (int)(m_iResizeNewHeight * m_fResizeRatio);
