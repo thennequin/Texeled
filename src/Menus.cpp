@@ -547,6 +547,46 @@ void Menus::OnMenu()
 
 		ImGui::Separator();
 
+		if (ImGuiUtils::MenuItemPlus("Paste to new texture", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
+		{
+			Graphics::Texture oClipboardTexture;
+			if (IO::Clipboard::GetTexture(&oClipboardTexture))
+			{
+				oClipboardTexture.Swap(oTexture);
+				Program::GetInstance()->ClearTextureFilePath();
+				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Image paste to new texture from clipboard");
+			}
+			else
+			{
+				Core::LogError("Menus", "No image in clipboard");
+			}
+		}
+
+		if (ImGuiUtils::MenuItemPlus("Paste to current slice", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
+		{
+			Graphics::Texture oClipboardTexture;
+			if (IO::Clipboard::GetTexture(&oClipboardTexture))
+			{
+				Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
+				Graphics::Texture::SliceData oDestSliceData = oTexture.GetSliceData(0, 0, 0);
+
+				if (oSourceSliceData.CopyTo(oDestSliceData) == ErrorCode::Ok)
+				{
+					Program::GetInstance()->UpdateTexture2DRes();
+					Core::LogInfo("Menus", "Image paste to current Slice from clipboard");
+				}
+				else
+				{
+					Core::LogError("Menus", "Can't paste image from clipboard to current Slice");
+				}
+			}
+			else
+			{
+				Core::LogError("Menus", "No image in clipboard");
+			}
+		}
+
 		if (ImGuiUtils::BeginMenu("Paste to component", oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
 		{
 			ImGui::PushID("PasteComponent");
@@ -579,7 +619,7 @@ void Menus::OnMenu()
 						}
 						else
 						{
-							Core::LogError("Menus", "Can't copy image from clipboard to current Slice component");
+							Core::LogError("Menus", "Can't paste image from clipboard to current Slice component");
 						}
 					}
 					else
