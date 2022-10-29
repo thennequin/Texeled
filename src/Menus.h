@@ -3,6 +3,8 @@
 
 #include "ImWindow/ImwMenu.h"
 
+#include "Graphics/Texture.h"
+
 #include "GraphicResources/Texture2D.h"
 
 class Menus : ImWindow::ImwMenu
@@ -13,6 +15,8 @@ public:
 
 	virtual void						OnMenu();
 protected:
+
+	Graphics::Texture::Desc				m_oNewTextureDesc;
 	bool								m_bResizeKeepRatio;
 	int									m_iResizeNewWidth;
 	int									m_iResizeNewHeight;

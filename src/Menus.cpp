@@ -4,6 +4,8 @@
 #include "Program.h"
 #include "ShortKeyManager.h"
 
+#include "Math/Arithmetic.h"
+
 #include "Graphics/Texture.h"
 #include "Graphics/TextureUtils.h"
 
@@ -330,8 +332,14 @@ void Menus::OnMenu()
 	const Shortkeys& oShortkeys = pProgram->GetShortkeys();
 	const Fonts& oFonts = pProgram->GetFonts();
 
+	bool bOpenNewMenu = false;
+
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGuiUtils::MenuItemPlus("New", NULL, oShortkeys.pOpen->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true, (ImTextureID)m_pIconNew->GetTextureView()))
+		{
+			bOpenNewMenu = true;
+		}
 		if (ImGuiUtils::MenuItemPlus("Open", NULL, oShortkeys.pOpen->m_sShortKey.c_str(), oFonts.pFontConsolas, false, true, (ImTextureID)m_pIconOpen->GetTextureView()))
 		{
 			pProgram->Open();
@@ -359,6 +367,133 @@ void Menus::OnMenu()
 			pProgram->AskExit();
 		}
 		ImGui::EndMenu();
+	}
+
+	if (bOpenNewMenu)
+	{
+		if (oTexture.IsValid())
+		{
+			// Copy current texture desc
+			m_oNewTextureDesc = oTexture.GetDesc();
+		}
+		else
+		{
+			//Reset texture format
+			m_oNewTextureDesc = Graphics::Texture::Desc();
+			m_oNewTextureDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
+			m_oNewTextureDesc.iWidth = 128;
+			m_oNewTextureDesc.iHeight = 128;
+			m_oNewTextureDesc.iSliceCount = 1;
+			m_oNewTextureDesc.iMipCount = 1;
+		}
+		ImGui::OpenPopup("TextureNew");
+	}
+
+	if (ImGui::BeginPopupModal("TextureNew", 0, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if (ImGui::BeginCombo("Pixel format", Graphics::PixelFormatEnumInfos[m_oNewTextureDesc.ePixelFormat].pName))
+		{
+			for (int iPixelFormat = Graphics::PixelFormatEnum::_NONE + 1; iPixelFormat < Graphics::PixelFormatEnum::_COUNT; ++iPixelFormat)
+			{
+				if (ImGui::MenuItem(Graphics::PixelFormatEnumInfos[iPixelFormat].pName, NULL, iPixelFormat == m_oNewTextureDesc.ePixelFormat))
+				{
+					m_oNewTextureDesc.ePixelFormat = (Graphics::PixelFormatEnum)iPixelFormat;
+				}
+			}
+			//ImGui::MenuItem()
+			ImGui::EndCombo();
+		}
+		bool bIsCubeMap = m_oNewTextureDesc.eFaces != Graphics::Texture::FaceFlag::NONE;
+		if (ImGui::Checkbox("IsCubeMap", &bIsCubeMap))
+		{
+			m_oNewTextureDesc.eFaces = bIsCubeMap ? Graphics::Texture::FaceFlag::ALL : Graphics::Texture::FaceFlag::NONE;
+			if (bIsCubeMap)
+			{
+				m_oNewTextureDesc.iSliceCount = 6;
+				m_oNewTextureDesc.iHeight = m_oNewTextureDesc.iWidth;
+			}
+		}
+
+		if (bIsCubeMap)
+		{
+			int iSize = m_oNewTextureDesc.iWidth;
+			if (ImGui::DragInt("Size", &iSize, 0.5f, 1, Graphics::Texture::c_iMaxSize))
+			{
+				iSize = Math::Clamp(iSize, 1, Graphics::Texture::c_iMaxSize);
+
+				m_oNewTextureDesc.iWidth = iSize;
+				m_oNewTextureDesc.iHeight = iSize;
+			}
+		}
+		else
+		{
+			int iWidth = m_oNewTextureDesc.iWidth;
+			if (ImGui::DragInt("Width", &iWidth, 0.5f, 1, Graphics::Texture::c_iMaxSize))
+			{
+				iWidth = Math::Clamp(iWidth, 1, Graphics::Texture::c_iMaxSize);
+
+				m_oNewTextureDesc.iWidth = iWidth;
+			}
+
+			int iHeight = m_oNewTextureDesc.iHeight;
+			if (ImGui::DragInt("Height", &iHeight, 0.5f, 1, Graphics::Texture::c_iMaxSize))
+			{
+				iHeight = Math::Clamp(iHeight, 1, Graphics::Texture::c_iMaxSize);
+
+				m_oNewTextureDesc.iHeight = iHeight;
+			}
+
+			int iDepth = m_oNewTextureDesc.iSliceCount;
+			if (ImGui::DragInt("Slice/Depth", &iDepth, 0.5f, 1, Graphics::Texture::c_iMaxSize))
+			{
+				iDepth = Math::Clamp(iDepth, 1, Graphics::Texture::c_iMaxSize);
+
+				m_oNewTextureDesc.iSliceCount = iDepth;
+			}
+		}
+
+		bool bIsSizeValid = true;
+		bIsSizeValid &= (m_oNewTextureDesc.iWidth % Graphics::PixelFormatEnumInfos[m_oNewTextureDesc.ePixelFormat].iBlockWidth) == 0;
+		bIsSizeValid &= (m_oNewTextureDesc.iHeight % Graphics::PixelFormatEnumInfos[m_oNewTextureDesc.ePixelFormat].iBlockHeight) == 0;
+
+		if (bIsSizeValid == false)
+		{
+			ImGui::TextColored(ImVec4(1.f, 0.5f, 0.f, 1.f), "Size not compatible with selected Pixel format");
+		}
+
+		uint16_t iMaxMipCount = Math::HighBitLast(Math::Max<uint16_t>(Math::Max<uint16_t>(m_oNewTextureDesc.iWidth, m_oNewTextureDesc.iHeight), m_oNewTextureDesc.iSliceCount));
+
+		int iMipCount = m_oNewTextureDesc.iMipCount;
+		if (ImGui::SliderInt("Mip count", &iMipCount, 1, iMaxMipCount))
+		{
+			iMipCount = Math::Clamp(iMipCount, 1, (int)iMaxMipCount);
+
+			m_oNewTextureDesc.iMipCount= iMipCount;
+		}
+
+		if (ImGui::Button("Create") && bIsSizeValid)
+		{
+			ErrorCode oErr = oTexture.Create(m_oNewTextureDesc);
+			CORE_VERIFY_OK(oErr);
+			if (oErr == ErrorCode::Ok)
+			{
+				Program::GetInstance()->ClearTextureFilePath();
+				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "New texture created");
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't a create new texture : %s", oErr.ToString());
+			}
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 
 	bool bOpenResizeMenu = false;
