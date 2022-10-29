@@ -15,6 +15,7 @@
 
 #include "ImGuiUtils.h"
 
+#include "Resources/Icons/New_16_png.h"
 #include "Resources/Icons/Open_16_png.h"
 #include "Resources/Icons/Save_16_png.h"
 #include "Resources/Icons/SaveAs_16_png.h"
@@ -38,6 +39,7 @@ Menus::Menus()
 	, m_iResizeNewWidth(0)
 	, m_iResizeNewHeight(0)
 	, m_fResizeRatio(0.f)
+	, m_pIconNew(NULL)
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
 	, m_pIconSaveAs( NULL )
@@ -59,6 +61,15 @@ Menus::Menus()
 	//Load icons
 	Graphics::Texture oTexture;
 
+	// New
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::New_16_png::Data, Resources::Icons::New_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconNew));
+		}
+	}
 	// Open
 	{
 		IO::MemoryStream oMemStream(Resources::Icons::Open_16_png::Data, Resources::Icons::Open_16_png::Size);
@@ -208,6 +219,12 @@ Menus::Menus()
 
 Menus::~Menus()
 {
+	if (m_pIconNew != NULL)
+	{
+		delete m_pIconNew;
+		m_pIconNew = NULL;
+	}
+
 	if (m_pIconOpen != NULL)
 	{
 		delete m_pIconOpen;

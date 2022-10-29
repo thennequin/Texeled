@@ -18,6 +18,7 @@ protected:
 	int									m_iResizeNewHeight;
 	double								m_fResizeRatio;
 
+	GraphicResources::Texture2D*		m_pIconNew;
 	GraphicResources::Texture2D*		m_pIconOpen;
 	GraphicResources::Texture2D*		m_pIconSave;
 	GraphicResources::Texture2D*		m_pIconSaveAs;
