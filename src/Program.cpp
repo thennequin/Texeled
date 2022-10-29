@@ -253,6 +253,11 @@ void Program::CloseCurrentWindow()
 	}
 }
 
+void Program::ClearTextureFilePath()
+{
+	m_sTexturePath.clear();
+}
+
 void Program::UpdateTexture2DRes()
 {
 	ImwSafeDelete(m_pTexture2D);

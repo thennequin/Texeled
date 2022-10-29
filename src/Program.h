@@ -129,6 +129,7 @@ public:
 	Graphics::Texture&						GetTexture() { return m_oTexture; }
 	GraphicResources::Texture2D*			GetTexture2DRes() { return m_pTexture2D; }
 	const Core::String&						GetTextureFilePath() const { return m_sTexturePath; }
+	void									ClearTextureFilePath();
 	void									UpdateTexture2DRes();
 	void									ClearTexture();
 
