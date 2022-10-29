@@ -464,8 +464,10 @@ void Menus::OnMenu()
 		{
 			static Graphics::PixelFormat::ConvertionInfoList s_oAvailableConvertionFormats;
 			static int s_iAvailableConvertionFormatCount = 0;
-			if (ImGui::GetCurrentWindowRead()->WasActive == false)
+			static Graphics::PixelFormatEnum s_iCurrentPixelFormat = Graphics::PixelFormatEnum::_NONE;
+			if (s_iCurrentPixelFormat != oTexture.GetPixelFormat())
 			{
+				s_iCurrentPixelFormat = oTexture.GetPixelFormat();
 				s_iAvailableConvertionFormatCount = Graphics::PixelFormat::GetAvailableConvertion(oTexture.GetPixelFormat(), true, &s_oAvailableConvertionFormats);
 			}
 
