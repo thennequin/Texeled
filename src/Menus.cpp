@@ -808,7 +808,7 @@ void Menus::OnMenu()
 			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
 			{
 				const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
-				m_iSwizzleComponents[iComponentIndex] = eComponent;
+				m_iSwizzleComponents[iComponentIndex-1] = eComponent;
 			}
 		}
 
@@ -931,7 +931,7 @@ void Menus::OnMenu()
 				ImGui::Selectable("##Source", false, 0, oDotSize);
 				bool bItemActive = ImGui::IsItemActive();
 				bool bItemActiveLastFrame = pImGuiContext->ActiveIdPreviousFrame != 0 && pImGuiContext->ActiveIdPreviousFrame == pImGuiContext->CurrentWindow->DC.LastItemId;
-				oSourceComponentPos[iComponentIndex] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
+				oSourceComponentPos[iComponentIndex-1] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
 
 				if (bItemActive || bItemActiveLastFrame)
 				{
@@ -949,11 +949,11 @@ void Menus::OnMenu()
 				bool bItemActive = ImGui::IsItemActive();
 				bool bItemJustActivated = bItemActive && pImGuiContext->ActiveIdPreviousFrame != pImGuiContext->CurrentWindow->DC.LastItemId;
 				bool bItemActiveLastFrame = pImGuiContext->ActiveIdPreviousFrame != 0 && pImGuiContext->ActiveIdPreviousFrame == pImGuiContext->CurrentWindow->DC.LastItemId;
-				oDestComponentPos[iComponentIndex] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
+				oDestComponentPos[iComponentIndex-1] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
 
 				if (bItemJustActivated)
 				{
-					m_iSwizzleComponents[iComponentIndex] = Graphics::ComponentFlag::_NONE;
+					m_iSwizzleComponents[iComponentIndex-1] = Graphics::ComponentFlag::_NONE;
 				}
 
 				if (bItemActive || bItemActiveLastFrame)
@@ -995,18 +995,18 @@ void Menus::OnMenu()
 
 			// Draw Source and Dest dots
 			pDrawList->ChannelsSetCurrent(1);
-			pDrawList->AddCircleFilled(oSourceComponentPos[iComponentIndex], fDotRadius, ImGui::GetColorU32(oColor));
-			pDrawList->AddCircleFilled(oDestComponentPos[iComponentIndex], fDotRadius, ImGui::GetColorU32(oColor));
+			pDrawList->AddCircleFilled(oSourceComponentPos[iComponentIndex-1], fDotRadius, ImGui::GetColorU32(oColor));
+			pDrawList->AddCircleFilled(oDestComponentPos[iComponentIndex-1], fDotRadius, ImGui::GetColorU32(oColor));
 
-			const Graphics::ComponentFlag eSourceComponent = m_iSwizzleComponents[iComponentIndex];
+			const Graphics::ComponentFlag eSourceComponent = m_iSwizzleComponents[iComponentIndex-1];
 			const uint8_t iSourceComponentIndex = Math::HighBitFirst(eSourceComponent);
 
 			if (iSourceComponentIndex == 0)
 				continue;
 
 			// Draw link
-			ImVec2 oPT0 = oSourceComponentPos[iSourceComponentIndex];
-			ImVec2 oPT1 = oDestComponentPos[iComponentIndex];
+			ImVec2 oPT0 = oSourceComponentPos[iSourceComponentIndex-1];
+			ImVec2 oPT1 = oDestComponentPos[iComponentIndex-1];
 			ImVec2 oCP0 = oPT0 + ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
 			ImVec2 oCP1 = oPT1 - ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
 			pDrawList->ChannelsSetCurrent(0);
@@ -1026,7 +1026,7 @@ void Menus::OnMenu()
 				if (iComponentIndex == 0)
 					continue;
 
-				ImVec2 oDiff = (oMousePos - pPositions[iComponentIndex]);
+				ImVec2 oDiff = (oMousePos - pPositions[iComponentIndex-1]);
 				float fDistSqr = oDiff.x* oDiff.x + oDiff.y * oDiff.y;
 				if (fDistSqr <= oDotSize.x * oDotSize.x)
 					eHoveredComponent = eComponent;
@@ -1034,7 +1034,7 @@ void Menus::OnMenu()
 
 			ImVec4 oColor = ImVec4(Graphics::ComponentFlagColor[eEditingComponent][0], Graphics::ComponentFlagColor[eEditingComponent][1], Graphics::ComponentFlagColor[eEditingComponent][2], 1.f);
 
-			ImVec2 oPT0 = bEditingSource ? oSourceComponentPos[iEditingComponentIndex] : oDestComponentPos[iEditingComponentIndex];
+			ImVec2 oPT0 = bEditingSource ? oSourceComponentPos[iEditingComponentIndex-1] : oDestComponentPos[iEditingComponentIndex-1];
 			ImVec2 oPT1 = ImGui::GetMousePos();
 			ImVec2 oCP0 = oPT0 + ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
 			ImVec2 oCP1 = oPT1 - ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
@@ -1045,7 +1045,7 @@ void Menus::OnMenu()
 				if (bEditingSource == false || eHoveredComponent != Graphics::ComponentFlag::_NONE)
 				{
 					const uint8_t iComponentIndex = Math::HighBitFirst(bEditingSource ? eHoveredComponent : eEditingComponent);
-					m_iSwizzleComponents[iComponentIndex] = bEditingSource ? eEditingComponent : eHoveredComponent;
+					m_iSwizzleComponents[iComponentIndex-1] = bEditingSource ? eEditingComponent : eHoveredComponent;
 				}
 			}
 		}
@@ -1078,10 +1078,10 @@ void Menus::OnMenu()
 
 								const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
 
-								if (m_iSwizzleComponents[iComponentIndex] == Graphics::ComponentFlag::_NONE)
+								if (m_iSwizzleComponents[iComponentIndex-1] == Graphics::ComponentFlag::_NONE)
 									continue;
 
-								Graphics::Texture::ComponentAccessor oSrcComponentAccessor = oSrcSliceData.GetComponentAccesor(m_iSwizzleComponents[iComponentIndex]);
+								Graphics::Texture::ComponentAccessor oSrcComponentAccessor = oSrcSliceData.GetComponentAccesor(m_iSwizzleComponents[iComponentIndex-1]);
 								Graphics::Texture::ComponentAccessor oDestComponentAccessor = oDstSliceData.GetComponentAccesor(eComponent);
 
 								if (oSrcComponentAccessor.CopyTo(oDestComponentAccessor) == false)
