@@ -22,6 +22,8 @@ protected:
 	int									m_iResizeNewHeight;
 	double								m_fResizeRatio;
 
+	Graphics::ComponentFlag				m_iSwizzleComponents[Graphics::ComponentFlag::_COUNT];
+
 	GraphicResources::Texture2D*		m_pIconNew;
 	GraphicResources::Texture2D*		m_pIconOpen;
 	GraphicResources::Texture2D*		m_pIconSave;
@@ -37,6 +39,7 @@ protected:
 	GraphicResources::Texture2D*		m_pIconCut;
 	GraphicResources::Texture2D*		m_pIconCopy;
 	GraphicResources::Texture2D*		m_pIconPaste;
+	GraphicResources::Texture2D*		m_pIconSwizzle;
 	GraphicResources::Texture2D*		m_pIconLog;
 	GraphicResources::Texture2D*		m_pIconHelp;
 };

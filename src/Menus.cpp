@@ -32,6 +32,7 @@
 #include "Resources/Icons/Cut_16_png.h"
 #include "Resources/Icons/Copy_16_png.h"
 #include "Resources/Icons/Paste_16_png.h"
+#include "Resources/Icons/Swizzle_16_png.h"
 #include "Resources/Icons/Log_16_png.h"
 #include "Resources/Icons/Help_16_png.h"
 
@@ -56,6 +57,7 @@ Menus::Menus()
 	, m_pIconCut(NULL)
 	, m_pIconCopy(NULL)
 	, m_pIconPaste(NULL)
+	, m_pIconSwizzle(NULL)
 	, m_pIconLog(NULL)
 	, m_pIconHelp(NULL)
 {
@@ -198,6 +200,15 @@ Menus::Menus()
 			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconPaste));
 		}
 	}
+	// Swizzle
+	{
+		IO::MemoryStream oMemStream(Resources::Icons::Swizzle_16_png::Data, Resources::Icons::Swizzle_16_png::Size);
+		CORE_VERIFY(Texture::LoadFromStream(&oTexture, &oMemStream) == ErrorCode::Ok);
+		if (oTexture.IsValid())
+		{
+			CORE_VERIFY_OK(GraphicResources::Texture2D::CreateFromTexture(&oTexture, &m_pIconSwizzle));
+		}
+	}
 	// Log
 	{
 		IO::MemoryStream oMemStream(Resources::Icons::Log_16_png::Data, Resources::Icons::Log_16_png::Size);
@@ -309,6 +320,12 @@ Menus::~Menus()
 	{
 		delete m_pIconPaste;
 		m_pIconPaste = NULL;
+	}
+
+	if (m_pIconSwizzle != NULL)
+	{
+		delete m_pIconSwizzle;
+		m_pIconSwizzle = NULL;
 	}
 
 	if (m_pIconLog != NULL)
@@ -497,6 +514,7 @@ void Menus::OnMenu()
 	}
 
 	bool bOpenResizeMenu = false;
+	bool bOpenSwizzleMenu = false;
 
 	if (ImGui::BeginMenu("Edit"))
 	{
@@ -780,6 +798,20 @@ void Menus::OnMenu()
 			}
 		}
 
+		ImGui::Separator();
+
+		if (ImGuiUtils::MenuItemPlus("Swizzle components", NULL, NULL, NULL, false, oTexture.IsValid(), (ImTextureID)m_pIconSwizzle->GetTextureView()))
+		{
+			bOpenSwizzleMenu = true;
+			
+			// Reset swizzle
+			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+			{
+				const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
+				m_iSwizzleComponents[iComponentIndex] = eComponent;
+			}
+		}
+
 		ImGui::EndMenu();
 	}
 
@@ -831,6 +863,248 @@ void Menus::OnMenu()
 			else
 			{
 				Core::LogError("Menus", "Can't resize to %d x %d : %s", m_iResizeNewWidth, m_iResizeNewHeight, oErr.ToString());
+			}
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	if (bOpenSwizzleMenu)
+	{
+		if (oTexture.IsValid())
+		{
+			ImGui::OpenPopup("TextureSwizzle");
+		}
+	}
+
+	if (ImGui::BeginPopupModal("TextureSwizzle", 0, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
+
+		ImVec2 oSourceComponentPos[Graphics::ComponentFlag::_COUNT];
+		ImVec2 oDestComponentPos[Graphics::ComponentFlag::_COUNT];
+
+		bool bEditingSource = false;
+		bool bEditingEnded = false;
+		Graphics::ComponentFlag eEditingComponent = Graphics::ComponentFlag::_NONE;
+		bool bHoveredSource = false;
+		Graphics::ComponentFlag eHoveredComponent = Graphics::ComponentFlag::_NONE;
+
+		const ImVec2 oDotSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
+		const float fDotRadius = oDotSize.x / 2.5f;
+
+		ImGuiContext* pImGuiContext = ImGui::GetCurrentContext();
+		ImDrawList* pDrawList = ImGui::GetWindowDrawList();
+
+		// Source component names
+		ImGui::BeginGroup();
+		for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+		{
+			if ((eComponent & oPixelFormatInfos.iComponents) == 0)
+				continue;
+			ImGui::TextUnformatted(Graphics::ComponentFlagString[eComponent]);
+		}
+		ImGui::EndGroup();
+		
+		ImGui::SameLine();
+
+		// Source and Dest component dots
+		ImGui::BeginGroup();
+		for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+		{
+			if ((eComponent & oPixelFormatInfos.iComponents) == 0)
+				continue;
+
+			const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
+
+			ImVec4 oColor = ImVec4(Graphics::ComponentFlagColor[eComponent][0], Graphics::ComponentFlagColor[eComponent][1], Graphics::ComponentFlagColor[eComponent][2], 1.f);
+			ImGui::PushID((int)eComponent);
+
+			// Source
+			{
+				ImGui::Selectable("##Source", false, 0, oDotSize);
+				bool bItemActive = ImGui::IsItemActive();
+				bool bItemActiveLastFrame = pImGuiContext->ActiveIdPreviousFrame != 0 && pImGuiContext->ActiveIdPreviousFrame == pImGuiContext->CurrentWindow->DC.LastItemId;
+				oSourceComponentPos[iComponentIndex] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
+
+				if (bItemActive || bItemActiveLastFrame)
+				{
+					bEditingSource = true;
+					eEditingComponent = eComponent;
+					bEditingEnded = bItemActiveLastFrame && bItemActive == false;
+				}
+			}
+
+			ImGui::SameLine(0.f, 75.f);
+
+			// Dest
+			{
+				ImGui::Selectable("##Dest", false, 0, oDotSize);
+				bool bItemActive = ImGui::IsItemActive();
+				bool bItemJustActivated = bItemActive && pImGuiContext->ActiveIdPreviousFrame != pImGuiContext->CurrentWindow->DC.LastItemId;
+				bool bItemActiveLastFrame = pImGuiContext->ActiveIdPreviousFrame != 0 && pImGuiContext->ActiveIdPreviousFrame == pImGuiContext->CurrentWindow->DC.LastItemId;
+				oDestComponentPos[iComponentIndex] = (ImGui::GetItemRectMin() + ImGui::GetItemRectMax()) / 2.f;
+
+				if (bItemJustActivated)
+				{
+					m_iSwizzleComponents[iComponentIndex] = Graphics::ComponentFlag::_NONE;
+				}
+
+				if (bItemActive || bItemActiveLastFrame)
+				{
+					bEditingSource = false;
+					eEditingComponent = eComponent;
+					bEditingEnded = bItemActiveLastFrame && bItemActive == false;
+				}
+			}
+
+			ImGui::PopID();
+		}
+		ImGui::EndGroup();
+
+		ImGui::SameLine();
+
+		// Dest component names
+		ImGui::BeginGroup();
+		for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+		{
+			if ((eComponent & oPixelFormatInfos.iComponents) == 0)
+				continue;
+			ImGui::TextUnformatted(Graphics::ComponentFlagString[eComponent]);
+		}
+		ImGui::EndGroup();
+
+		// Draw dots and links
+		pDrawList->ChannelsSplit(2);
+		for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+		{
+			if ((eComponent & oPixelFormatInfos.iComponents) == 0)
+				continue;
+
+			const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
+			if (iComponentIndex == 0)
+				continue;
+
+			ImVec4 oColor = ImVec4(Graphics::ComponentFlagColor[eComponent][0], Graphics::ComponentFlagColor[eComponent][1], Graphics::ComponentFlagColor[eComponent][2], 1.f);
+
+			// Draw Source and Dest dots
+			pDrawList->ChannelsSetCurrent(1);
+			pDrawList->AddCircleFilled(oSourceComponentPos[iComponentIndex], fDotRadius, ImGui::GetColorU32(oColor));
+			pDrawList->AddCircleFilled(oDestComponentPos[iComponentIndex], fDotRadius, ImGui::GetColorU32(oColor));
+
+			const Graphics::ComponentFlag eSourceComponent = m_iSwizzleComponents[iComponentIndex];
+			const uint8_t iSourceComponentIndex = Math::HighBitFirst(eSourceComponent);
+
+			if (iSourceComponentIndex == 0)
+				continue;
+
+			// Draw link
+			ImVec2 oPT0 = oSourceComponentPos[iSourceComponentIndex];
+			ImVec2 oPT1 = oDestComponentPos[iComponentIndex];
+			ImVec2 oCP0 = oPT0 + ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
+			ImVec2 oCP1 = oPT1 - ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
+			pDrawList->ChannelsSetCurrent(0);
+			pDrawList->AddBezierCurve(oPT0, oCP0, oCP1, oPT1, ImGui::GetColorU32(oColor), 2.f);
+		}
+		pDrawList->ChannelsMerge();
+
+		if (eEditingComponent != Graphics::ComponentFlag::_NONE)
+		{
+			const uint8_t iEditingComponentIndex = Math::HighBitFirst(eEditingComponent);
+			Graphics::ComponentFlag eHoveredComponent = Graphics::ComponentFlag::_NONE;
+			ImVec2* pPositions = bEditingSource ? oDestComponentPos : oSourceComponentPos;
+			ImVec2 oMousePos = ImGui::GetMousePos();
+			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+			{
+				const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
+				if (iComponentIndex == 0)
+					continue;
+
+				ImVec2 oDiff = (oMousePos - pPositions[iComponentIndex]);
+				float fDistSqr = oDiff.x* oDiff.x + oDiff.y * oDiff.y;
+				if (fDistSqr <= oDotSize.x * oDotSize.x)
+					eHoveredComponent = eComponent;
+			}
+
+			ImVec4 oColor = ImVec4(Graphics::ComponentFlagColor[eEditingComponent][0], Graphics::ComponentFlagColor[eEditingComponent][1], Graphics::ComponentFlagColor[eEditingComponent][2], 1.f);
+
+			ImVec2 oPT0 = bEditingSource ? oSourceComponentPos[iEditingComponentIndex] : oDestComponentPos[iEditingComponentIndex];
+			ImVec2 oPT1 = ImGui::GetMousePos();
+			ImVec2 oCP0 = oPT0 + ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
+			ImVec2 oCP1 = oPT1 - ImVec2((oPT1 - oPT0).x / 2.f, 0.f);
+			pDrawList->AddBezierCurve(oPT0, oCP0, oCP1, oPT1, ImGui::GetColorU32(oColor), 2.f);
+
+			if (bEditingEnded)
+			{
+				if (bEditingSource == false || eHoveredComponent != Graphics::ComponentFlag::_NONE)
+				{
+					const uint8_t iComponentIndex = Math::HighBitFirst(bEditingSource ? eHoveredComponent : eEditingComponent);
+					m_iSwizzleComponents[iComponentIndex] = bEditingSource ? eEditingComponent : eHoveredComponent;
+				}
+			}
+		}
+
+		if (ImGui::Button("Swizzle"))
+		{
+			Graphics::Texture::Desc oDesc = oTexture.GetDesc();
+			Graphics::Texture oNewTexture;
+			ErrorCode oErr = oNewTexture.Create(oDesc);
+			bool bOk = true;
+			if (oErr == ErrorCode::Ok)
+			{
+				for (uint16_t iLayer = 0; iLayer < oDesc.iLayerCount && bOk; ++iLayer)
+				{
+					const Graphics::Texture::LayerData oSrcLayerData = oTexture.GetLayerData(iLayer);
+					const Graphics::Texture::LayerData oDstLayerData = oNewTexture.GetLayerData(iLayer);
+					for (uint16_t iMip = 0; iMip < oDesc.iMipCount && bOk; ++iMip)
+					{
+						const Graphics::Texture::MipData oSrcMipData = oSrcLayerData.GetMipData(iMip);
+						const Graphics::Texture::MipData oDstMipData = oDstLayerData.GetMipData(iMip);
+						for (uint16_t iSlice = 0; iSlice < oDesc.iSliceCount && bOk; ++iSlice)
+						{
+							const Graphics::Texture::SliceData oSrcSliceData = oSrcMipData.GetSliceData(iSlice);
+							const Graphics::Texture::SliceData oDstSliceData = oDstMipData.GetSliceData(iSlice);
+
+							for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+							{
+								if ((eComponent & oPixelFormatInfos.iComponents) == 0)
+									continue;
+
+								const uint8_t iComponentIndex = Math::HighBitFirst(eComponent);
+
+								if (m_iSwizzleComponents[iComponentIndex] == Graphics::ComponentFlag::_NONE)
+									continue;
+
+								Graphics::Texture::ComponentAccessor oSrcComponentAccessor = oSrcSliceData.GetComponentAccesor(m_iSwizzleComponents[iComponentIndex]);
+								Graphics::Texture::ComponentAccessor oDestComponentAccessor = oDstSliceData.GetComponentAccesor(eComponent);
+
+								if (oSrcComponentAccessor.CopyTo(oDestComponentAccessor) == false)
+								{
+									oErr = ErrorCode(ErrorCode::Fail.GetCode(), "Copying components is not supported by Pixel format");
+									bOk = false;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (oErr == ErrorCode::Ok)
+			{
+				oNewTexture.Swap(oTexture);
+				Program::GetInstance()->UpdateTexture2DRes();
+				Core::LogInfo("Menus", "Texture components swizzled");
+			}
+			else
+			{
+				Core::LogError("Menus", "Can't swizzle texture component : %s", oErr.ToString());
 			}
 			ImGui::CloseCurrentPopup();
 		}
