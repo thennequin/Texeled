@@ -565,7 +565,7 @@ void Menus::OnMenu()
 
 		ImGui::Separator();
 
-		if (ImGuiUtils::MenuItemPlus("Paste to new texture", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Paste to new texture", NULL, NULL, NULL, NULL, true, (ImTextureID)m_pIconPaste->GetTextureView()))
 		{
 			Graphics::Texture oClipboardTexture;
 			if (IO::Clipboard::GetTexture(&oClipboardTexture))
