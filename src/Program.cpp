@@ -374,6 +374,10 @@ void Program::SaveAs()
 		return;
 
 	char pBuffer[1024] = { 0 };
+	if (m_sTexturePath.size() < sizeof(pBuffer))
+	{
+		strncpy(pBuffer, m_sTexturePath.c_str(), m_sTexturePath.size());
+	}
 	int iSelectedIndex = 0;
 
 	Core::StringBuilder oExts;
