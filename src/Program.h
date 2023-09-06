@@ -41,6 +41,13 @@ struct Shortkeys
 	const ShortKeyManager::ShortKey* pReloadFile;
 	const ShortKeyManager::ShortKey* pOpenPreviousFile;
 	const ShortKeyManager::ShortKey* pOpenNextFile;
+
+	const ShortKeyManager::ShortKey* pCopyCurrentSlice;
+	const ShortKeyManager::ShortKey* pCopyComponent[4];
+
+	const ShortKeyManager::ShortKey* pPasteToNewTexture;
+	const ShortKeyManager::ShortKey* pPasteToCurrentSlice;
+	const ShortKeyManager::ShortKey* pPasteToComponent[4];
 };
 
 struct Fonts
@@ -140,6 +147,15 @@ public:
 	bool									OpenPreviousFile();
 	bool									OpenNextFile();
 
+	bool									CopyCurrentSlice();
+	bool									CopyComponent(Graphics::ComponentFlag eComponent);
+	bool									CopyComponentIndex(uint8_t iComponentIndex);
+
+	bool									PasteToNewTexture();
+	bool									PasteToCurrentSlice();
+	bool									PasteToComponent(Graphics::ComponentFlag eComponent);
+	bool									PasteToComponentIndex(uint8_t iComponentIndex);
+
 	const Shortkeys&						GetShortkeys() const { return m_oShortkeys; }
 	const Fonts&							GetFonts() const { return m_oFonts; }
 
@@ -157,6 +173,21 @@ protected:
 	void									ReloadFile();
 	void									OpenPreviousFileCallback();
 	void									OpenNextFileCallback();
+
+	void									CopyCurrentSliceCallback();
+	template<uint8_t Index>
+	void									CopyComponentCallback()
+	{
+		CopyComponentIndex(Index);
+	}
+
+	void									PasteToNewTextureCallback();
+	void									PasteToCurrentSliceCallback();
+	template<uint8_t Index>
+	void									PasteToComponentCallback()
+	{
+		PasteToComponentIndex(Index);
+	}
 
 	static Program*							s_pInstance;
 

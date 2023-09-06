@@ -518,16 +518,9 @@ void Menus::OnMenu()
 
 	if (ImGui::BeginMenu("Edit"))
 	{
-		if (ImGuiUtils::MenuItemPlus("Copy current slice", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Copy current slice", NULL, oShortkeys.pCopyCurrentSlice->m_sShortKey.c_str(), NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
 		{
-			if (IO::Clipboard::SetTexturePNG(oTexture, 0, oDisplayOptions.iMip, oDisplayOptions.iSlice) == ErrorCode::Ok)
-			{
-				Core::LogInfo("Menus", "Current Slice copied to clipboard");
-			}
-			else
-			{
-				Core::LogError("Menus", "Can't copy current Slice to clipboard");
-			}
+			Program::GetInstance()->CopyCurrentSlice();
 		}
 
 		if (ImGuiUtils::BeginMenu("Copy component", oTexture.IsValid(), (ImTextureID)m_pIconCopy->GetTextureView()))
@@ -537,26 +530,19 @@ void Menus::OnMenu()
 			ImTextureID hWhiteTexture = ImGui::GetIO().Fonts->TexID;
 
 			const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
-			
+
+			uint8_t iCurrentIndex = 0;
 			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
 			{
 				if ((oPixelFormatInfos.iComponents & eComponent) == 0 || Graphics::ComponentFlagString[eComponent] == NULL)
 					continue;
 
 				const uint8_t* pColor = Graphics::ComponentFlagColor[eComponent];
-				if (ImGuiUtils::MenuItemPlus(Graphics::ComponentFlagString[eComponent], NULL, NULL, NULL, NULL, oTexture.IsValid(), hWhiteTexture, ImVec4(pColor[0] / 255.f, pColor[1] / 255.f, pColor[2] / 255.f, 1.f), oWhitePixelUV, oWhitePixelUV))
+				if (ImGuiUtils::MenuItemPlus(Graphics::ComponentFlagString[eComponent], NULL, oShortkeys.pCopyComponent[iCurrentIndex]->m_sShortKey.c_str(), NULL, NULL, oTexture.IsValid(), hWhiteTexture, ImVec4(pColor[0] / 255.f, pColor[1] / 255.f, pColor[2] / 255.f, 1.f), oWhitePixelUV, oWhitePixelUV))
 				{
-					Graphics::Texture oNewTexture;
-					if (Graphics::ExtractChannel(&oTexture, &oNewTexture, eComponent) == ErrorCode::Ok
-						&& IO::Clipboard::SetTexturePNG(oNewTexture, 0, oDisplayOptions.iMip, oDisplayOptions.iSlice) == ErrorCode::Ok)
-					{
-						Core::LogInfo("Menus", "Current Slice component copied to clipboard");
-					}
-					else
-					{
-						Core::LogError("Menus", "Can't copy current Slice component to clipboard");
-					}
+					Program::GetInstance()->CopyComponent(eComponent);
 				}
+				++iCurrentIndex;
 			}
 
 			ImGui::PopID();
@@ -565,44 +551,14 @@ void Menus::OnMenu()
 
 		ImGui::Separator();
 
-		if (ImGuiUtils::MenuItemPlus("Paste to new texture", NULL, NULL, NULL, NULL, true, (ImTextureID)m_pIconPaste->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Paste to new texture", NULL, oShortkeys.pPasteToNewTexture->m_sShortKey.c_str(), NULL, NULL, true, (ImTextureID)m_pIconPaste->GetTextureView()))
 		{
-			Graphics::Texture oClipboardTexture;
-			if (IO::Clipboard::GetTexture(&oClipboardTexture))
-			{
-				oClipboardTexture.Swap(oTexture);
-				Program::GetInstance()->ClearTextureFilePath();
-				Program::GetInstance()->UpdateTexture2DRes();
-				Core::LogInfo("Menus", "Image paste to new texture from clipboard");
-			}
-			else
-			{
-				Core::LogError("Menus", "No image in clipboard");
-			}
+			Program::GetInstance()->PasteToNewTexture();
 		}
 
-		if (ImGuiUtils::MenuItemPlus("Paste to current slice", NULL, NULL, NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
+		if (ImGuiUtils::MenuItemPlus("Paste to current slice", NULL, oShortkeys.pPasteToCurrentSlice->m_sShortKey.c_str(), NULL, NULL, oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
 		{
-			Graphics::Texture oClipboardTexture;
-			if (IO::Clipboard::GetTexture(&oClipboardTexture))
-			{
-				Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
-				Graphics::Texture::SliceData oDestSliceData = oTexture.GetSliceData(0, 0, 0);
-
-				if (oSourceSliceData.CopyTo(oDestSliceData) == ErrorCode::Ok)
-				{
-					Program::GetInstance()->UpdateTexture2DRes();
-					Core::LogInfo("Menus", "Image paste to current Slice from clipboard");
-				}
-				else
-				{
-					Core::LogError("Menus", "Can't paste image from clipboard to current Slice");
-				}
-			}
-			else
-			{
-				Core::LogError("Menus", "No image in clipboard");
-			}
+			Program::GetInstance()->PasteToCurrentSlice();
 		}
 
 		if (ImGuiUtils::BeginMenu("Paste to component", oTexture.IsValid(), (ImTextureID)m_pIconPaste->GetTextureView()))
@@ -613,38 +569,18 @@ void Menus::OnMenu()
 
 			const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[oTexture.GetPixelFormat()];
 
+			uint8_t iCurrentIndex = 0;
 			for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
 			{
 				if ((oPixelFormatInfos.iComponents & eComponent) == 0 || Graphics::ComponentFlagString[eComponent] == NULL)
 					continue;
 
 				const uint8_t* pColor = Graphics::ComponentFlagColor[eComponent];
-				if (ImGuiUtils::MenuItemPlus(Graphics::ComponentFlagString[eComponent], NULL, NULL, NULL, NULL, oTexture.IsValid(), hWhiteTexture, ImVec4(pColor[0] / 255.f, pColor[1] / 255.f, pColor[2] / 255.f, 1.f), oWhitePixelUV, oWhitePixelUV))
+				if (ImGuiUtils::MenuItemPlus(Graphics::ComponentFlagString[eComponent], NULL, oShortkeys.pPasteToComponent[iCurrentIndex]->m_sShortKey.c_str(), NULL, NULL, oTexture.IsValid(), hWhiteTexture, ImVec4(pColor[0] / 255.f, pColor[1] / 255.f, pColor[2] / 255.f, 1.f), oWhitePixelUV, oWhitePixelUV))
 				{
-					Graphics::Texture::SliceData oDestSliceData = oTexture.GetSliceData(0, oDisplayOptions.iMip, oDisplayOptions.iSlice);
-					Graphics::Texture::ComponentAccessor oDestComponent = oDestSliceData.GetComponentAccesor(eComponent);
-
-					Graphics::Texture oClipboardTexture;
-					if (IO::Clipboard::GetTexture(&oClipboardTexture))
-					{
-						Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
-						Graphics::Texture::ComponentAccessor oSourceCompoent = oSourceSliceData.GetComponentAccesor(Graphics::ComponentFlag::R);
-
-						if (oSourceCompoent.CopyTo(oDestComponent))
-						{
-							Program::GetInstance()->UpdateTexture2DRes();
-							Core::LogInfo("Menus", "Image paste to current Slice component from clipboard");
-						}
-						else
-						{
-							Core::LogError("Menus", "Can't paste image from clipboard to current Slice component");
-						}
-					}
-					else
-					{
-						Core::LogError("Menus", "No image in clipboard");
-					}
+					Program::GetInstance()->PasteToComponent(eComponent);
 				}
+				++iCurrentIndex;
 			}
 
 			ImGui::PopID();

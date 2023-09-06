@@ -14,6 +14,9 @@
 #include "Core/StringUtils.h"
 
 #include "IO/FileSystem.h"
+#include "IO/Clipboard.h"
+
+#include "Graphics/TextureUtils.h"
 
 #include "Texture/TextureLoader.h"
 #include "Texture/TextureWriter.h"
@@ -141,6 +144,19 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oShortkeys.pReloadFile = m_pShortKeyManager->RegisterShortKey("Reload file", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_R, new Callback::InstanceCaller<Program, void>(this, &Program::ReloadFile), false);
 	m_oShortkeys.pOpenPreviousFile = m_pShortKeyManager->RegisterShortKey("Open previous file", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEUP, new Callback::InstanceCaller<Program, void>(this, &Program::OpenPreviousFileCallback), false);
 	m_oShortkeys.pOpenNextFile = m_pShortKeyManager->RegisterShortKey("Open next", EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_PAGEDOWN, new Callback::InstanceCaller<Program, void>(this, &Program::OpenNextFileCallback), false);
+
+	m_oShortkeys.pCopyCurrentSlice = m_pShortKeyManager->RegisterShortKey("Copy current slice", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_C, new Callback::InstanceCaller<Program, void>(this, &Program::CopyCurrentSliceCallback), false);
+	m_oShortkeys.pCopyComponent[0] = m_pShortKeyManager->RegisterShortKey("Copy first component", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_1, new Callback::InstanceCaller<Program, void>(this, &Program::CopyComponentCallback<0>), false);
+	m_oShortkeys.pCopyComponent[1] = m_pShortKeyManager->RegisterShortKey("Copy second component", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_2, new Callback::InstanceCaller<Program, void>(this, &Program::CopyComponentCallback<1>), false);
+	m_oShortkeys.pCopyComponent[2] = m_pShortKeyManager->RegisterShortKey("Copy third component", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_3, new Callback::InstanceCaller<Program, void>(this, &Program::CopyComponentCallback<2>), false);
+	m_oShortkeys.pCopyComponent[3] = m_pShortKeyManager->RegisterShortKey("Copy fourth component", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_4, new Callback::InstanceCaller<Program, void>(this, &Program::CopyComponentCallback<3>), false);
+
+	m_oShortkeys.pPasteToNewTexture = m_pShortKeyManager->RegisterShortKey("Paste to new texture", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_V, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToNewTextureCallback), false);
+	m_oShortkeys.pPasteToCurrentSlice = m_pShortKeyManager->RegisterShortKey("Paste to current slice", EasyWindow::KEY_CTRL, EasyWindow::KEY_NONE, EasyWindow::KEY_NONE, EasyWindow::KEY_V, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToCurrentSliceCallback), false);
+	m_oShortkeys.pPasteToComponent[0] = m_pShortKeyManager->RegisterShortKey("Paste to first component", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_1, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToComponentCallback<0>), false);
+	m_oShortkeys.pPasteToComponent[1] = m_pShortKeyManager->RegisterShortKey("Paste to second component", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_2, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToComponentCallback<1>), false);
+	m_oShortkeys.pPasteToComponent[2] = m_pShortKeyManager->RegisterShortKey("Paste to third component", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_3, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToComponentCallback<2>), false);
+	m_oShortkeys.pPasteToComponent[3] = m_pShortKeyManager->RegisterShortKey("Paste to fourth component", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_4, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToComponentCallback<3>), false);
 
 	m_pMenus = new Menus();
 	new StatusBars();
@@ -478,6 +494,157 @@ bool Program::OpenNextFile()
 	return false;
 }
 
+bool Program::CopyCurrentSlice()
+{
+	if (IO::Clipboard::SetTexturePNG(m_oTexture, 0, m_oDisplayOptions.iMip, m_oDisplayOptions.iSlice) == ErrorCode::Ok)
+	{
+		Core::LogInfo("Program", "Current Slice copied to clipboard");
+		return true;
+	}
+	else
+	{
+		Core::LogError("Program", "Can't copy current Slice to clipboard");
+		return false;
+	}
+}
+
+bool Program::CopyComponent(Graphics::ComponentFlag eComponent)
+{
+	CORE_TEST_RETURN(m_oTexture.IsValid(), false);
+
+	Graphics::Texture oNewTexture;
+	if (Graphics::ExtractChannel(&m_oTexture, &oNewTexture, eComponent) == ErrorCode::Ok
+		&& IO::Clipboard::SetTexturePNG(oNewTexture, 0, m_oDisplayOptions.iMip, m_oDisplayOptions.iSlice) == ErrorCode::Ok)
+	{
+		Core::LogInfo("Program", "Current Slice component %s copied to clipboard", Graphics::ComponentFlagString[eComponent]);
+		return true;
+	}
+	else
+	{
+		Core::LogError("Program", "Can't copy current Slice component %s to clipboard", Graphics::ComponentFlagString[eComponent]);
+		return false;
+	}
+}
+
+bool Program::CopyComponentIndex(uint8_t iComponentIndex)
+{
+	CORE_TEST_RETURN(m_oTexture.IsValid(), false);
+
+	const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[m_oTexture.GetPixelFormat()];
+	uint8_t iCurrentIndex = 0;
+	for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+	{
+		if ((oPixelFormatInfos.iComponents & eComponent) == 0 || Graphics::ComponentFlagString[eComponent] == NULL)
+			continue;
+
+		if (iCurrentIndex == iComponentIndex)
+		{
+			return CopyComponent(eComponent);
+		}
+
+		++iCurrentIndex;
+	}
+
+	return false;
+}
+
+bool Program::PasteToNewTexture()
+{
+	Graphics::Texture oClipboardTexture;
+	if (IO::Clipboard::GetTexture(&oClipboardTexture))
+	{
+		oClipboardTexture.Swap(m_oTexture);
+		Program::GetInstance()->ClearTextureFilePath();
+		Program::GetInstance()->UpdateTexture2DRes();
+		Core::LogInfo("Program", "Image paste to new texture from clipboard");
+		return true;
+	}
+	else
+	{
+		Core::LogError("Program", "No image in clipboard");
+		return false;
+	}
+}
+
+bool Program::PasteToCurrentSlice()
+{
+	Graphics::Texture oClipboardTexture;
+	if (IO::Clipboard::GetTexture(&oClipboardTexture))
+	{
+		Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
+		Graphics::Texture::SliceData oDestSliceData = m_oTexture.GetSliceData(0, 0, 0);
+
+		if (oSourceSliceData.CopyTo(oDestSliceData) == ErrorCode::Ok)
+		{
+			Program::GetInstance()->UpdateTexture2DRes();
+			Core::LogInfo("Program", "Image paste to current Slice from clipboard");
+			return true;
+		}
+		else
+		{
+			Core::LogError("Program", "Can't paste image from clipboard to current Slice");
+			return false;
+		}
+	}
+	else
+	{
+		Core::LogError("Program", "No image in clipboard");
+		return false;
+	}
+}
+
+bool Program::PasteToComponent(Graphics::ComponentFlag eComponent)
+{
+	Graphics::Texture::SliceData oDestSliceData = m_oTexture.GetSliceData(0, m_oDisplayOptions.iMip, m_oDisplayOptions.iSlice);
+	Graphics::Texture::ComponentAccessor oDestComponent = oDestSliceData.GetComponentAccesor(eComponent);
+
+	Graphics::Texture oClipboardTexture;
+	if (IO::Clipboard::GetTexture(&oClipboardTexture))
+	{
+		Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
+		Graphics::Texture::ComponentAccessor oSourceCompoent = oSourceSliceData.GetComponentAccesor(Graphics::ComponentFlag::R);
+
+		if (oSourceCompoent.CopyTo(oDestComponent))
+		{
+			Program::GetInstance()->UpdateTexture2DRes();
+			Core::LogInfo("Program", "Image paste to current Slice component %s from clipboard", Graphics::ComponentFlagString[eComponent]);
+			return true;
+		}
+		else
+		{
+			Core::LogError("Program", "Can't paste image from clipboard to current Slice component %s", Graphics::ComponentFlagString[eComponent]);
+			return false;
+		}
+	}
+	else
+	{
+		Core::LogError("Program", "No image in clipboard");
+		return false;
+	}
+}
+
+bool Program::PasteToComponentIndex(uint8_t iComponentIndex)
+{
+	CORE_TEST_RETURN(m_oTexture.IsValid(), false);
+
+	const Graphics::PixelFormatInfos& oPixelFormatInfos = Graphics::PixelFormatEnumInfos[m_oTexture.GetPixelFormat()];
+	uint8_t iCurrentIndex = 0;
+	for (Graphics::ComponentFlag eComponent = Graphics::ComponentFlag::_BEGIN; eComponent <= Graphics::ComponentFlag::_END; eComponent = (Graphics::ComponentFlag)(eComponent << 1))
+	{
+		if ((oPixelFormatInfos.iComponents & eComponent) == 0 || Graphics::ComponentFlagString[eComponent] == NULL)
+			continue;
+
+		if (iCurrentIndex == iComponentIndex)
+		{
+			return PasteToComponent(eComponent);
+		}
+
+		++iCurrentIndex;
+	}
+
+	return false;
+}
+
 void Program::ReloadFile()
 {
 	if (m_sTexturePath.empty() == false)
@@ -494,4 +661,19 @@ void Program::OpenPreviousFileCallback()
 void Program::OpenNextFileCallback()
 {
 	OpenNextFile();
+}
+
+void Program::CopyCurrentSliceCallback()
+{
+	CopyCurrentSlice();
+}
+
+void Program::PasteToNewTextureCallback()
+{
+	PasteToNewTexture();
+}
+
+void Program::PasteToCurrentSliceCallback()
+{
+	PasteToCurrentSlice();
 }
