@@ -54,6 +54,7 @@ namespace Graphics
 			ErrorCode					CopyTo(SliceData& oDest);
 
 			ComponentAccessor			GetComponentAccesor(ComponentFlag eComponent) const { return ComponentAccessor(*this, eComponent); }
+			CORE_PTR_VOID				GetBlockAtCoord(uint16_t iX, uint16_t iY);
 		};
 
 		class ComponentAccessor

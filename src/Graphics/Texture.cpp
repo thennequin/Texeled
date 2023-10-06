@@ -56,6 +56,24 @@ ErrorCode Texture::SliceData::CopyTo(SliceData& oTo)
 	return ErrorCode::Ok;
 }
 
+CORE_PTR_VOID Texture::SliceData::GetBlockAtCoord(uint16_t iX, uint16_t iY)
+{
+	CORE_TEST_RETURN(pData != NULL, CORE_PTR_NULL);
+	CORE_TEST_RETURN(iX < iWidth && iY < iHeight, CORE_PTR_NULL);
+
+	const PixelFormatInfos& oFormatInfos = PixelFormatEnumInfos[ePixelFormat];
+
+	uint32_t iBlockCountX = ((iWidth + (oFormatInfos.iBlockWidth - 1)) / oFormatInfos.iBlockWidth);
+	uint32_t iBlockCountY = ((iHeight + (oFormatInfos.iBlockHeight - 1)) / oFormatInfos.iBlockHeight);
+
+	uint32_t iBlockX = ((iX + (oFormatInfos.iBlockWidth - 1)) / oFormatInfos.iBlockWidth);
+	uint32_t iBlockY = ((iY + (oFormatInfos.iBlockHeight - 1)) / oFormatInfos.iBlockHeight);
+
+	return CORE_PTR_CAST_VOID(CORE_PTR_CAST(uint8_t, pData)
+		+ iBlockX * oFormatInfos.iBlockSize
+		+ iBlockY * iBlockCountX * oFormatInfos.iBlockSize);
+}
+
 ////////////////////////////////////////////////////////////////
 // Texture::ComponentAccessor
 ////////////////////////////////////////////////////////////////
