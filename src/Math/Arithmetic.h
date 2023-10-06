@@ -28,17 +28,24 @@ namespace Math
 
 	inline float Sqrt(float fValue);
 
-	// Return first high bit
+	// Return first high bit position
 	// Return 0 if no high bit;
 	// Example : HighBitFirst of 26 (11010) => 2
 	//                               ...|.
 	uint8_t HighBitFirst(uint64_t iNumber);
 
-	// Return last high bit
+	// Return last high bit position
 	// Return 0 if no high bit;
 	// Example : HighBitLast of 26 (11010) => 5
 	//                              |....
 	uint8_t HighBitLast(uint64_t iNumber);
+
+	// Return nth high bit position
+	// Return 0 if no high bit;
+	// Example : nth is 1, HighBitLast of 26 (11010) => 4
+	//                                        .|...
+	//                                        21 0
+	uint8_t HighBitNth(uint64_t iNumber, uint8_t iIndex);
 
 	// Extract high bit count in unsigned number
 	// Example : HighBitCount of 26 (11010) => 3

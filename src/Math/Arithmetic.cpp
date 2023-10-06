@@ -36,6 +36,24 @@ namespace Math
 		return 0;
 	}
 
+	uint8_t HighBitNth(uint64_t iNumber, uint8_t iIndex)
+	{
+		uint8_t iCurrentIndex = 0;
+		for (uint8_t iBit = 0; iBit < 64; ++iBit)
+		{
+			if (((iNumber >> iBit) & 1) != 0)
+			{
+				if (iIndex == iCurrentIndex)
+				{
+					return iBit + 1;
+				}
+				++iCurrentIndex;
+			}
+		}
+
+		return 0;
+	}
+
 	uint8_t HighBitCount(uint64_t iNumber)
 	{
 		uint8_t iCount = 0;
