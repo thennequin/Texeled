@@ -572,7 +572,7 @@ bool Program::PasteToCurrentSlice()
 	if (IO::Clipboard::GetTexture(&oClipboardTexture))
 	{
 		Graphics::Texture::SliceData oSourceSliceData = oClipboardTexture.GetSliceData(0, 0, 0);
-		Graphics::Texture::SliceData oDestSliceData = m_oTexture.GetSliceData(0, 0, 0);
+		Graphics::Texture::SliceData oDestSliceData = m_oTexture.GetSliceData(0, m_oDisplayOptions.iMip, m_oDisplayOptions.iSlice);
 
 		if (oSourceSliceData.CopyTo(oDestSliceData) == ErrorCode::Ok)
 		{
