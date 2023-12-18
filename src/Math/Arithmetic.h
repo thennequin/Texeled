@@ -26,7 +26,7 @@ namespace Math
 		return (oMin * (1.f - fLerp)) + oMax * fLerp;
 	}
 
-	inline float Sqrt(float fValue);
+	float Sqrt(float fValue);
 
 	// Return first high bit position
 	// Return 0 if no high bit;

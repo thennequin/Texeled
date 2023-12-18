@@ -2,7 +2,7 @@
 
 namespace Math
 {
-	inline float Sqrt(float fValue)
+	float Sqrt(float fValue)
 	{
 		union { int iX; float fX; };
 		fX = fValue;
