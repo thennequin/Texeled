@@ -5,6 +5,8 @@
 #include "Graphics/PixelFormatConverters.h"
 #include "Graphics/PixelFormatConvertersCompressed.h"
 
+#include "Core/StringUtils.h"
+
 #include <string.h> // memset
 
 namespace Graphics
@@ -148,6 +150,21 @@ namespace Graphics
 #undef MASKZERO
 #undef MASK
 #undef MASKEXP
+
+	PixelFormatEnum GetPixelFormatByName(const char* pName)
+	{
+		size_t iNameLen = Core::StringUtils::StrLen(pName, -1);
+		for (size_t iPixelFormatIndex = 0; iPixelFormatIndex < sizeof(PixelFormatEnumInfos) / sizeof(PixelFormatEnumInfos[0]); ++iPixelFormatIndex)
+		{
+			const char* pPixelFormatName = PixelFormatEnumInfos[iPixelFormatIndex].pShortName;
+			size_t iPixelFormatNameLen = Core::StringUtils::StrLen(pPixelFormatName, -1);
+			if (Core::StringUtils::StrCmpI(pPixelFormatName, iPixelFormatNameLen, pName, iNameLen) == 0)
+			{
+				return PixelFormatEnumInfos[iPixelFormatIndex].eFormat;
+			}
+		}
+		return PixelFormatEnum::_NONE;
+	}
 
 	namespace PixelFormat
 	{

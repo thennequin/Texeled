@@ -139,6 +139,8 @@ namespace Graphics
 
 	extern const PixelFormatInfos PixelFormatEnumInfos[PixelFormatEnum::_COUNT];
 
+	PixelFormatEnum				GetPixelFormatByName(const char* pName);
+
 	namespace PixelFormat
 	{
 		typedef void(*ConvertionFunc)(void*, void*, size_t, size_t);
