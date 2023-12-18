@@ -42,6 +42,7 @@ Menus::Menus()
 	, m_iResizeNewWidth(0)
 	, m_iResizeNewHeight(0)
 	, m_fResizeRatio(0.f)
+	, m_iDistanceFieldSpread(32)
 	, m_pIconNew(NULL)
 	, m_pIconOpen(NULL)
 	, m_pIconSave(NULL)
@@ -747,6 +748,42 @@ void Menus::OnMenu()
 				m_iSwizzleComponents[iComponentIndex-1] = eComponent;
 			}
 		}
+
+		ImGui::Separator();
+
+		if (ImGuiUtils::MenuItemPlus("Generate Distance Field", NULL, NULL, NULL, false, oTexture.IsValid() && oTexture.GetPixelFormat() == Graphics::PixelFormatEnum::R8_UNORM))
+		{
+			if (Graphics::SignedDistanceField(oTexture.GetSliceData(0, 0, 0), m_iDistanceFieldSpread) == ErrorCode::Ok)
+			{
+				Program::GetInstance()->UpdateTexture2DRes();
+			}
+		}
+		if ((oTexture.IsValid() == false || oTexture.GetPixelFormat() != Graphics::PixelFormatEnum::R8_UNORM) && ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("R8 UNorm texture is required to create a Signed Distance Field");
+		}
+
+
+		ImGui::Indent();
+		ImGui::Indent();
+		ImGui::TextDisabled("Distance field spread : ");
+		ImGui::SameLine(0.f, 0.f);
+
+		if (ImGui::SmallButton("-") && m_iDistanceFieldSpread > 8)
+		{
+			m_iDistanceFieldSpread /=2;
+		}
+		ImGui::SameLine();
+		if (ImGui::SmallButton("+") && m_iDistanceFieldSpread < 128)
+		{
+			m_iDistanceFieldSpread *= 2;
+		}
+
+		ImGui::SameLine();
+		ImGui::Text("%d", m_iDistanceFieldSpread);
+
+		ImGui::Unindent();
+		ImGui::Unindent();
 
 		ImGui::EndMenu();
 	}

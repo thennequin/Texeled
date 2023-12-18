@@ -21,6 +21,7 @@ protected:
 	int									m_iResizeNewWidth;
 	int									m_iResizeNewHeight;
 	double								m_fResizeRatio;
+	int									m_iDistanceFieldSpread;
 
 	Graphics::ComponentFlag				m_iSwizzleComponents[Graphics::ComponentFlag::_COUNT];
 
