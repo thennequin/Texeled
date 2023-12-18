@@ -858,4 +858,155 @@ namespace Graphics
 
 		return ErrorCode::Ok;
 	}
+
+	ErrorCode SignedDistanceField(Texture::SliceData& oInputSlice, uint8_t iSpread, uint8_t iThreshold)
+	{
+		CORE_TEST_RETURN(oInputSlice.iWidth > 1 || oInputSlice.iHeight > 1, ErrorCode::InvalidArgument);
+		CORE_TEST_RETURN(oInputSlice.ePixelFormat == PixelFormatEnum::R8_UNORM, ErrorCode::InvalidArgument);
+
+		// Use Jump Flood Algorithm
+
+		Texture oCoordTexture, oCoordTexture2;
+		Texture::Desc oCoordDesc;
+		oCoordDesc.ePixelFormat = PixelFormatEnum::RGBA16_UNORM; // RG : Outside coord, BA : Inside coord
+		oCoordDesc.iWidth = oInputSlice.iWidth;
+		oCoordDesc.iHeight = oInputSlice.iHeight;
+		CORE_TEST_RETURN(oCoordTexture.Create(oCoordDesc) == ErrorCode::Ok, ErrorCode::Fail);
+		CORE_TEST_RETURN(oCoordTexture2.Create(oCoordDesc) == ErrorCode::Ok, ErrorCode::Fail);
+
+		Texture oCoordTextureFinal;
+		oCoordDesc.ePixelFormat = PixelFormatEnum::RGBA8_UNORM;
+		CORE_TEST_RETURN(oCoordTextureFinal.Create(oCoordDesc) == ErrorCode::Ok, ErrorCode::Fail);
+
+		// Init coord texture
+		{
+			Texture::SliceData oCoordSlice = oCoordTexture.GetSliceData(0, 0, 0);
+			Texture::SliceData oCoordSlice2 = oCoordTexture2.GetSliceData(0, 0, 0);
+			for (uint16_t iY = 0; iY < oInputSlice.iHeight; ++iY)
+			{
+				for (uint16_t iX = 0; iX < oInputSlice.iWidth; ++iX)
+				{
+					const uint8_t* pBlockInput = (uint8_t*)oInputSlice.GetBlockAtCoord(iX, iY);
+					uint16_t* pBlockCoord = (uint16_t*)oCoordSlice.GetBlockAtCoord(iX, iY);
+					uint16_t* pBlockCoord2 = (uint16_t*)oCoordSlice2.GetBlockAtCoord(iX, iY);
+					if (pBlockInput[0] < iThreshold )
+					{
+						pBlockCoord[0] = 0xFFFF;
+						pBlockCoord[1] = 0xFFFF;
+						pBlockCoord[2] = iX;
+						pBlockCoord[3] = iY;
+					}
+					else
+					{
+						pBlockCoord[0] = iX;
+						pBlockCoord[1] = iY;
+						pBlockCoord[2] = 0xFFFF;
+						pBlockCoord[3] = 0xFFFF;
+					}
+
+					pBlockCoord2[0] = pBlockCoord[0];
+					pBlockCoord2[1] = pBlockCoord[1];
+					pBlockCoord2[2] = pBlockCoord[2];
+					pBlockCoord2[3] = pBlockCoord[3];
+				}
+			}
+
+			oCoordSlice.CopyTo(oCoordSlice2);
+		}
+
+		// Flood jump : use 1+JFA (start with a step of size 1 then continue with N/2, N/4, ...
+		const uint16_t iMaxStep = Math::Max(oInputSlice.iWidth, oInputSlice.iHeight) / 2;
+		uint16_t iStep = 1;
+		int iStepCount = Math::HighBitLast(iMaxStep) + 1;
+
+		while (iStepCount > 0)
+		{
+			Texture::SliceData oCoordSlice = oCoordTexture.GetSliceData(0, 0, 0);
+			Texture::SliceData oCoordSlice2 = oCoordTexture2.GetSliceData(0, 0, 0);
+			for (int32_t iY = 0; iY < oInputSlice.iHeight; ++iY)
+			{
+				for (int32_t iX = 0; iX < oInputSlice.iWidth; ++iX)
+				{
+					uint16_t* pBlockCoord2 = (uint16_t*)oCoordSlice2.GetBlockAtCoord(iX, iY);
+
+					uint64_t iBestistSqrInOut[2];
+					iBestistSqrInOut[0] = 0xFFFFFFFFFFFFFFFF;
+					iBestistSqrInOut[1] = 0xFFFFFFFFFFFFFFFF;
+					iBestistSqrInOut[0] = (iX - pBlockCoord2[0]) * (iX - pBlockCoord2[0]) + (iY - pBlockCoord2[1]) * (iY - pBlockCoord2[1]);
+					iBestistSqrInOut[1] = (iX - pBlockCoord2[2]) * (iX - pBlockCoord2[2]) + (iY - pBlockCoord2[3]) * (iY - pBlockCoord2[3]);
+
+					for (int32_t iK = -iStep ; iK <= iStep; iK += iStep)
+					{
+						if ((iY + iK) < 0 || (iY + iK) >= oInputSlice.iHeight)
+							continue;
+
+						for (int32_t iJ = -iStep ; iJ <= iStep; iJ += iStep)
+						{
+							if (iK == 0 && iJ == 0)
+								continue;
+
+							if ((iX + iJ) < 0 || (iX + iJ) >= oInputSlice.iWidth)
+								continue;
+
+							uint16_t* pSubBlockCoord = (uint16_t*)oCoordSlice.GetBlockAtCoord(iX + iJ, iY + iK);
+
+							for (int i = 0; i <2; ++i)
+							{
+								const uint16_t iCX = i * 2;
+								const uint16_t iCY = 1 + i * 2;
+								if (pSubBlockCoord[iCX] != 0xFFFF || pSubBlockCoord[iCY] != 0xFFFF)
+								{
+									uint64_t iDistSqr = (iX - pSubBlockCoord[iCX]) * (iX - pSubBlockCoord[iCX]) + (iY - pSubBlockCoord[iCY]) * (iY - pSubBlockCoord[iCY]);
+
+									if (iDistSqr < iBestistSqrInOut[i])
+									{
+										pBlockCoord2[iCX] = pSubBlockCoord[iCX];
+										pBlockCoord2[iCY] = pSubBlockCoord[iCY];
+										iBestistSqrInOut[i] = iDistSqr;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (iStepCount > 1)
+			{
+				if (iStep == 1)
+					iStep = iMaxStep;
+				else
+					iStep /= 2;
+			}
+
+			--iStepCount;
+
+			oCoordSlice2.CopyTo(oCoordSlice);
+		}
+
+		// Copy distance field to input texture
+		{
+			Texture::SliceData oCoordSliceFinal = oCoordTextureFinal.GetSliceData(0, 0, 0);
+			Texture::SliceData oCoordSlice = oCoordTexture.GetSliceData(0, 0, 0);
+			for (uint16_t iY = 0; iY < oInputSlice.iHeight; ++iY)
+			{
+				for (uint16_t iX = 0; iX < oInputSlice.iWidth; ++iX)
+				{
+					uint8_t* pBlockInput = (uint8_t*)oInputSlice.GetBlockAtCoord(iX, iY);
+					uint16_t* pBlockCoord = (uint16_t*)oCoordSlice.GetBlockAtCoord(iX, iY);
+
+					float fDistOut = Math::Sqrt((int64_t)(iX - pBlockCoord[0]) * (int64_t)(iX - pBlockCoord[0]) + (int64_t)(iY - pBlockCoord[1]) * (int64_t)(iY - pBlockCoord[1]));
+					float fDistIn = Math::Sqrt((int64_t)(iX - pBlockCoord[2]) * (int64_t)(iX - pBlockCoord[2]) + (int64_t)(iY - pBlockCoord[3]) * (int64_t)(iY - pBlockCoord[3]));
+
+					float fDist = (fDistIn > fDistOut)
+						? Math::Max(0.f, 255.f * (0.5f - 0.5f * (fDistIn - 0.5f) / (iSpread + 0.5f)))
+						: Math::Min(255.f, 255.f * (0.5f + 0.5f * (fDistOut - 0.5f) / (iSpread + 0.5f)));
+
+					pBlockInput[0] = 255 - (uint8_t)fDist;
+				}
+			}
+		}
+
+		return ErrorCode::Ok;
+	}
 }

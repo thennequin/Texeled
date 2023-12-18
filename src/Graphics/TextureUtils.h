@@ -33,6 +33,8 @@ namespace Graphics
 	ErrorCode		AssembleTextureMipmap(Texture* pOutTexture, const Texture* pTextures, uint8_t iTextureCount, bool bRegenerateIntermediate);
 
 	ErrorCode		ExtractChannel(const Texture* pTexture, Texture* pOutTexture, ComponentFlag eChannel);
+	// Generate an R8 Signed Distance Field texture
+	ErrorCode		SignedDistanceField(Texture::SliceData& oInputSlice, uint8_t iSpread, uint8_t iThreshold = 127);
 }
 
 #endif //__GRAPHICS_TEXTURE_UTILS_H__
