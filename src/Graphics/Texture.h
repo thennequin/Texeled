@@ -136,9 +136,9 @@ namespace Graphics
 		size_t							GetDataSize() const				{ return m_iSize; }
 		size_t							GetLayerDataSize() const		{ return m_iLayerSize; }
 
-		const LayerData					GetLayerData(uint16_t iLayer) const;
-		const MipData					GetMipData(uint16_t iLayer, uint8_t iMip) const;
-		const SliceData					GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const;
+		LayerData						GetLayerData(uint16_t iLayer) const;
+		MipData							GetMipData(uint16_t iLayer, uint8_t iMip) const;
+		SliceData						GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const;
 
 		void							Swap(Texture& oOtherTexture);
 

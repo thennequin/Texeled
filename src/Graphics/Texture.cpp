@@ -400,7 +400,7 @@ void Texture::GetMipSizeAndOffset(PixelFormatEnum ePixelFormat, uint16_t iWidth,
 		*pOutMipOffset = iMipOffset;
 }
 
-const Texture::LayerData Texture::GetLayerData(uint16_t iLayer) const
+Texture::LayerData Texture::GetLayerData(uint16_t iLayer) const
 {
 	CORE_ASSERT(iLayer >= 0 && iLayer < m_oDesc.iLayerCount);
 
@@ -421,12 +421,12 @@ const Texture::LayerData Texture::GetLayerData(uint16_t iLayer) const
 	return oData;
 }
 
-const Texture::MipData Texture::GetMipData(uint16_t iLayer, uint8_t iMip) const
+Texture::MipData Texture::GetMipData(uint16_t iLayer, uint8_t iMip) const
 {
 	return GetLayerData(iLayer).GetMipData(iMip);
 }
 
-const Texture::SliceData Texture::GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const
+Texture::SliceData Texture::GetSliceData(uint16_t iLayer, uint8_t iMip, uint16_t iSlice) const
 {
 	return GetLayerData(iLayer).GetMipData(iMip).GetSliceData(iSlice);
 }
