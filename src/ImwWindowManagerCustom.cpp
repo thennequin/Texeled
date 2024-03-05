@@ -71,6 +71,11 @@ void ImwWindowManagerCustom::PaintTitleBar(ImwPlatformWindow* pPlatformWindow, b
 		if (m_pIcon)
 		{
 			ImGui::Image((ImTextureID)m_pIcon->GetTextureView(), ImVec2(c_fIconSize, c_fIconSize));
+
+			if (ImGui::IsMouseHoveringRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax()))
+			{
+				((ImwPlatformWindowCustom*)pPlatformWindow)->m_eHoveredArea = E_PLATFORMWINDOWHOVEREDAREA_MENU;
+			}
 			ImGui::SameLine();
 		}
 

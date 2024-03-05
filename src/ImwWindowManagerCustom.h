@@ -4,6 +4,7 @@
 #include "ImwConfig.h"
 
 #include "ImwWindowManagerDX11.h"
+#include "ImwPlatformWindowDX11.h"
 
 namespace GraphicResources
 {
@@ -12,6 +13,11 @@ namespace GraphicResources
 
 namespace ImWindow
 {
+	class ImwPlatformWindowCustom : public ImwPlatformWindowDX11
+	{
+		friend class ImwWindowManagerCustom;
+	};
+
 	class ImwWindowManagerCustom : public ImwWindowManagerDX11
 	{
 	public:
