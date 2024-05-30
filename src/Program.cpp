@@ -3,7 +3,6 @@
 
 #include "ShortKeyManager.h"
 #include "Menus.h"
-#include "StatusBars.h"
 #include "Toolbar.h"
 
 #include <D3D11.h>
@@ -159,7 +158,7 @@ Program::Program(int iArgCount, char** pArgs)
 	m_oShortkeys.pPasteToComponent[3] = m_pShortKeyManager->RegisterShortKey("Paste to fourth component", EasyWindow::KEY_CTRL, EasyWindow::KEY_SHIFT, EasyWindow::KEY_NONE, EasyWindow::KEY_4, new Callback::InstanceCaller<Program, void>(this, &Program::PasteToComponentCallback<3>), false);
 
 	m_pMenus = new Menus();
-	new StatusBars();
+	m_pStatusBars = new StatusBars();
 	new Toolbar();
 
 	m_pWorkAreaWindow = new Windows::WorkAreaWindow();
@@ -258,7 +257,14 @@ bool Program::Run()
 
 void Program::AskExit()
 {
-	m_bRun = false;
+	if (m_pStatusBars->IsDisplayingLog())
+	{
+		m_pStatusBars->SkipLog();
+	}
+	else
+	{
+		m_bRun = false;
+	}
 }
 
 void Program::CloseCurrentWindow()

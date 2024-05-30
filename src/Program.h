@@ -14,6 +14,8 @@
 
 #include "ShortKeyManager.h"
 
+#include "StatusBars.h"
+
 class Menus;
 
 struct IDXGIFactory;
@@ -203,6 +205,7 @@ protected:
 	ShortKeyManager*						m_pShortKeyManager;
 	Shortkeys								m_oShortkeys;
 	Menus*									m_pMenus;
+	StatusBars*								m_pStatusBars;
 
 	ProgramModeEnum							m_eMode;
 	DisplayOptions							m_oDisplayOptions;

@@ -18,6 +18,9 @@ public:
 
 	virtual void						Log(Core::Logger::Category eCategory, const char* pName, const char* pFormattedMessage);
 
+	bool								IsDisplayingLog() const;
+	void								SkipLog();
+
 protected:
 	GraphicResources::Texture2D*		m_pIconLog;
 	uint64_t							m_iLastLogTime;

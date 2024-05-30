@@ -14,6 +14,10 @@
 
 #include "Resources/Icons/Log_16_png.h"
 
+const uint64_t c_iLogDisplayTime = 5000;
+const uint64_t c_iLogDisplayTransitionTime = 150;
+const uint64_t c_iLogDisplayHighlightTime = 1000;
+
 StatusBars::StatusBars()
 	: m_iLastLogTime(0)
 	, m_eLastLogCategory(Core::Logger::Category::Info)
@@ -44,10 +48,6 @@ StatusBars::~StatusBars()
 
 void StatusBars::OnStatusBar()
 {
-	const uint64_t c_iLogDisplayTime = 5000;
-	const uint64_t c_iLogDisplayTransitionTime = 150;
-	const uint64_t c_iLogDisplayHighlightTime = 1000;
-
 	Program* pProgram = Program::GetInstance();
 	const Core::Clock& oClock = pProgram->GetClock();
 	const Fonts& oFonts = pProgram->GetFonts();
@@ -272,4 +272,19 @@ void StatusBars::Log(Core::Logger::Category eCategory, const char* /*pName*/, co
 	m_iLastLogTime = iCurrent;
 	m_eLastLogCategory = eCategory;
 	m_sLastLogMessage = pFormattedMessage;
+}
+
+bool StatusBars::IsDisplayingLog() const
+{
+	return m_fLastLogFade > 0.f;
+}
+
+void StatusBars::SkipLog()
+{
+	Program* pProgram = Program::GetInstance();
+	const Core::Clock& oClock = pProgram->GetClock();
+
+	uint64_t iResetTime = oClock.GetFrameTime() - (c_iLogDisplayTime - c_iLogDisplayTransitionTime);
+	if (m_iLastLogTime > iResetTime)
+		m_iLastLogTime = iResetTime;
 }
