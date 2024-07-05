@@ -681,5 +681,12 @@ void Program::PasteToNewTextureCallback()
 
 void Program::PasteToCurrentSliceCallback()
 {
-	PasteToCurrentSlice();
+	if (m_oTexture.IsValid())
+	{
+		PasteToCurrentSlice();
+	}
+	else
+	{
+		PasteToNewTexture();
+	}
 }
