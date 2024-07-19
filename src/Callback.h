@@ -9,6 +9,7 @@ namespace Callback
 	class Caller
 	{
 	public:
+		virtual						~Caller() {}
 		virtual R					Call() = 0;
 	};
 
@@ -49,6 +50,7 @@ namespace Callback
 	class CallerOneArg
 	{
 	public:
+		virtual						~CallerOneArg() {}
 		virtual R					Call(const T1& oT1) = 0;
 	};
 
@@ -99,6 +101,7 @@ namespace Callback
 	class CallerTwoArg
 	{
 	public:
+		virtual						~CallerTwoArg() {}
 		virtual R					Call(const T1& oT1, const T2& oT2) = 0;
 	};
 
