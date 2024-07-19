@@ -286,7 +286,16 @@ namespace Texture
 			{
 				oDesc.ePixelFormat = Graphics::PixelFormatEnum::RG8_UNORM;
 			}
-			else if (oDDSHeader.oPixelFormat.iFourCC == 0
+			else if ((oDDSHeader.oPixelFormat.iFourCC == 0 || oDDSHeader.oPixelFormat.iFourCC == 20)
+				&& oDDSHeader.oPixelFormat.iRGBBitCount == 24
+				&& oDDSHeader.oPixelFormat.iRBitMask == 0xff0000
+				&& oDDSHeader.oPixelFormat.iGBitMask == 0xff00
+				&& oDDSHeader.oPixelFormat.iBBitMask == 0xff
+				&& oDDSHeader.oPixelFormat.iABitMask == 0)
+			{
+				oDesc.ePixelFormat = Graphics::PixelFormatEnum::BGR8_UNORM;
+			}
+			else if ((oDDSHeader.oPixelFormat.iFourCC == 0 || oDDSHeader.oPixelFormat.iFourCC == 21)
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
 				&& oDDSHeader.oPixelFormat.iRBitMask == 0xff0000
 				&& oDDSHeader.oPixelFormat.iGBitMask == 0xff00
@@ -295,7 +304,7 @@ namespace Texture
 			{
 				oDesc.ePixelFormat = Graphics::PixelFormatEnum::BGRA8_UNORM;
 			}
-			else if (oDDSHeader.oPixelFormat.iFourCC == 0
+			else if ((oDDSHeader.oPixelFormat.iFourCC == 0 || oDDSHeader.oPixelFormat.iFourCC == 21)
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
 				&& oDDSHeader.oPixelFormat.iRBitMask == 0xff
 				&& oDDSHeader.oPixelFormat.iGBitMask == 0xff00
@@ -304,7 +313,7 @@ namespace Texture
 			{
 				oDesc.ePixelFormat = Graphics::PixelFormatEnum::RGBA8_UNORM;
 			}
-			else if (oDDSHeader.oPixelFormat.iFourCC == 0
+			else if ((oDDSHeader.oPixelFormat.iFourCC == 0 || oDDSHeader.oPixelFormat.iFourCC == 21)
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
 				&& oDDSHeader.oPixelFormat.iRBitMask == 0xff0000
 				&& oDDSHeader.oPixelFormat.iGBitMask == 0xff00
@@ -313,7 +322,7 @@ namespace Texture
 			{
 				oDesc.ePixelFormat = Graphics::PixelFormatEnum::BGRA8_UNORM;
 			}
-			else if (oDDSHeader.oPixelFormat.iFourCC == 0
+			else if ((oDDSHeader.oPixelFormat.iFourCC == 0 || oDDSHeader.oPixelFormat.iFourCC == 21)
 				&& oDDSHeader.oPixelFormat.iRGBBitCount == 32
 				&& oDDSHeader.oPixelFormat.iRBitMask == 0xff
 				&& oDDSHeader.oPixelFormat.iGBitMask == 0xff00
