@@ -6,6 +6,8 @@
 
 #include "Callback.h"
 
+#include <string> // std::string
+
 #include <EasyWindow.h> // EasyWindow::EKey
 
 // Forward declaration
